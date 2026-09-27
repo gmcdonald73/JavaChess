@@ -1,15 +1,15 @@
-// import MyStuff.ConsoleInput;
+package engine;
 
 // This does not (and should not) contain any state information. All state information is
-// stored in cBoard
+// stored in Board
 
-class Army
+public class Army
 {
 	public Army()
 	{
 		int i;
 
-		for(i=0; i<JavaChess.PIECES_PER_SIDE; i++)
+		for(i=0; i<Constants.PIECES_PER_SIDE; i++)
 		{
 			_piece[i] = null;
 		}
@@ -137,7 +137,7 @@ class Army
 			}
 
 			// !!! Should also terminate here for obvious stalemate / other draw
-			if( (moveStack[0]._score == JavaChess.MS_WIN) || (moveStack[0]._score == JavaChess.MS_LOSE) )
+			if( (moveStack[0]._score == Constants.MS_WIN) || (moveStack[0]._score == Constants.MS_LOSE) )
 			{
 				return true;
 			}
@@ -160,14 +160,14 @@ class Army
 
 		int idxPiece;
 		boolean bFoundLegalMove = false;
-		Move[] tempMoveStack = new Move[JavaChess.MAX_MOVES_LOOKAHEAD];
+		Move[] tempMoveStack = new Move[Constants.MAX_MOVES_LOOKAHEAD];
 		int msi;
 
-		moveStack[lookAheadLevel]._score = JavaChess.MS_ILLEGAL;
-		MoveStack possibleMoves = new MoveStack(JavaChess.MAX_PIECE_POSSIBLE_MOVES);
+		moveStack[lookAheadLevel]._score = Constants.MS_ILLEGAL;
+		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 
 		// Loop through all pieces on my side
-		for(idxPiece=0; idxPiece<JavaChess.PIECES_PER_SIDE; idxPiece++)
+		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
 		{
 			int idxMove;
 
@@ -183,14 +183,14 @@ class Army
 					for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
 					{
 						// Copy the move stack to temp
-						for(msi=0; msi<JavaChess.MAX_MOVES_LOOKAHEAD; msi++)
+						for(msi=0; msi<Constants.MAX_MOVES_LOOKAHEAD; msi++)
 						{
 							tempMoveStack[msi] = new Move();
 							tempMoveStack[msi].Copy(moveStack[msi]);
 						}
 
 						tempMoveStack[lookAheadLevel].Copy(possibleMoves.getMove(idxMove));
-						tempMoveStack[lookAheadLevel]._score = JavaChess.MS_UNDEFINED;
+						tempMoveStack[lookAheadLevel]._score = Constants.MS_UNDEFINED;
 						 
 						// Evaluate the move
 						EvaluateMove(moveNum, tempMoveStack, board, lookAheadLevel, numMovesToLookAhead);
@@ -207,14 +207,14 @@ class Army
 							moveStack[lookAheadLevel]._score = tempMoveStack[lookAheadLevel]._score;
 
 							// Copy the temp move stack back
-							for(msi=0; msi<JavaChess.MAX_MOVES_LOOKAHEAD; msi++)
+							for(msi=0; msi<Constants.MAX_MOVES_LOOKAHEAD; msi++)
 							{
 								moveStack[msi].Copy(tempMoveStack[msi]);
 							}
 
 							bFoundLegalMove = true;
 
-							if(moveStack[lookAheadLevel]._score == JavaChess.MS_WIN)
+							if(moveStack[lookAheadLevel]._score == Constants.MS_WIN)
 							{
 								// If the move will win the game for us, then stop looking for a better move because
 								// there isn't any
@@ -244,7 +244,7 @@ class Army
 		// Determine if my own king is in check (if so then reject this move)
 		if( IsKingInCheck(board) )
 		{
-			moveStack[lookAheadLevel]._score = JavaChess.MS_ILLEGAL;
+			moveStack[lookAheadLevel]._score = Constants.MS_ILLEGAL;
 			return;
 		}
 
@@ -272,7 +272,7 @@ class Army
 			{
 				// Found a legal move for the enemy, our score for our move is the inverse of the 
 				// best move for the enemy after making our move.
-				moveStack[lookAheadLevel]._score = JavaChess.MS_WIN - moveStack[lookAheadLevel + 1]._score;
+				moveStack[lookAheadLevel]._score = Constants.MS_WIN - moveStack[lookAheadLevel + 1]._score;
 			}
 		}
 
@@ -294,14 +294,14 @@ class Army
 			if( _pEnemy.IsKingInCheck(board) )
 			{
 				// Enemy is checkmated, we win
-				moveStack[lookAheadLevel]._score = JavaChess.MS_WIN;
+				moveStack[lookAheadLevel]._score = Constants.MS_WIN;
 				moveStack[lookAheadLevel]._bIsCheck = true;				
 				moveStack[lookAheadLevel]._bIsMate = true;				
 			}
 			else
 			{
 				// Enemy is stalemated, we draw
-				moveStack[lookAheadLevel]._score = JavaChess.MS_DRAW;
+				moveStack[lookAheadLevel]._score = Constants.MS_DRAW;
 				moveStack[lookAheadLevel]._bIsCheck = false;				
 			}
 		}
@@ -331,14 +331,14 @@ class Army
 		enemyScore = _pEnemy.RateArmy(board);
 
 		// Rate position
-		rating = (int)((score * JavaChess.MS_WIN) / (score + enemyScore));
+		rating = (int)((score * Constants.MS_WIN) / (score + enemyScore));
 
 		return rating;
 	}
 
 	public long RateArmy(Board board)
 	{
-		MoveStack moves = new MoveStack(JavaChess.PIECES_PER_SIDE * JavaChess.MAX_PIECE_POSSIBLE_MOVES);
+		MoveStack moves = new MoveStack(Constants.PIECES_PER_SIDE * Constants.MAX_PIECE_POSSIBLE_MOVES);
 		long score;
 		int i;
 
@@ -431,7 +431,7 @@ class Army
 		int i;
 		long materialValue = 0;
 
-		for(i=0; i<JavaChess.PIECES_PER_SIDE; i++)
+		for(i=0; i<Constants.PIECES_PER_SIDE; i++)
 		{
 			if( _piece[i] != null )
 			{
@@ -459,10 +459,10 @@ class Army
 
 		int idxPiece;
 		boolean bFoundLegalMove = false;
-		MoveStack possibleMoves = new MoveStack(JavaChess.MAX_PIECE_POSSIBLE_MOVES);
+		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 
 		// Loop through all pieces on my side
-		for(idxPiece=0; idxPiece<JavaChess.PIECES_PER_SIDE; idxPiece++)
+		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
 		{
 			int idxMove;
 
@@ -529,7 +529,7 @@ class Army
 	{
 		int i;
 
-		for(i=0; i<JavaChess.PIECES_PER_SIDE; i++)
+		for(i=0; i<Constants.PIECES_PER_SIDE; i++)
 		{
 			if( _piece[i] != null )
 			{
@@ -551,7 +551,7 @@ class Army
 		// Empty the movestack
 		moves.Clear();
 
-		for(idxPiece=0; idxPiece<JavaChess.PIECES_PER_SIDE; idxPiece++)
+		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
 		{
 			if( _piece[idxPiece] != null )
 			{
@@ -587,7 +587,7 @@ class Army
 		move._bCastleQueenSide = false;
 		move._bCastleKingSide = false;
 		move._bEnPassantCapture = false;
-		move._score = JavaChess.MS_UNDEFINED;
+		move._score = Constants.MS_UNDEFINED;
 		move._bLegalMove = false;
 
 		piece = null;
@@ -760,7 +760,7 @@ class Army
 		}
 
 		int numMoves = 0;
-		MoveStack moves = new MoveStack(JavaChess.MAX_PIECE_POSSIBLE_MOVES);
+		MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 
 		// Get the moves for the piece
 		piece.GetMoves(board, moves, false); 
@@ -829,10 +829,10 @@ class Army
 
 	Army Enemy() { return _pEnemy; }
 
-	String GetErrMsg() { return _sErrMsg; }
+	public String GetErrMsg() { return _sErrMsg; }
 
 
-	private Piece[] _piece = new Piece[JavaChess.PIECES_PER_SIDE];
+	private Piece[] _piece = new Piece[Constants.PIECES_PER_SIDE];
 	int _colour;
 	Army _pEnemy;
 	String _sErrMsg;

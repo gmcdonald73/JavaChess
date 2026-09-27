@@ -1,5 +1,9 @@
+package ui;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import engine.*;
 
 public class ConsoleChess {
 
@@ -30,7 +34,7 @@ public class ConsoleChess {
                 new BufferedReader(new InputStreamReader(System.in));
 
         Move[] moveStack =
-                new Move[JavaChess.MAX_MOVES_LOOKAHEAD];
+                new Move[Constants.MAX_MOVES_LOOKAHEAD];
 
         for (int i = 0; i < moveStack.length; i++) {
             moveStack[i] = new Move();
@@ -88,7 +92,7 @@ public class ConsoleChess {
             } else {
                 // Computer player
                 Move[] engineMoves =
-                        new Move[JavaChess.MAX_MOVES_LOOKAHEAD];
+                        new Move[Constants.MAX_MOVES_LOOKAHEAD];
 
                 for (int i = 0; i < engineMoves.length; i++) {
                     engineMoves[i] = new Move();
@@ -97,7 +101,7 @@ public class ConsoleChess {
                 legalMove = army[armyNum].FindBestMove(
                         moveNum,
                         board,
-                        JavaChess.NUM_MOVES_LOOKAHEAD,
+                        Constants.NUM_MOVES_LOOKAHEAD,
                         engineMoves);
 
                 // View the best line calculated by the engine

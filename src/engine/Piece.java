@@ -1,5 +1,4 @@
-import javax.swing.*;
-
+package engine;
 
 // IMPORTANT : Pieces should not retain any state information. All state information should be
 // stored in (or derived from) the cBoard class
@@ -41,7 +40,7 @@ public abstract class Piece
 			posMyCoords._ry = ry;
 		}
 
-		MoveStack possibleMoves = new MoveStack(JavaChess.MAX_PIECE_POSSIBLE_MOVES);
+		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 
 		GetMoves(board, possibleMoves, true);
 
@@ -92,7 +91,7 @@ public abstract class Piece
 		move._promoteTo = promoteTo;
 		move._bIsCheck = false;
 		move._bIsMate = false;
-		move._score = JavaChess.MS_UNDEFINED;
+		move._score = Constants.MS_UNDEFINED;
 		move._bCastleQueenSide = false;
 		move._bCastleKingSide = false;
 		move._bEnPassantCapture = false;

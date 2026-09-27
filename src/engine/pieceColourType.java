@@ -1,4 +1,6 @@
-public class pieceColourType 
+package engine;
+
+public class pieceColourType
 { 
 	public static final int PC_WHITE = 0;
 	public static final int PC_BLACK = 1;

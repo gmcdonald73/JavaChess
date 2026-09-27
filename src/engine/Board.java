@@ -1,3 +1,5 @@
+package engine;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -18,7 +20,7 @@ class posDescriptionType
 	boolean _bPawnMovedTwoStepsLastTurn;
 }
 
-class Board // implements ActionListener
+public class Board // implements ActionListener
 {
 
 	public static final int MAX_X = 8;
@@ -56,7 +58,7 @@ class Board // implements ActionListener
 
 		for(armyNum=0; armyNum<MAX_ARMIES; armyNum++)
 		{
-			for(pieceNum=0; pieceNum<JavaChess.PIECES_PER_SIDE; pieceNum++)
+			for(pieceNum=0; pieceNum<Constants.PIECES_PER_SIDE; pieceNum++)
 			{
 				_piece[armyNum][pieceNum] = new posDescriptionType();
 			}
@@ -167,7 +169,7 @@ class Board // implements ActionListener
 
 		for(armyNum=0; armyNum<MAX_ARMIES; armyNum++)
 		{
-			for(pieceNum=0; pieceNum<JavaChess.PIECES_PER_SIDE; pieceNum++)
+			for(pieceNum=0; pieceNum<Constants.PIECES_PER_SIDE; pieceNum++)
 			{
 				_piece[armyNum][pieceNum]._bIsAlive = false;
 				_piece[armyNum][pieceNum]._ax = -1;
@@ -280,7 +282,7 @@ class Board // implements ActionListener
 		// Clear the PawnMovedTwoStepsLastTurn flags
 		int pieceNum;
 
-		for(pieceNum=0; pieceNum<JavaChess.PIECES_PER_SIDE; pieceNum++)
+		for(pieceNum=0; pieceNum<Constants.PIECES_PER_SIDE; pieceNum++)
 		{
 			_piece[move._colour][pieceNum]._bPawnMovedTwoStepsLastTurn = false;
 		}
@@ -316,7 +318,7 @@ class Board // implements ActionListener
 			rookMove._bCastleQueenSide = false;
 			rookMove._bCastleKingSide = false;
 			rookMove._bEnPassantCapture = false;
-			rookMove._score = JavaChess.MS_UNDEFINED;
+			rookMove._score = Constants.MS_UNDEFINED;
 
 			if(move._bCastleQueenSide)
 			{
@@ -805,7 +807,7 @@ class Board // implements ActionListener
 
 		for(armyNum=0; armyNum<MAX_ARMIES; armyNum++)
 		{
-			for(pieceNum=0; pieceNum<JavaChess.PIECES_PER_SIDE; pieceNum++)
+			for(pieceNum=0; pieceNum<Constants.PIECES_PER_SIDE; pieceNum++)
 			{
 				_piece[armyNum][pieceNum] = new posDescriptionType();
 
@@ -831,7 +833,7 @@ class Board // implements ActionListener
 	private	pieceDescriptionType[][] _position = new pieceDescriptionType[Board.MAX_X][Board.MAX_Y];
 
 	// The pieces on either side, lookup where it is, or if it is dead
-	private	posDescriptionType[][] _piece =  new posDescriptionType[Board.MAX_ARMIES][JavaChess.PIECES_PER_SIDE];
+	private	posDescriptionType[][] _piece =  new posDescriptionType[Board.MAX_ARMIES][Constants.PIECES_PER_SIDE];
 
 //	private JPanel _boardPane;
 

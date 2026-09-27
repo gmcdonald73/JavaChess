@@ -1,3 +1,5 @@
+package engine;
+
 public class posType
 {
 	int _x;

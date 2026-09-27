@@ -1,3 +1,5 @@
+package engine;
+
 public class King extends Piece
 {
 	public King(Army pArmy, int colour, int number)

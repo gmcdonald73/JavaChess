@@ -1,4 +1,6 @@
-public class pieceNumberType 
+package engine;
+
+public class pieceNumberType
 { 
 	public static final int PN_PAWN_1 = 0;
 	public static final int PN_PAWN_2 = 1;

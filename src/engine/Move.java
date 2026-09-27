@@ -1,6 +1,6 @@
+package engine;
 
-
-class Move 
+public class Move
 {
 	public int _colour;
 	public int _number;

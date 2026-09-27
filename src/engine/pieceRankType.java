@@ -1,5 +1,6 @@
+package engine;
 
-public class pieceRankType 
+public class pieceRankType
 { 
 	public static final int PR_KING = 0; 
 	public static final int PR_QUEEN = 1;
