@@ -3,13 +3,25 @@ package engine;
 public class Bishop extends Piece
 {
 
-	public Bishop(Army pArmy, int colour, int number) 
+	public Bishop(int colour, int number)
 	{ 
-		super(pArmy, colour, number);
+		super(colour, number);
 		_rank = pieceRankType.PR_BISHOP; 
 		_materialValue = 3;
 	}
 
+	private Bishop(Bishop other)
+	{
+		super(other);
+	}
+
+	@Override
+	public Piece copy()
+	{
+		return new Bishop(this);
+	}
+
+	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
 		if( !board.IsPieceAlive(_colour, _number) )

@@ -5,6 +5,7 @@ package engine;
 
 public class Army
 {
+	// !!! remove
 	public Army()
 	{
 		int i;
@@ -15,30 +16,31 @@ public class Army
 		}
 	}
 
+	// !!! Move to board
 	public void Initialise(int colour, Board board, Army pEnemy)
 	{
 		_colour = colour;
 		_pEnemy = pEnemy;
 
-		_piece[pieceNumberType.PN_PAWN_1] = new Pawn(this, colour, pieceNumberType.PN_PAWN_1);
-		_piece[pieceNumberType.PN_PAWN_2] = new Pawn(this, colour, pieceNumberType.PN_PAWN_2);
-		_piece[pieceNumberType.PN_PAWN_3] = new Pawn(this, colour, pieceNumberType.PN_PAWN_3);
-		_piece[pieceNumberType.PN_PAWN_4] = new Pawn(this, colour, pieceNumberType.PN_PAWN_4);
-		_piece[pieceNumberType.PN_PAWN_5] = new Pawn(this, colour, pieceNumberType.PN_PAWN_5);
-		_piece[pieceNumberType.PN_PAWN_6] = new Pawn(this, colour, pieceNumberType.PN_PAWN_6);
-		_piece[pieceNumberType.PN_PAWN_7] = new Pawn(this, colour, pieceNumberType.PN_PAWN_7);
-		_piece[pieceNumberType.PN_PAWN_8] = new Pawn(this, colour, pieceNumberType.PN_PAWN_8);
-		_piece[pieceNumberType.PN_ROOK_1] = new Rook(this, colour, pieceNumberType.PN_ROOK_1);
-		_piece[pieceNumberType.PN_ROOK_2] = new Rook(this, colour, pieceNumberType.PN_ROOK_2);
-		_piece[pieceNumberType.PN_KNIGHT_1] = new Knight(this, colour, pieceNumberType.PN_KNIGHT_1);
-		_piece[pieceNumberType.PN_KNIGHT_2] = new Knight(this, colour, pieceNumberType.PN_KNIGHT_2);
-		_piece[pieceNumberType.PN_BISHOP_1] = new Bishop(this, colour, pieceNumberType.PN_BISHOP_1);
-		_piece[pieceNumberType.PN_BISHOP_2] = new Bishop(this, colour, pieceNumberType.PN_BISHOP_2);
-		_piece[pieceNumberType.PN_QUEEN] = new Queen(this, colour, pieceNumberType.PN_QUEEN);
-		_piece[pieceNumberType.PN_KING] = new King(this, colour, pieceNumberType.PN_KING);
+		_piece[pieceNumberType.PN_PAWN_1] = new Pawn( colour, pieceNumberType.PN_PAWN_1);
+		_piece[pieceNumberType.PN_PAWN_2] = new Pawn( colour, pieceNumberType.PN_PAWN_2);
+		_piece[pieceNumberType.PN_PAWN_3] = new Pawn( colour, pieceNumberType.PN_PAWN_3);
+		_piece[pieceNumberType.PN_PAWN_4] = new Pawn( colour, pieceNumberType.PN_PAWN_4);
+		_piece[pieceNumberType.PN_PAWN_5] = new Pawn( colour, pieceNumberType.PN_PAWN_5);
+		_piece[pieceNumberType.PN_PAWN_6] = new Pawn( colour, pieceNumberType.PN_PAWN_6);
+		_piece[pieceNumberType.PN_PAWN_7] = new Pawn( colour, pieceNumberType.PN_PAWN_7);
+		_piece[pieceNumberType.PN_PAWN_8] = new Pawn( colour, pieceNumberType.PN_PAWN_8);
+		_piece[pieceNumberType.PN_ROOK_1] = new Rook( colour, pieceNumberType.PN_ROOK_1);
+		_piece[pieceNumberType.PN_ROOK_2] = new Rook( colour, pieceNumberType.PN_ROOK_2);
+		_piece[pieceNumberType.PN_KNIGHT_1] = new Knight( colour, pieceNumberType.PN_KNIGHT_1);
+		_piece[pieceNumberType.PN_KNIGHT_2] = new Knight( colour, pieceNumberType.PN_KNIGHT_2);
+		_piece[pieceNumberType.PN_BISHOP_1] = new Bishop( colour, pieceNumberType.PN_BISHOP_1);
+		_piece[pieceNumberType.PN_BISHOP_2] = new Bishop( colour, pieceNumberType.PN_BISHOP_2);
+		_piece[pieceNumberType.PN_QUEEN] = new Queen( colour, pieceNumberType.PN_QUEEN);
+		_piece[pieceNumberType.PN_KING] = new King( colour, pieceNumberType.PN_KING);
 	}
 
-
+	// !! Move to board
 	public void SetupForGame(Board board)
 	{
 		if (_colour == pieceColourType.PC_WHITE)
@@ -81,56 +83,20 @@ public class Army
 		}
 	}
 
-	public void SetupForTesting(Board board)
-	{
-		if(_colour == pieceColourType.PC_WHITE)
-		{
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_1], 'e', 7);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_2], 'f', 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_3], 5, 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_4], 7, 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_5], 9, 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_ROOK_1], 'a', 1);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_ROOK_2], 'h', 1);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_KNIGHT_1], 'b', 1);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_KNIGHT_2], 'e', 2);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_BISHOP_1], 'a', 3);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_BISHOP_2], 'e', 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_QUEEN], 'f', 6);
-			board.PlacePiece(_piece[pieceNumberType.PN_KING], 'e', 1);
-		}
-		else
-		{
-			board.PlacePiece(_piece[pieceNumberType.PN_PAWN_1], 'a', 2);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_2], 'f', 3);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_3], 5, 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_4], 7, 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_PAWN_5], 9, 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_ROOK_1], 'g', 7);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_ROOK_2], 'd', 6);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_KNIGHT_1], 'h', 6);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_KNIGHT_2], 'e', 7);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_BISHOP_1], 'a', 4);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_BISHOP_2], 'g', 1);
-	//		board.PlacePiece(_piece[pieceNumberType.PN_QUEEN], 8, 1);
-			board.PlacePiece(_piece[pieceNumberType.PN_KING], 'h', 7);
-		}
-	}
-
+	// !!! Move to BotPlayer
 	// Do a breadth first search, look 2 moves ahead for win or lose, then 4 moves ahead etc.
 	public boolean FindBestMove(int moveNum, Board board, int lookAheadMax, Move moveStack[])
 	{
 		// Sneaky stuff, take a copy so that the original board is not modified.
 		// This effectively simulates pass by value for board.
-		Board testBoard = new Board();
-		testBoard.Copy(board);
-		board = testBoard;
+		// !!! do we need to do this here, or just in RecursiveFindBestMove?
+		Board testBoard = board.copy();
 
 		int numMovesToLookAhead = 2; 
 
 		while(numMovesToLookAhead <= lookAheadMax)
 		{
-			if( !RecursiveFindBestMove(moveNum, board, 0, numMovesToLookAhead, moveStack) )
+			if( !RecursiveFindBestMove(moveNum, testBoard, 0, numMovesToLookAhead, moveStack) )
 			{
 				// no legal move
 				return false;
@@ -148,15 +114,14 @@ public class Army
 		return true;
 	}
 
+	// !!! Move to BotPlayer
 	// board is passed by value as this is called recursively
 	// when we recurse back out, the board is automatically restored
 	public boolean RecursiveFindBestMove(int moveNum, Board board, int lookAheadLevel, int numMovesToLookAhead, Move moveStack[])
 	{
 		// Sneaky stuff, take a copy so that the original board is not modified.
 		// This effectively simulates pass by value for board.
-		Board testBoard = new Board();
-		testBoard.Copy(board);
-		board = testBoard;
+		Board testBoard = board.copy();
 
 		int idxPiece;
 		boolean bFoundLegalMove = false;
@@ -175,9 +140,9 @@ public class Army
 
 			if( _piece[idxPiece] != null )
 			{
-				if(board.IsPieceAlive(_colour, idxPiece))
+				if(testBoard.IsPieceAlive(_colour, idxPiece))
 				{
-					_piece[idxPiece].GetMoves(board, possibleMoves, false);
+					_piece[idxPiece].GetMoves(testBoard, possibleMoves, false);
 
 					// Loop through all possible moves for the piece
 					for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
@@ -193,7 +158,7 @@ public class Army
 						tempMoveStack[lookAheadLevel]._score = Constants.MS_UNDEFINED;
 						 
 						// Evaluate the move
-						EvaluateMove(moveNum, tempMoveStack, board, lookAheadLevel, numMovesToLookAhead);
+						EvaluateMove(moveNum, tempMoveStack, testBoard, lookAheadLevel, numMovesToLookAhead);
 
 /*
 						if (lookAheadLevel == 0)
@@ -229,20 +194,20 @@ public class Army
 		return bFoundLegalMove;
 	}
 
+	// !!! Move to BotPlayer
 	// When we recurse back out, the board is automatically restored
 	public void EvaluateMove(int moveNum, Move moveStack[], Board board, int lookAheadLevel, int numMovesToLookAhead)
 	{
 		// Sneaky stuff, take a copy so that the original board is not modified.
 		// This effectively simulates pass by value for board.
-		Board testBoard = new Board();
-		testBoard.Copy(board);
-		board = testBoard;
+		Board testBoard = board.copy();
 
 		// Make the move
-		board.MakeMove(moveStack[lookAheadLevel]);
+		testBoard.MakeMove(moveStack[lookAheadLevel]);
 
 		// Determine if my own king is in check (if so then reject this move)
-		if( IsKingInCheck(board) )
+		// !!! should MakeMove be checking if move is illegal?
+		if( testBoard.IsKingInCheck(_colour) )
 		{
 			moveStack[lookAheadLevel]._score = Constants.MS_ILLEGAL;
 			return;
@@ -255,18 +220,19 @@ public class Army
 		if( lookAheadLevel >= (numMovesToLookAhead-1) )
 		{
 			// Check if the enemy is checkmated or stalemated
-			bEnemyHasLegalMoves = _pEnemy.HasAnyLegalMoves(board);
+//			bEnemyHasLegalMoves = _pEnemy.HasAnyLegalMoves(testBoard);
+			bEnemyHasLegalMoves = testBoard.HasAnyLegalMoves(1 - _colour);
 
 			if( bEnemyHasLegalMoves )
 			{
 				//	evaluate the position on the board
-				moveStack[lookAheadLevel]._score = RateSituation(board, moveStack[lookAheadLevel]);
+				moveStack[lookAheadLevel]._score = RateSituation(testBoard, moveStack[lookAheadLevel]);
 			}
 		}
 		else
 		{
 			//	FindBestMove for enemy
-			bEnemyHasLegalMoves = _pEnemy.RecursiveFindBestMove(moveNum, board, lookAheadLevel + 1, numMovesToLookAhead, moveStack);
+			bEnemyHasLegalMoves = _pEnemy.RecursiveFindBestMove(moveNum, testBoard, lookAheadLevel + 1, numMovesToLookAhead, moveStack);
 
 			if( bEnemyHasLegalMoves )
 			{
@@ -279,7 +245,7 @@ public class Army
 		// See if we have won or stalemated, also set flags for displaying checks
 		if( bEnemyHasLegalMoves )
 		{
-			if( _pEnemy.IsKingInCheck(board) )
+			if(  testBoard.IsKingInCheck(1 - _colour) )
 			{
 				moveStack[lookAheadLevel]._bIsCheck = true;				
 			}
@@ -291,7 +257,7 @@ public class Army
 		else
 		{
 			// Enemy has no legal moves
-			if( _pEnemy.IsKingInCheck(board) )
+			if( testBoard.IsKingInCheck(1 - _colour) )
 			{
 				// Enemy is checkmated, we win
 				moveStack[lookAheadLevel]._score = Constants.MS_WIN;
@@ -308,6 +274,7 @@ public class Army
 	}
 
 
+	// !!! Move to BotPlayer
 	// RateSituation - return a score between MS_LOSE and MS_WIN indicating how favourable to board
 	// position & forces are for calling army.
 	// This is where the really intelligence is. Play with this to make computer player smarter
@@ -336,6 +303,7 @@ public class Army
 		return rating;
 	}
 
+	// !!! Move to BotPlayer
 	public long RateArmy(Board board)
 	{
 		MoveStack moves = new MoveStack(Constants.PIECES_PER_SIDE * Constants.MAX_PIECE_POSSIBLE_MOVES);
@@ -343,7 +311,7 @@ public class Army
 		int i;
 
 		// Rate your forces
-		GetMoves(board, moves, false);
+		board.GetMoves(moves, _colour);
 
 		score = moves.getNumMoves();
 
@@ -420,42 +388,22 @@ public class Army
 			}
 		}
 
-		score += MaterialValue(board) * 10;
+		score += board.MaterialValue(_colour) * 10;
 
 		return score;
 	}
 
-	// NOTE : This routine should NOT modify the board
-	public long MaterialValue(Board board)
-	{
-		int i;
-		long materialValue = 0;
-
-		for(i=0; i<Constants.PIECES_PER_SIDE; i++)
-		{
-			if( _piece[i] != null )
-			{
-				if(board.IsPieceAlive(_colour, i))
-				{
-					materialValue += _piece[i].MaterialValue();
-				}
-			}
-		}
-		
-		return materialValue;
-	}
-
-
+		// !!! Move to Board
 	// When we recurse back out, the board is automatically restored
 	// Returns true if the army has one or more legal moves
 	// Returns false if the army is checkmated or stalemated
+/*
 	public boolean HasAnyLegalMoves(Board board)
 	{
 		// Sneaky stuff, take a copy so that the original board is not modified.
 		// This effectively simulates pass by value for board.
-		Board testBoard = new Board();
-		testBoard.Copy(board);
-		board = testBoard;
+		// !!! do we need to do this here, or only in methods that actually modify the board?
+		Board testBoard = board.copy();
 
 		int idxPiece;
 		boolean bFoundLegalMove = false;
@@ -470,15 +418,15 @@ public class Army
 
 			if( _piece[idxPiece] != null )
 			{
-				if(board.IsPieceAlive(_colour, idxPiece))
+				if(testBoard.IsPieceAlive(_colour, idxPiece))
 				{
-					_piece[idxPiece].GetMoves(board, possibleMoves, false);
+					_piece[idxPiece].GetMoves(testBoard, possibleMoves, false);
 
 					// Loop through all possible moves for the piece
 					for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
 					{
 						// Is the move legal?
-						if( !WillMovePutKingInCheck(board, possibleMoves.getMove(idxMove)) )
+						if( ! testBoard.WillMovePutKingInCheck(possibleMoves.getMove(idxMove), _colour) )
 						{
 							return true;
 						}
@@ -489,8 +437,11 @@ public class Army
 
 		return false;
 	}
+*/
 
+	// !!! Move to Board
 	// NOTE : This routine should NOT modify the board
+/*
 	public boolean IsKingInCheck(Board board)
 	{
 		// Get the current position of the king
@@ -500,31 +451,35 @@ public class Army
 
 		return _pEnemy.CanCaptureAt(board, _colour, relPos._rx, relPos._ry);
 	}
+*/
 
 
+	// !!! Move to Board
 	// This routine assume that the move is a valid move for the piece,
 	// It determines whether the move would put the king in check
+	//
+/*
 	public boolean WillMovePutKingInCheck(Board board, Move move)
 	{
 		// Sneaky stuff, take a copy so that the original board is not modified.
 		// This effectively simulates pass by value for board.
-		Board testBoard = new Board();
-		testBoard.Copy(board);
-		board = testBoard;
+		Board testBoard = board.copy();
 
 		// Make the move
-		board.MakeMove(move);
+		testBoard.MakeMove(move);
 
 		// Determine if my own king is in check (if so then reject this move)
-		if( IsKingInCheck(board) )
+		if( testBoard.IsKingInCheck(_colour) )
 		{
 			return true;
 		}
 
 		return false;
 	}
-
+*/
+	// !!! Move to Board
 	// NOTE : This routine should NOT modify the board
+/*
 	public boolean CanCaptureAt(Board board, int colour, int rx, int ry)
 	{
 		int i;
@@ -542,9 +497,12 @@ public class Army
 
 		return false;
 	}
+*/
 
+	// !!! Move to Board
 	// NOTE : This routine should NOT modify the board
-	public void GetMoves(Board board, MoveStack moves, boolean bCapturesOnly)
+	// !!! Modify this (or GetMoves on Piece) to exclude moves that would place king in check
+	/*public void GetMoves(Board board, MoveStack moves, boolean bCapturesOnly)
 	{
 		int idxPiece;
 
@@ -561,8 +519,9 @@ public class Army
 				}
 			}
 		}
-	}
+	}*/
 
+	// !!! Move to HumanPlayer
 	// Convert a move string the user has entered into a Move
 	// NOTE : This routine should NOT modify the board
 	public boolean InterpretMove(Board board, String sMove, Piece piece, Move move)
@@ -789,15 +748,15 @@ public class Army
 
 				// Now check if the move would place our king in check
 
+				// !!! Replace this will WillMovePutMyKingInCheck?
 				// Copy the board to a test board
-				// Make a copy so that the orignal board is not modified
-				Board testBoard = new Board();
-				testBoard.Copy(board);
+				// Make a copy so that the original board is not modified
+				Board testBoard = board.copy();
 
 				// Make the move
 				testBoard.MakeMove(move);
 
-				if( IsKingInCheck(testBoard) )
+				if( testBoard.IsKingInCheck(_colour) )
 				{
 					_sErrMsg = "Illegal move - this move would place the king in check";
 				}
@@ -814,8 +773,11 @@ public class Army
 		return false;
 	}
 
+	// !!! Move to ChessPlayer
 	public int Colour() { return _colour; }
 
+	// !!! Move to Board
+/*
 	public Piece Piece(int pieceNum)
 	{
 		if( (pieceNum < 0) || (pieceNum >= pieceNumberType.PN_MAX_PIECES))
@@ -825,13 +787,15 @@ public class Army
 
 		return _piece[pieceNum];
 	}
+*/
 
-
+	// !!! remove
 	Army Enemy() { return _pEnemy; }
 
+	// !!! remove
 	public String GetErrMsg() { return _sErrMsg; }
 
-
+	// !!! remove these
 	private Piece[] _piece = new Piece[Constants.PIECES_PER_SIDE];
 	int _colour;
 	Army _pEnemy;

@@ -1,5 +1,6 @@
 package engine;
 
+// !!! replace with enum
 public class pieceColourType
 { 
 	public static final int PC_WHITE = 0;

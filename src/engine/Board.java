@@ -1,14 +1,28 @@
 package engine;
 
+/*
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+*/
+
 
 class pieceDescriptionType
 {
 	int _rank;
 	int _colour;
 	int _number;
+
+	public pieceDescriptionType()
+	{
+	}
+
+	public pieceDescriptionType(pieceDescriptionType other)
+	{
+		this._rank = other._rank;
+		this._colour = other._colour;
+		this._number = other._number;
+	}
 }
 
 class posDescriptionType
@@ -18,33 +32,47 @@ class posDescriptionType
 	int _ay;
 	boolean _bHasMovedThisGame;
 	boolean _bPawnMovedTwoStepsLastTurn;
+
+	public posDescriptionType()
+	{
+
+	}
+
+	public posDescriptionType(posDescriptionType other)
+	{
+		this._bIsAlive = other._bIsAlive;
+		this._ax = other._ax;
+		this._ay = other._ay;
+		this._bHasMovedThisGame = other._bHasMovedThisGame;
+		this._bPawnMovedTwoStepsLastTurn = other._bPawnMovedTwoStepsLastTurn;
+	}
 }
 
-public class Board // implements ActionListener
+public class Board
 {
 
 	public static final int MAX_X = 8;
 	public static final int MAX_Y = 8;
 	public static final int MAX_ARMIES = 2;
 
-//	JButton[][] _cells = new JButton[8][8];
-	boolean _bIsSelected;
-//	JButton _sourceBtn;
-//	Color _sourceBackColour;
+	// boolean _bIsSelected;
 
-//	ImageIcon _whiteIcons[] = new ImageIcon[pieceRankType.PR_MAX_RANKS];
-//	ImageIcon _blackIcons[] = new ImageIcon[pieceRankType.PR_MAX_RANKS];
+	private Piece[] _whitePieces = new Piece[Constants.PIECES_PER_SIDE];
+	private Piece[] _blackPieces = new Piece[Constants.PIECES_PER_SIDE];
 
-// public methods
+	// The positions on the board, lookup what piece is there
+	private	pieceDescriptionType[][] _position = new pieceDescriptionType[Board.MAX_X][Board.MAX_Y];
+
+	// The pieces on either side, lookup where it is, or if it is dead
+	private	posDescriptionType[][] _piece =  new posDescriptionType[Board.MAX_ARMIES][Constants.PIECES_PER_SIDE];
+
+
+	// public methods
 	public Board()
 	{
 		int x, y;
 
-//		GridLayout lm = new GridLayout(9, 9, 0, 0);
-//		_boardPane = new JPanel();
-//		_boardPane.setLayout(lm);
-
-		_bIsSelected = false;
+		// _bIsSelected = false;
 
 		for(x=0; x<MAX_X; x++)
 		{
@@ -66,89 +94,8 @@ public class Board // implements ActionListener
 
 		EmptyBoard();
 
-/*
-		for(y = 8; y>=0; y--)
-		{
-			for(x = 0; x<9; x++)
-			{	
-				if ((x>0) && (y>0))
-				{
-					JButton btn = new JButton();
+		// !!! Need to setup board for game
 
-					btn.addActionListener(this);
-
-					char c = (char)('a' + (x-1));
-
-					btn.setActionCommand(c + "" + y); 
-
-					if(((x+y) % 2) == 0)
-					{
-						btn.setBackground(Color.black);
-					}
-					else
-					{
-						btn.setBackground(Color.white);
-					}
-
-					_cells[x-1][y-1] = btn;
-					_boardPane.add(btn);
-				}
-				else
-				{
-					if ((x > 0) || (y > 0))
-					{
-						if (x == 0)
-						{
-							_boardPane.add(new JLabel(y + "", SwingConstants.CENTER));
-						}
-						else
-						{
-							// y == 0
-							char c = (char)('a' + (x-1));
-
-							_boardPane.add(new JLabel(c + "", SwingConstants.CENTER));
-						}
-					}
-					else
-					{
-						_boardPane.add(new JLabel(""));
-					}
-				}
-			}
-		}
-
-		_whiteIcons[pieceRankType.PR_PAWN] = new ImageIcon("3Pawn.gif");
-		_whiteIcons[pieceRankType.PR_ROOK] = new ImageIcon("3Rook.gif");
-		_whiteIcons[pieceRankType.PR_KNIGHT] = new ImageIcon("3Knight.gif");
-		_whiteIcons[pieceRankType.PR_BISHOP] = new ImageIcon("3Bishop.gif");
-		_whiteIcons[pieceRankType.PR_QUEEN] = new ImageIcon("3Queen.gif");
-		_whiteIcons[pieceRankType.PR_KING] = new ImageIcon("3King.gif");
-
-		_blackIcons[pieceRankType.PR_PAWN] = new ImageIcon("4Pawn.gif");
-		_blackIcons[pieceRankType.PR_ROOK] = new ImageIcon("4Rook.gif");
-		_blackIcons[pieceRankType.PR_KNIGHT] = new ImageIcon("4Knight.gif");
-		_blackIcons[pieceRankType.PR_BISHOP] = new ImageIcon("4Bishop.gif");
-		_blackIcons[pieceRankType.PR_QUEEN] = new ImageIcon("4Queen.gif");
-		_blackIcons[pieceRankType.PR_KING] = new ImageIcon("4King.gif");
-
-		cells[0][0].setIcon(whiteRook);
-		cells[1][0].setIcon(whiteKnight);
-		cells[2][0].setIcon(whiteBishop);
-		cells[3][0].setIcon(whiteQueen);
-		cells[4][0].setIcon(whiteKing);
-		cells[5][0].setIcon(whiteBishop);
-		cells[6][0].setIcon(whiteKnight);
-		cells[7][0].setIcon(whiteRook);
-
-		cells[0][7].setIcon(blackRook);
-		cells[1][7].setIcon(blackKnight);
-		cells[2][7].setIcon(blackBishop);
-		cells[3][7].setIcon(blackQueen);
-		cells[4][7].setIcon(blackKing);
-		cells[5][7].setIcon(blackBishop);
-		cells[6][7].setIcon(blackKnight);
-		cells[7][7].setIcon(blackRook);
-*/
 	}
 
 	public void EmptyBoard()
@@ -179,6 +126,85 @@ public class Board // implements ActionListener
 			}
 		}
 	}
+
+	public void SetupForGame()
+	{
+		int colour = 0;
+
+		_whitePieces[pieceNumberType.PN_PAWN_1] = new Pawn( colour, pieceNumberType.PN_PAWN_1);
+		_whitePieces[pieceNumberType.PN_PAWN_2] = new Pawn( colour, pieceNumberType.PN_PAWN_2);
+		_whitePieces[pieceNumberType.PN_PAWN_3] = new Pawn( colour, pieceNumberType.PN_PAWN_3);
+		_whitePieces[pieceNumberType.PN_PAWN_4] = new Pawn( colour, pieceNumberType.PN_PAWN_4);
+		_whitePieces[pieceNumberType.PN_PAWN_5] = new Pawn( colour, pieceNumberType.PN_PAWN_5);
+		_whitePieces[pieceNumberType.PN_PAWN_6] = new Pawn( colour, pieceNumberType.PN_PAWN_6);
+		_whitePieces[pieceNumberType.PN_PAWN_7] = new Pawn( colour, pieceNumberType.PN_PAWN_7);
+		_whitePieces[pieceNumberType.PN_PAWN_8] = new Pawn( colour, pieceNumberType.PN_PAWN_8);
+		_whitePieces[pieceNumberType.PN_ROOK_1] = new Rook( colour, pieceNumberType.PN_ROOK_1);
+		_whitePieces[pieceNumberType.PN_ROOK_2] = new Rook( colour, pieceNumberType.PN_ROOK_2);
+		_whitePieces[pieceNumberType.PN_KNIGHT_1] = new Knight( colour, pieceNumberType.PN_KNIGHT_1);
+		_whitePieces[pieceNumberType.PN_KNIGHT_2] = new Knight( colour, pieceNumberType.PN_KNIGHT_2);
+		_whitePieces[pieceNumberType.PN_BISHOP_1] = new Bishop( colour, pieceNumberType.PN_BISHOP_1);
+		_whitePieces[pieceNumberType.PN_BISHOP_2] = new Bishop( colour, pieceNumberType.PN_BISHOP_2);
+		_whitePieces[pieceNumberType.PN_QUEEN] = new Queen( colour, pieceNumberType.PN_QUEEN);
+		_whitePieces[pieceNumberType.PN_KING] = new King( colour, pieceNumberType.PN_KING);
+
+		colour = 1;
+
+		_blackPieces[pieceNumberType.PN_PAWN_1] = new Pawn( colour, pieceNumberType.PN_PAWN_1);
+		_blackPieces[pieceNumberType.PN_PAWN_2] = new Pawn( colour, pieceNumberType.PN_PAWN_2);
+		_blackPieces[pieceNumberType.PN_PAWN_3] = new Pawn( colour, pieceNumberType.PN_PAWN_3);
+		_blackPieces[pieceNumberType.PN_PAWN_4] = new Pawn( colour, pieceNumberType.PN_PAWN_4);
+		_blackPieces[pieceNumberType.PN_PAWN_5] = new Pawn( colour, pieceNumberType.PN_PAWN_5);
+		_blackPieces[pieceNumberType.PN_PAWN_6] = new Pawn( colour, pieceNumberType.PN_PAWN_6);
+		_blackPieces[pieceNumberType.PN_PAWN_7] = new Pawn( colour, pieceNumberType.PN_PAWN_7);
+		_blackPieces[pieceNumberType.PN_PAWN_8] = new Pawn( colour, pieceNumberType.PN_PAWN_8);
+		_blackPieces[pieceNumberType.PN_ROOK_1] = new Rook( colour, pieceNumberType.PN_ROOK_1);
+		_blackPieces[pieceNumberType.PN_ROOK_2] = new Rook( colour, pieceNumberType.PN_ROOK_2);
+		_blackPieces[pieceNumberType.PN_KNIGHT_1] = new Knight( colour, pieceNumberType.PN_KNIGHT_1);
+		_blackPieces[pieceNumberType.PN_KNIGHT_2] = new Knight( colour, pieceNumberType.PN_KNIGHT_2);
+		_blackPieces[pieceNumberType.PN_BISHOP_1] = new Bishop( colour, pieceNumberType.PN_BISHOP_1);
+		_blackPieces[pieceNumberType.PN_BISHOP_2] = new Bishop( colour, pieceNumberType.PN_BISHOP_2);
+		_blackPieces[pieceNumberType.PN_QUEEN] = new Queen( colour, pieceNumberType.PN_QUEEN);
+		_blackPieces[pieceNumberType.PN_KING] = new King( colour, pieceNumberType.PN_KING);
+
+		// White
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_1], 'a', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_2], 'b', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_3], 'c', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_4], 'd', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_5], 'e', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_6], 'f', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_7], 'g', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_8], 'h', 2);
+		PlacePiece(_whitePieces[pieceNumberType.PN_ROOK_1], 'a', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_ROOK_2], 'h', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_KNIGHT_1], 'b', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_KNIGHT_2], 'g', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_BISHOP_1], 'c', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_BISHOP_2], 'f', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_QUEEN], 'd', 1);
+		PlacePiece(_whitePieces[pieceNumberType.PN_KING], 'e', 1);
+
+		// Black
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_1], 'h', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_2], 'g', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_3], 'f', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_4], 'e', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_5], 'd', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_6], 'c', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_7], 'b', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_8], 'a', 7);
+		PlacePiece(_blackPieces[pieceNumberType.PN_ROOK_1], 'h', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_ROOK_2], 'a', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_KNIGHT_1], 'g', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_KNIGHT_2], 'b', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_BISHOP_1], 'f', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_BISHOP_2], 'c', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_QUEEN], 'd', 8);
+		PlacePiece(_blackPieces[pieceNumberType.PN_KING], 'e', 8);
+
+	}
+
 
 	public void PlacePiece(Piece piece, char x, int y)
 	{
@@ -277,6 +303,103 @@ public class Board // implements ActionListener
 		}
 	}
 
+	public MoveValidationResult IsMoveLegal(int colour, Move move)
+	{
+		// Determine piece
+		pieceDescriptionType pieceDescrip;
+		pieceDescrip = WhatIsAt(colour, move._startRX, move._startRY);
+		String errorMessage;
+
+        if (pieceDescrip._rank == pieceRankType.PR_NONE )
+		{
+			errorMessage = "Illegal move - there is no piece at " + move.StartPos();
+			return new MoveValidationResult(false, errorMessage);
+		}
+
+		if (pieceDescrip._rank != move._rank )
+		{
+			errorMessage = "Illegal move - piece at " + move.StartPos() + " is not a " + ConvertRankToSymbol(move._rank);
+			return new MoveValidationResult(false, errorMessage);
+		}
+
+		if (pieceDescrip._colour != colour )
+		{
+			errorMessage = "Illegal move - piece at " + move.StartPos() + " is not yours";
+			return new MoveValidationResult(false, errorMessage);
+		}
+
+		move._number = pieceDescrip._number;
+
+		Piece piece;
+
+		if(colour == 0)
+		{
+			piece = _whitePieces[pieceDescrip._number];
+		}
+		else
+		{
+			piece = _blackPieces[pieceDescrip._number];
+		}
+
+        if(piece == null)
+        {
+            // Couldn't find piece that move is refering to
+            errorMessage = "Internal error - null piece pointer";
+			return new MoveValidationResult(false, errorMessage);
+        }
+
+        int numMoves = 0;
+        MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+
+        // Get the moves for the piece
+        piece.GetMoves(this, moves, false);
+        numMoves = moves.getNumMoves();
+
+        // Find out if the entered move is one of them
+        int i;
+
+        for(i=0; i<numMoves; i++)
+        {
+            Move currMove;
+
+            currMove = moves.getMove(i);
+
+            if( (move._startRX == currMove._startRX) &&
+                    (move._startRY == currMove._startRY) &&
+                    (move._endRX == currMove._endRX) &&
+                    (move._endRY == currMove._endRY) &&
+                    (move._promoteTo == currMove._promoteTo))
+            {
+                // Found the move in the list of possible moves for the piece
+
+                // Update the move with the one from the moveStack so other flags eg bIsCapture etc.
+                // are set correctly
+                move.Copy(currMove);
+
+                // Now check if the move would place our king in check
+
+                // Copy the board to a test board
+                // Make a copy so that the original board is not modified
+                Board testBoard = this.copy();
+
+                // Make the move
+                testBoard.MakeMove(move);
+
+                if( testBoard.IsKingInCheck(colour) )
+                {
+                    errorMessage = "Illegal move - this move would place the king in check";
+					return new MoveValidationResult(false, errorMessage);
+                }
+
+				return new MoveValidationResult(true, "");
+            }
+        }
+
+        errorMessage = "Illegal move - this move is not valid for this piece";
+		return new MoveValidationResult(false, errorMessage);
+
+	}
+
 	public void MakeMove(Move move)
 	{
 		// Clear the PawnMovedTwoStepsLastTurn flags
@@ -303,7 +426,7 @@ public class Board // implements ActionListener
 		if((move._bCastleQueenSide) || (move._bCastleKingSide))
 		{
 			Move rookMove = new Move(); // if castling
-			pieceDescriptionType pieceDescrip = new pieceDescriptionType();
+			pieceDescriptionType pieceDescrip;
 
 			rookMove._colour = move._colour;
 			rookMove._rank = pieceRankType.PR_ROOK;
@@ -311,8 +434,6 @@ public class Board // implements ActionListener
 			rookMove._promoteTo = pieceRankType.PR_NONE;
 			rookMove._startRY = 1;
 			rookMove._endRY = 1;
-			rookMove._bIsCapture = false; // Is the move a capture?
-			rookMove._promoteTo = pieceRankType.PR_NONE;
 			rookMove._bIsCheck = false;
 			rookMove._bIsMate = false;
 			rookMove._bCastleQueenSide = false;
@@ -333,7 +454,7 @@ public class Board // implements ActionListener
 					rookMove._endRX = 5; 
 				}
 			}
-			else if(move._bCastleKingSide)
+			else // if(move._bCastleKingSide)
 			{
 				if(move._colour == pieceColourType.PC_WHITE)
 				{
@@ -513,7 +634,7 @@ public class Board // implements ActionListener
 		return pieceColourType.PC_WHITE;
 	}
 
-
+	// !!! Move to Piece?
 	public static char ConvertRankToSymbol(int rank)
 	{
 		switch (rank)
@@ -528,6 +649,7 @@ public class Board // implements ActionListener
 		}
 	}
 
+	// !!! Move to Piece?
 	public static int ConvertSymbolToRank(char symbol)
 	{
 		switch (symbol)
@@ -772,14 +894,51 @@ public class Board // implements ActionListener
 		_position[ax][ay]._colour = pieceColourType.PC_NONE;
 		_position[ax][ay]._rank = pieceRankType.PR_NONE;
 
-//		_cells[ax][ay].setIcon(null);
-
 		_piece[colour][number]._bIsAlive = false;
 		_piece[colour][number]._ax = -1;
 		_piece[colour][number]._ay = -1;
 	}
 
+	public Board copy()
+	{
+		Board copy = new Board();
 
+		// Copy white and black pieces
+		for (int i = 0; i < Constants.PIECES_PER_SIDE; i++)
+		{
+			if (_whitePieces[i] != null)
+				copy._whitePieces[i] = _whitePieces[i].copy();
+
+			if (_blackPieces[i] != null)
+				copy._blackPieces[i] = _blackPieces[i].copy();
+		}
+
+		// Copy board positions
+		for (int x = 0; x < Board.MAX_X; x++)
+		{
+			for (int y = 0; y < Board.MAX_Y; y++)
+			{
+				if (_position[x][y] != null)
+					copy._position[x][y] =
+							new pieceDescriptionType(_position[x][y]);
+			}
+		}
+
+		// Copy piece positions/status
+		for (int side = 0; side < Board.MAX_ARMIES; side++)
+		{
+			for (int piece = 0; piece < Constants.PIECES_PER_SIDE; piece++)
+			{
+				if (_piece[side][piece] != null)
+					copy._piece[side][piece] =
+							new posDescriptionType(_piece[side][piece]);
+			}
+		}
+
+		return copy;
+	}
+
+/*
 	public void Copy(Board src)
 	{
 		int x, y;
@@ -823,19 +982,161 @@ public class Board // implements ActionListener
 			}
 		}
 	}
+*/
+
+	public boolean IsKingInCheck(int colour)
+	{
+		// Get the current position of the king
+		relPosType relPos = new relPosType();
+
+		WhereIs(colour, pieceNumberType.PN_KING, relPos);
+
+		return CanCaptureAt(1 - colour, colour, relPos._rx, relPos._ry);
+	}
+
+	// Can the playerColour army capture a piece at the relative co-ordinate (rColour, rx, ry)?
+	public boolean CanCaptureAt(int playerColour, int rColour, int rx, int ry)
+	{
+		int i;
+
+		for(i=0; i<Constants.PIECES_PER_SIDE; i++)
+		{
+			if(IsPieceAlive(playerColour, i))
+			{
+				if(playerColour == pieceColourType.PC_WHITE)
+				{
+					if( _whitePieces[i].CanPieceCaptureAt(this, rColour, rx, ry) )
+					{
+						return true;
+					}
+				}
+				else if(playerColour == pieceColourType.PC_BLACK)
+				{
+					if( _blackPieces[i].CanPieceCaptureAt(this, rColour, rx, ry) )
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public long MaterialValue(int colour)
+	{
+		int i;
+		long materialValue = 0;
+
+		for(i=0; i<pieceNumberType.PN_MAX_PIECES; i++)
+		{
+			if(IsPieceAlive(colour, i))
+			{
+				if(colour == pieceColourType.PC_WHITE)
+				{
+					materialValue += _whitePieces[i].MaterialValue();
+				}
+				else if(colour == pieceColourType.PC_BLACK)
+				{
+					materialValue += _blackPieces[i].MaterialValue();
+				}
+			}
+		}
+
+		return materialValue;
+	}
+
+	// This routine assume that the move is a valid move for the piece,
+	// It determines whether the move would put the king in check
+	public boolean WillMovePutKingInCheck(Move move, int colour)
+	{
+		Board testBoard = this.copy();
+
+		// Make the move
+		testBoard.MakeMove(move);
+
+		if( testBoard.IsKingInCheck(colour) )
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	// NOTE : This routine should NOT modify the board
+	// !!! Modify this (or GetMoves on Piece) to exclude moves that would place king in check?
+	public void GetMoves(MoveStack moves, int colour)
+	{
+		int idxPiece;
+
+		// Empty the movestack
+		moves.Clear();
+
+		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
+		{
+			if(IsPieceAlive(colour, idxPiece))
+			{
+				if(colour == pieceColourType.PC_WHITE)
+				{
+					_whitePieces[idxPiece].GetMoves(this, moves, false);
+				}
+				else if (colour == pieceColourType.PC_BLACK)
+				{
+					_blackPieces[idxPiece].GetMoves(this, moves, false);
+				}
+			}
+		}
+	}
+
+
+	// When we recurse back out, the board is automatically restored
+	// Returns true if the army has one or more legal moves
+	// Returns false if the army is checkmated or stalemated
+	public boolean HasAnyLegalMoves(int colour)
+	{
+		int idxPiece;
+		boolean bFoundLegalMove = false;
+		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+
+		// Loop through all pieces on my side
+		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
+		{
+			int idxMove;
+
+			possibleMoves.Clear();
+
+			if(IsPieceAlive(colour, idxPiece))
+			{
+				if(colour == pieceColourType.PC_WHITE)
+				{
+					_whitePieces[idxPiece].GetMoves(this, possibleMoves, false);
+				}
+				else if (colour == pieceColourType.PC_BLACK)
+				{
+					_blackPieces[idxPiece].GetMoves(this, possibleMoves, false);
+				}
+
+				// Loop through all possible moves for the piece
+				for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
+				{
+					// Is the move legal?
+					if( !WillMovePutKingInCheck(possibleMoves.getMove(idxMove), colour) )
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
 
 	public posDescriptionType getPosDescription(int colour, int pieceNum)
 	{
 		return _piece[colour][pieceNum];
 	}
 
-	// The positions on the board, lookup what piece is there
-	private	pieceDescriptionType[][] _position = new pieceDescriptionType[Board.MAX_X][Board.MAX_Y];
-
-	// The pieces on either side, lookup where it is, or if it is dead
-	private	posDescriptionType[][] _piece =  new posDescriptionType[Board.MAX_ARMIES][Constants.PIECES_PER_SIDE];
-
-//	private JPanel _boardPane;
-
+	// !!! Fix this
+	public boolean isGameOver() { return false; }
 }
 

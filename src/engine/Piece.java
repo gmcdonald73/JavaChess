@@ -6,13 +6,27 @@ package engine;
 
 public abstract class Piece
 {
+	protected final int _colour;
+	protected final int _number;
 
-	public Piece(Army pArmy, int colour, int number)
+	protected int _rank;
+	protected long _materialValue;
+
+	public Piece(int colour, int number)
 	{
-		_pArmy = pArmy;
 		_colour = colour;
 		_number = number;
 	}
+
+	protected Piece(Piece other)
+	{
+		_colour = other._colour;
+		_number = other._number;
+		_rank = other._rank;
+		_materialValue = other._materialValue;
+	}
+
+	public abstract Piece copy();
 
 	// NOTE : This routine should NOT modify the board
 	public abstract void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly);
@@ -99,11 +113,6 @@ public abstract class Piece
 		moveStack.AddMove(move);
 	}
 
-	protected int _colour;
-	protected int _rank;
-	protected int _number;
-	protected long _materialValue;
-	protected Army _pArmy;
 }
 
 

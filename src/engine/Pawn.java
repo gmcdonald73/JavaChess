@@ -2,14 +2,26 @@ package engine;
 
 public class Pawn extends Piece
 {
-	public Pawn(Army pArmy, int colour, int number) 
+	public Pawn(int colour, int number)
 	{ 
-		super(pArmy, colour, number);
+		super(colour, number);
 		_rank = pieceRankType.PR_PAWN;
 		_materialValue = 1;
 	}
 
+	private Pawn(Pawn other)
+	{
+		super(other);
+	}
+
+	@Override
+	public Piece copy()
+	{
+		return new Pawn(this);
+	}
+
 	// NOTE : This routine should NOT modify the board
+	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
 		int startNumMoves = possibleMoves.getNumMoves();
@@ -37,28 +49,28 @@ public class Pawn extends Piece
 
 		if(pieceDescrip._rank == pieceRankType.PR_KNIGHT)
 		{
-			Knight knight = new Knight(_pArmy, _colour, _number);
+			Knight knight = new Knight(_colour, _number);
 			knight.GetMoves(board, possibleMoves, false);
 			return;
 		}
 
 		if(pieceDescrip._rank == pieceRankType.PR_BISHOP)
 		{
-			Bishop bishop = new Bishop(_pArmy, _colour, _number);
+			Bishop bishop = new Bishop(_colour, _number);
 			bishop.GetMoves(board, possibleMoves, false);
 			return;
 		}
 
 		if(pieceDescrip._rank == pieceRankType.PR_ROOK)
 		{
-			Rook rook = new Rook(_pArmy, _colour, _number);
+			Rook rook = new Rook(_colour, _number);
 			rook.GetMoves(board, possibleMoves, false);
 			return;
 		}
 
 		if(pieceDescrip._rank == pieceRankType.PR_QUEEN)
 		{
-			Queen queen = new Queen(_pArmy, _colour, _number);
+			Queen queen = new Queen(_colour, _number);
 			queen.GetMoves(board, possibleMoves, false);
 			return;
 		}

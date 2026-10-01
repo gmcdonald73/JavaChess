@@ -10,6 +10,7 @@ public class ConsoleChess {
     public static void main(String[] args) throws Exception {
 
         Board board = new Board();
+        board.SetupForGame();
 
         Army[] army = new Army[2];
         army[0] = new Army();
@@ -128,8 +129,9 @@ public class ConsoleChess {
                 break;
             }
 
-            if (!legalMove) {
-                if (army[armyNum].IsKingInCheck(board)) {
+            if (!legalMove)
+            {
+                if( board.IsKingInCheck(armyNum)) {
                     System.out.println("Checkmate!");
                 } else {
                     System.out.println("Stalemate!");

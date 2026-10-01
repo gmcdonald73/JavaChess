@@ -3,13 +3,25 @@ package engine;
 public class Rook extends Piece
 {
 
-	public Rook(Army pArmy, int colour, int number) 
+	public Rook(int colour, int number)
 	{ 
-		super(pArmy, colour, number); 
+		super(colour, number);
 		_rank = pieceRankType.PR_ROOK; 
 		_materialValue = 5;
 	}
 
+	private Rook(Rook other)
+	{
+		super(other);
+	}
+
+	@Override
+	public Piece copy()
+	{
+		return new Rook(this);
+	}
+
+	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
 		if( !board.IsPieceAlive(_colour, _number) )

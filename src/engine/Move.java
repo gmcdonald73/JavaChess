@@ -18,7 +18,6 @@ public class Move
 	public boolean _bEnPassantCapture;
 	public int _score;
 	public boolean _bLegalMove;
-	public boolean _bIsDevelopingMove; // !!! What to do with this?
 
 	public void Copy(Move src)
 	{
@@ -49,6 +48,38 @@ public class Move
 		System.out.println(sMove);
 	}
 
+	public String StartPos() {
+		return FormatRelPos(_colour, _startRX, _startRY);
+	}
+
+	public String EndPos() {
+		return FormatRelPos(_colour, _endRX, _endRY);
+	}
+
+	public String FormatRelPos(int colour, int rx, int ry)
+	{
+		String pos = "";
+		int absX = 0;
+		int absY = 0;
+
+		// Convert source and destination to absolute co-ords
+		relPosType relPos = new relPosType();
+		posType absPos = new posType();
+
+		relPos._colour = _colour;
+		relPos._rx = _startRX;
+		relPos._ry = _startRY;
+
+		Board.ConvertRelToAbsCoords(relPos, absPos);
+
+		absX = absPos._x;
+		absY = absPos._y;
+
+		// Display source
+		pos = pos + ((char)('a' + absX)) + (absY + 1);
+
+		return pos;
+	}
 
 	public String Format(int moveNum)
 	{

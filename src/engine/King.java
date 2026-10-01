@@ -2,21 +2,26 @@ package engine;
 
 public class King extends Piece
 {
-	public King(Army pArmy, int colour, int number)
+	public King(int colour, int number)
 	{ 
-		super(pArmy, colour, number);
+		super(colour, number);
 		_rank = pieceRankType.PR_KING; 
 		_materialValue = 1; // so formulaes work if only king left
+	}
 
-		int i;
+	private King(King other)
+	{
+		super(other);
+	}
 
-		for(i=0; i<8; i++)
-		{
-			_testMove[i] = new Move();
-		}
+	@Override
+	public Piece copy()
+	{
+		return new King(this);
 	}
 
 	// NOTE : This routine should NOT modify the board
+	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
 		if( !board.IsPieceAlive(_colour, _number) )
@@ -33,6 +38,13 @@ public class King extends Piece
 
 		kingRX = relPos._rx;
 		kingRY = relPos._ry;
+
+		Move[] _testMove = new Move[8];
+
+		for(i=0; i<8; i++)
+		{
+			_testMove[i] = new Move();
+		}
 
 		// check NW is on the board, has no friendly piece, if so add to list
 		_testMove[0]._endRX = kingRX - 1;
@@ -98,7 +110,7 @@ public class King extends Piece
 		}
 
 		// Is king in check?
-		if( _pArmy.IsKingInCheck(board) )
+		if( board.IsKingInCheck(_colour) )
 		{
 			// King can't castle if it is check
 			return;
@@ -220,7 +232,7 @@ public class King extends Piece
 
 		for(rx=startRX; rx<=endRX; rx++)
 		{
-			if( _pArmy.Enemy().CanCaptureAt(board, _colour, rx, 1) )
+			if( board.CanCaptureAt(1 - _colour, _colour, rx, 1) )
 			{
 				return false;
 			}
@@ -229,7 +241,7 @@ public class King extends Piece
 		return true;
 	}
 
-	protected Move[] _testMove = new Move[8];
+	// protected Move[] _testMove = new Move[8];
 }
 
 

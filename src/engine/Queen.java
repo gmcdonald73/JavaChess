@@ -3,13 +3,25 @@ package engine;
 public class Queen extends Piece
 {
 
-	public Queen(Army pArmy, int colour, int number) 
+	public Queen(int colour, int number)
 	{ 
-		super(pArmy, colour, number);
+		super(colour, number);
 		_rank = pieceRankType.PR_QUEEN; 
 		_materialValue = 9;
 	}
 
+	private Queen(Queen other)
+	{
+		super(other);
+	}
+
+	@Override
+	public Piece copy()
+	{
+		return new Queen(this);
+	}
+
+	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
 		if( !board.IsPieceAlive(_colour, _number) )

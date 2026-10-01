@@ -3,20 +3,25 @@ package engine;
 public class Knight extends Piece
 {
 
-	public Knight(Army pArmy, int colour, int number) 
+	public Knight(int colour, int number)
 	{ 
-		super(pArmy, colour, number);
+		super(colour, number);
 		_rank = pieceRankType.PR_KNIGHT; 
 		_materialValue = 3;
-
-		int i;
-
-		for(i=0; i<8; i++)
-		{
-			_testMove[i] = new Move();
-		}
 	}
 
+	private Knight(Knight other)
+	{
+		super(other);
+	}
+
+	@Override
+	public Piece copy()
+	{
+		return new Knight(this);
+	}
+
+	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
 		if( !board.IsPieceAlive(_colour, _number) )
@@ -33,6 +38,13 @@ public class Knight extends Piece
 
 		knightRX = relPos._rx;
 		knightRY = relPos._ry;
+
+		Move[] _testMove = new Move[8];
+
+		for(i=0; i<8; i++)
+		{
+			_testMove[i] = new Move();
+		}
 
 		// Check two points to the north
 		_testMove[0]._startRX = knightRX;
@@ -101,7 +113,7 @@ public class Knight extends Piece
 		}
 	}
 
-	protected Move[] _testMove = new Move[8];
+//	protected Move[] _testMove = new Move[8];
 
 }
 

@@ -1,5 +1,6 @@
 package engine;
 
+// !!! replace with enum
 public class pieceRankType
 { 
 	public static final int PR_KING = 0; 

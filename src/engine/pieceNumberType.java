@@ -1,5 +1,6 @@
 package engine;
 
+// !!! replace with enum
 public class pieceNumberType
 { 
 	public static final int PN_PAWN_1 = 0;
