@@ -3,10 +3,10 @@ package engine;
 public class Rook extends Piece
 {
 
-	public Rook(int colour, int number)
+	public Rook(Colour colour, int number)
 	{ 
 		super(colour, number);
-		_rank = pieceRankType.PR_ROOK; 
+		_rank = PieceRank.ROOK;
 		_materialValue = 5;
 	}
 
@@ -91,10 +91,10 @@ public class Rook extends Piece
 								rookRY, 
 								currRelPos._x, 
 								currRelPos._y, 
-								(pieceDescrip._colour != pieceColourType.PC_NONE), 
-								pieceRankType.PR_NONE);
+								(pieceDescrip._colour != Colour.NONE),
+								PieceRank.NONE);
 
-						if ( pieceDescrip._colour != pieceColourType.PC_NONE )
+						if ( pieceDescrip._colour != Colour.NONE )
 						{
 							bDone = true;
 						}

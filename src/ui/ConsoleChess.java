@@ -18,12 +18,12 @@ public class ConsoleChess {
 
         // Initialise the two sides
         army[0].Initialise(
-                pieceColourType.PC_WHITE,
+                Colour.WHITE,
                 board,
                 army[1]);
 
         army[1].Initialise(
-                pieceColourType.PC_BLACK,
+                Colour.BLACK,
                 board,
                 army[0]);
 
@@ -117,7 +117,7 @@ public class ConsoleChess {
                     Move move = engineMoves[0];
 
                     System.out.println(
-                            "Black: " + move.Format(moveNum));
+                            "Black: " + move.Format(moveNum) + " : " + move._score);
 
                     board.MakeMove(move);
 
@@ -131,7 +131,8 @@ public class ConsoleChess {
 
             if (!legalMove)
             {
-                if( board.IsKingInCheck(armyNum)) {
+                Colour armyColour = armyNum == 0 ? Colour.WHITE : Colour.BLACK;
+                if( board.IsKingInCheck(armyColour)) {
                     System.out.println("Checkmate!");
                 } else {
                     System.out.println("Stalemate!");

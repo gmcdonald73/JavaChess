@@ -3,10 +3,10 @@ package engine;
 public class Knight extends Piece
 {
 
-	public Knight(int colour, int number)
+	public Knight(Colour colour, int number)
 	{ 
 		super(colour, number);
-		_rank = pieceRankType.PR_KNIGHT; 
+		_rank = PieceRank.KNIGHT;
 		_materialValue = 3;
 	}
 
@@ -109,7 +109,7 @@ public class Knight extends Piece
 				continue;
 			}
 
-			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != pieceColourType.PC_NONE), pieceRankType.PR_NONE);
+			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
 		}
 	}
 

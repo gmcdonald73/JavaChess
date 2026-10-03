@@ -12,3 +12,5 @@ public class pieceRankType
 	public static final int PR_MAX_RANKS = 6;
 	public static final int PR_NONE = 7; // e.g. no piece at this position  
 }
+
+

@@ -3,9 +3,9 @@ package engine;
 public abstract class ChessPlayer {
 
     private final String name;
-    private final int colour;
+    private final Colour colour;
 
-    protected ChessPlayer(String name, int colour) {
+    protected ChessPlayer(String name, Colour colour) {
         this.name = name;
         this.colour = colour;
     }
@@ -14,7 +14,7 @@ public abstract class ChessPlayer {
         return name;
     }
 
-    public int getColour() {
+    public Colour getColour() {
         return colour;
     }
 

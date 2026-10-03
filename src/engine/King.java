@@ -2,10 +2,10 @@ package engine;
 
 public class King extends Piece
 {
-	public King(int colour, int number)
+	public King(Colour colour, int number)
 	{ 
 		super(colour, number);
-		_rank = pieceRankType.PR_KING; 
+		_rank = PieceRank.KING;
 		_materialValue = 1; // so formulaes work if only king left
 	}
 
@@ -88,7 +88,7 @@ public class King extends Piece
 
 				if( pieceDescrip._colour != _colour )
 				{
-					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != pieceColourType.PC_NONE), pieceRankType.PR_NONE);
+					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
 				}
 			}
 		}
@@ -120,9 +120,9 @@ public class King extends Piece
 		// (queenside for white, king side for black)
 		if(CanKingCastle(board, true))
 		{
-			AddMove(possibleMoves, kingRX, kingRY, kingRX - 2, kingRY, false, pieceRankType.PR_NONE);
+			AddMove(possibleMoves, kingRX, kingRY, kingRX - 2, kingRY, false, PieceRank.NONE);
 
-			if(_colour == pieceColourType.PC_WHITE)
+			if(_colour == Colour.WHITE)
 			{
 				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bCastleQueenSide = true;	
 			}
@@ -136,9 +136,9 @@ public class King extends Piece
 		// king side for white, queen side for black
 		if(CanKingCastle(board, false))
 		{
-			AddMove(possibleMoves, kingRX, kingRY, kingRX + 2, kingRY, false, pieceRankType.PR_NONE);
+			AddMove(possibleMoves, kingRX, kingRY, kingRX + 2, kingRY, false, PieceRank.NONE);
 
-			if(_colour == pieceColourType.PC_WHITE)
+			if(_colour == Colour.WHITE)
 			{
 				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bCastleKingSide = true;	
 			}
@@ -160,7 +160,7 @@ public class King extends Piece
 		int kingRX;
 		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
 
-		if( _colour == pieceColourType.PC_WHITE )
+		if( _colour == Colour.WHITE )
 		{
 			kingRX = 5;
 		}
@@ -181,7 +181,7 @@ public class King extends Piece
 		// See if there is a rook at the correct position
 		pieceDescrip = board.WhatIsAt(_colour, rookStartX, 1);
 
-		if( !((pieceDescrip._rank == pieceRankType.PR_ROOK) && (pieceDescrip._colour == _colour)) )
+		if( !((pieceDescrip._rank == PieceRank.ROOK) && (pieceDescrip._colour == _colour)) )
 		{
 			return false;
 		}
@@ -212,7 +212,7 @@ public class King extends Piece
 		{
 			pieceDescrip = board.WhatIsAt(_colour, rx, 1);
 
-			if(pieceDescrip._rank != pieceRankType.PR_NONE)
+			if(pieceDescrip._rank != PieceRank.NONE)
 			{
 				return false;
 			}
@@ -232,7 +232,7 @@ public class King extends Piece
 
 		for(rx=startRX; rx<=endRX; rx++)
 		{
-			if( board.CanCaptureAt(1 - _colour, _colour, rx, 1) )
+			if( board.CanCaptureAt(_colour.opposite(), _colour, rx, 1) )
 			{
 				return false;
 			}

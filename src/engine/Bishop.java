@@ -3,10 +3,10 @@ package engine;
 public class Bishop extends Piece
 {
 
-	public Bishop(int colour, int number)
+	public Bishop(Colour colour, int number)
 	{ 
 		super(colour, number);
-		_rank = pieceRankType.PR_BISHOP; 
+		_rank = PieceRank.BISHOP;
 		_materialValue = 3;
 	}
 
@@ -86,9 +86,9 @@ public class Bishop extends Piece
 					}
 					else 
 					{
-						AddMove(possibleMoves, bishopRX, bishopRY, currRelPos._x, currRelPos._y, (pieceDescrip._colour != pieceColourType.PC_NONE), pieceRankType.PR_NONE);
+						AddMove(possibleMoves, bishopRX, bishopRY, currRelPos._x, currRelPos._y, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
 
-						if ( pieceDescrip._colour != pieceColourType.PC_NONE )
+						if ( pieceDescrip._colour != Colour.NONE )
 						{
 							bDone = true;
 						}

@@ -6,13 +6,13 @@ package engine;
 
 public abstract class Piece
 {
-	protected final int _colour;
+	protected final Colour _colour;
 	protected final int _number;
 
-	protected int _rank;
+	protected PieceRank _rank;
 	protected long _materialValue;
 
-	public Piece(int colour, int number)
+	public Piece(Colour colour, int number)
 	{
 		_colour = colour;
 		_number = number;
@@ -32,7 +32,7 @@ public abstract class Piece
 	public abstract void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly);
 
 	// NOTE : This routine should NOT modify the board
-	public boolean CanPieceCaptureAt(Board board, int colour, int rx, int ry)
+	public boolean CanPieceCaptureAt(Board board, Colour colour, int rx, int ry)
 	{
 		relPosType posMyCoords = new relPosType(); // The position to capture at in our co-ordinate system
 
@@ -75,22 +75,22 @@ public abstract class Piece
 	}
 
 
-	public int Colour() { return _colour; }
+	public Colour Colour() { return _colour; }
 
 	// NOTE : This routine should NOT modify the board
-	public int Rank(Board board) { return _rank; }
+	public PieceRank Rank(Board board) { return _rank; }
 
 	public int Number() { return _number; }
 
 	// NOTE : This routine should NOT modify the board
 	public char Symbol(Board board)
 	{
-		return Board.ConvertRankToSymbol(Rank(board));
+		return Rank(board).getSymbol();
 	}
 
 	public long MaterialValue() { return _materialValue; }
 
-	public void AddMove(MoveStack moveStack, int startX, int startY, int endX, int endY, boolean bIsCapture, int promoteTo)
+	public void AddMove(MoveStack moveStack, int startX, int startY, int endX, int endY, boolean bIsCapture, PieceRank promoteTo)
 	{
 		Move move = new Move();
 

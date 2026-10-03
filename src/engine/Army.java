@@ -17,7 +17,7 @@ public class Army
 	}
 
 	// !!! Move to board
-	public void Initialise(int colour, Board board, Army pEnemy)
+	public void Initialise(Colour colour, Board board, Army pEnemy)
 	{
 		_colour = colour;
 		_pEnemy = pEnemy;
@@ -43,7 +43,7 @@ public class Army
 	// !! Move to board
 	public void SetupForGame(Board board)
 	{
-		if (_colour == pieceColourType.PC_WHITE)
+		if (_colour == Colour.WHITE)
 		{
 			board.PlacePiece(_piece[pieceNumberType.PN_PAWN_1], 'a', 2);
 			board.PlacePiece(_piece[pieceNumberType.PN_PAWN_2], 'b', 2);
@@ -221,12 +221,21 @@ public class Army
 		{
 			// Check if the enemy is checkmated or stalemated
 //			bEnemyHasLegalMoves = _pEnemy.HasAnyLegalMoves(testBoard);
-			bEnemyHasLegalMoves = testBoard.HasAnyLegalMoves(1 - _colour);
+			bEnemyHasLegalMoves = testBoard.HasAnyLegalMoves(_colour.opposite());
 
 			if( bEnemyHasLegalMoves )
 			{
 				//	evaluate the position on the board
-				moveStack[lookAheadLevel]._score = RateSituation(testBoard, moveStack[lookAheadLevel]);
+				moveStack[lookAheadLevel]._score = RateSituation(testBoard); //, moveStack[lookAheadLevel]);
+
+				// Display movestack and score
+				String sMoveStack = "";
+				for(int x =0; x<=lookAheadLevel; x++){
+					sMoveStack += moveStack[x].Format(0) + ",";
+				}
+				sMoveStack += " : " + moveStack[lookAheadLevel]._score;
+				System.out.println(sMoveStack);
+
 			}
 		}
 		else
@@ -245,7 +254,7 @@ public class Army
 		// See if we have won or stalemated, also set flags for displaying checks
 		if( bEnemyHasLegalMoves )
 		{
-			if(  testBoard.IsKingInCheck(1 - _colour) )
+			if(  testBoard.IsKingInCheck(_colour.opposite()) )
 			{
 				moveStack[lookAheadLevel]._bIsCheck = true;				
 			}
@@ -257,7 +266,7 @@ public class Army
 		else
 		{
 			// Enemy has no legal moves
-			if( testBoard.IsKingInCheck(1 - _colour) )
+			if( testBoard.IsKingInCheck(_colour.opposite()) )
 			{
 				// Enemy is checkmated, we win
 				moveStack[lookAheadLevel]._score = Constants.MS_WIN;
@@ -288,7 +297,7 @@ public class Army
 	// move = last move made to get the board into this state
 
 	// NOTE: move is the last move made (eg if lookahead is even this is the move made by opposite side).
-	public int RateSituation(Board board, Move move)
+	public int RateSituation(Board board)
 	{
 		int rating;
 		long score, enemyScore;
@@ -367,7 +376,7 @@ public class Army
 						pieceDescrip = board.WhatIsAt(_colour, relPos._rx - 1, relPos._ry - 1);
 
 						if ((pieceDescrip._colour == _colour) && 
-							(pieceDescrip._rank == pieceRankType.PR_PAWN))
+							(pieceDescrip._rank == PieceRank.PAWN))
 						{
 							score += 1;
 						}
@@ -379,7 +388,7 @@ public class Army
 						pieceDescrip = board.WhatIsAt(_colour, relPos._rx + 1, relPos._ry - 1);
 
 						if ((pieceDescrip._colour == _colour) && 
-							(pieceDescrip._rank == pieceRankType.PR_PAWN))
+							(pieceDescrip._rank == PieceRank.PAWN))
 						{
 							score += 1;
 						}
@@ -392,134 +401,6 @@ public class Army
 
 		return score;
 	}
-
-		// !!! Move to Board
-	// When we recurse back out, the board is automatically restored
-	// Returns true if the army has one or more legal moves
-	// Returns false if the army is checkmated or stalemated
-/*
-	public boolean HasAnyLegalMoves(Board board)
-	{
-		// Sneaky stuff, take a copy so that the original board is not modified.
-		// This effectively simulates pass by value for board.
-		// !!! do we need to do this here, or only in methods that actually modify the board?
-		Board testBoard = board.copy();
-
-		int idxPiece;
-		boolean bFoundLegalMove = false;
-		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
-
-		// Loop through all pieces on my side
-		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
-		{
-			int idxMove;
-
-			possibleMoves.Clear();
-
-			if( _piece[idxPiece] != null )
-			{
-				if(testBoard.IsPieceAlive(_colour, idxPiece))
-				{
-					_piece[idxPiece].GetMoves(testBoard, possibleMoves, false);
-
-					// Loop through all possible moves for the piece
-					for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
-					{
-						// Is the move legal?
-						if( ! testBoard.WillMovePutKingInCheck(possibleMoves.getMove(idxMove), _colour) )
-						{
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-*/
-
-	// !!! Move to Board
-	// NOTE : This routine should NOT modify the board
-/*
-	public boolean IsKingInCheck(Board board)
-	{
-		// Get the current position of the king
-		relPosType relPos = new relPosType();
-
-		board.WhereIs(_colour, pieceNumberType.PN_KING, relPos);
-
-		return _pEnemy.CanCaptureAt(board, _colour, relPos._rx, relPos._ry);
-	}
-*/
-
-
-	// !!! Move to Board
-	// This routine assume that the move is a valid move for the piece,
-	// It determines whether the move would put the king in check
-	//
-/*
-	public boolean WillMovePutKingInCheck(Board board, Move move)
-	{
-		// Sneaky stuff, take a copy so that the original board is not modified.
-		// This effectively simulates pass by value for board.
-		Board testBoard = board.copy();
-
-		// Make the move
-		testBoard.MakeMove(move);
-
-		// Determine if my own king is in check (if so then reject this move)
-		if( testBoard.IsKingInCheck(_colour) )
-		{
-			return true;
-		}
-
-		return false;
-	}
-*/
-	// !!! Move to Board
-	// NOTE : This routine should NOT modify the board
-/*
-	public boolean CanCaptureAt(Board board, int colour, int rx, int ry)
-	{
-		int i;
-
-		for(i=0; i<Constants.PIECES_PER_SIDE; i++)
-		{
-			if( _piece[i] != null )
-			{
-				if( _piece[i].CanPieceCaptureAt(board, colour, rx, ry) )
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-*/
-
-	// !!! Move to Board
-	// NOTE : This routine should NOT modify the board
-	// !!! Modify this (or GetMoves on Piece) to exclude moves that would place king in check
-	/*public void GetMoves(Board board, MoveStack moves, boolean bCapturesOnly)
-	{
-		int idxPiece;
-
-		// Empty the movestack
-		moves.Clear();
-
-		for(idxPiece=0; idxPiece<Constants.PIECES_PER_SIDE; idxPiece++)
-		{
-			if( _piece[idxPiece] != null )
-			{
-				if(board.IsPieceAlive(_colour, idxPiece))
-				{
-					_piece[idxPiece].GetMoves(board, moves, false);
-				}
-			}
-		}
-	}*/
 
 	// !!! Move to HumanPlayer
 	// Convert a move string the user has entered into a Move
@@ -534,13 +415,13 @@ public class Army
 		// Set default values
 		move._colour = _colour;
 		move._number = pieceNumberType.PN_NONE;
-		move._rank = pieceRankType.PR_NONE;
+		move._rank = PieceRank.NONE;
 		move._startRX = -1; // These are relative for each army
 		move._startRY = -1;
 		move._endRX = -1; // These are relative for each army
 		move._endRY = -1;
 		move._bIsCapture = false; // Is the move a capture?
-		move._promoteTo = pieceRankType.PR_NONE;
+		move._promoteTo = PieceRank.NONE;
 		move._bIsCheck = false;
 		move._bIsMate = false;
 		move._bCastleQueenSide = false;
@@ -588,12 +469,12 @@ public class Army
 		// Check for castling moves
 		if( (sMove.compareToIgnoreCase("O-O") == 0) || (sMove.compareToIgnoreCase("O-O-O") == 0))
 		{
-			move._rank = pieceRankType.PR_KING;
+			move._rank = PieceRank.KING;
 
 			move._startRY = 1;
 			move._endRY = 1;
 
-			if(_colour == pieceColourType.PC_WHITE)
+			if(_colour == Colour.WHITE)
 			{
 				move._startRX = 5;
 
@@ -637,7 +518,7 @@ public class Army
 			}
 
 			// Breakdown move into component characters
-			move._rank = board.ConvertSymbolToRank(sMove.charAt(0));
+			move._rank = PieceRank.fromSymbol(sMove.charAt(0)); // board.ConvertSymbolToRank(sMove.charAt(0));
 			sourceAX = sMove.charAt(1) - 'a';
 			sourceAY = sMove.charAt(2) - '1';
 
@@ -677,11 +558,11 @@ public class Army
 
 			if( moveStringLen == 7 )
 			{
-				move._promoteTo = board.ConvertSymbolToRank(sMove.charAt(6));
+				move._promoteTo = PieceRank.fromSymbol(sMove.charAt(6)); // board.ConvertSymbolToRank(sMove.charAt(6));
 			}
 			else
 			{
-				move._promoteTo = pieceRankType.PR_NONE;
+				move._promoteTo = PieceRank.NONE;
 			}
 		}
 
@@ -689,7 +570,7 @@ public class Army
 		pieceDescriptionType pieceDescrip;
 		pieceDescrip = board.WhatIsAt(_colour, move._startRX, move._startRY);
 
-		if (pieceDescrip._rank == pieceRankType.PR_NONE )
+		if (pieceDescrip._rank == PieceRank.NONE )
 		{
 			_sErrMsg = "Illegal move - there is no piece at " + sMove.charAt(1) + sMove.charAt(2);
 			return false;
@@ -774,20 +655,7 @@ public class Army
 	}
 
 	// !!! Move to ChessPlayer
-	public int Colour() { return _colour; }
-
-	// !!! Move to Board
-/*
-	public Piece Piece(int pieceNum)
-	{
-		if( (pieceNum < 0) || (pieceNum >= pieceNumberType.PN_MAX_PIECES))
-		{
-			assert false;
-		}
-
-		return _piece[pieceNum];
-	}
-*/
+	// public int Colour() { return _colour; }
 
 	// !!! remove
 	Army Enemy() { return _pEnemy; }
@@ -797,7 +665,7 @@ public class Army
 
 	// !!! remove these
 	private Piece[] _piece = new Piece[Constants.PIECES_PER_SIDE];
-	int _colour;
+	Colour _colour;
 	Army _pEnemy;
 	String _sErrMsg;
 }

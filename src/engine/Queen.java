@@ -3,10 +3,10 @@ package engine;
 public class Queen extends Piece
 {
 
-	public Queen(int colour, int number)
+	public Queen(Colour colour, int number)
 	{ 
 		super(colour, number);
-		_rank = pieceRankType.PR_QUEEN; 
+		_rank = PieceRank.QUEEN;
 		_materialValue = 9;
 	}
 
@@ -111,10 +111,10 @@ public class Queen extends Piece
 								queenRY, 
 								currRelPos._x, 
 								currRelPos._y, 
-								(pieceDescrip._colour != pieceColourType.PC_NONE), 
-								pieceRankType.PR_NONE);
+								(pieceDescrip._colour != Colour.NONE),
+								PieceRank.NONE);
 
-						if ( pieceDescrip._colour != pieceColourType.PC_NONE )
+						if ( pieceDescrip._colour != Colour.NONE )
 						{
 							bDone = true;
 						}

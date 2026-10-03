@@ -2,6 +2,9 @@ package ui;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import engine.*;
 
@@ -9,9 +12,22 @@ public class ConsoleChess2 {
 
     public static void main(String[] args) throws Exception {
 
-        new ChessGame(
-                new HumanPlayer("Graeme", 0),
-                new HumanPlayer("GMac", 1)
-        ).play();
+        ChessGame game = new ChessGame(
+                new BotPlayer("Graeme", Colour.WHITE),
+                new BotPlayer("GMac", Colour.BLACK)
+        );
+
+        game.play();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+
+        String fileName = "game_" + now.format(formatter) + ".pgn";
+
+        Path file = Path.of("games", fileName);
+        System.out.println("Saving game to " + file.toAbsolutePath());
+        PgnWriter.save(game,  file);
     }
 }
