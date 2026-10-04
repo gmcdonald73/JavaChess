@@ -22,26 +22,6 @@ public class TestEngine {
         int whiteSituation1 = white.RateSituation(board, Colour.WHITE);
         int blackSituation1 = black.RateSituation(board, Colour.BLACK);
 
-        Army[] army = new Army[2];
-        army[0] = new Army();
-        army[1] = new Army();
-
-        // Initialise the two sides
-        army[0].Initialise(
-                Colour.WHITE,
-                board,
-                army[1]);
-
-        army[1].Initialise(
-                Colour.BLACK,
-                board,
-                army[0]);
-
-        long whiteArmyRating2 = army[0].RateArmy(board);
-        long blackArmyRating2 = army[1].RateArmy(board);
-        int whiteSituation2 = army[0].RateSituation(board);
-        int blackSituation2 = army[1].RateSituation(board);
-
     }
 
     static boolean makeMove(Colour colour, String input, Board board)

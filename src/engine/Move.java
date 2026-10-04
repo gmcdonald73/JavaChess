@@ -25,7 +25,7 @@ public class Move
 	public Move()
 	{
 		_colour = Colour.NONE;
-		_number = pieceNumberType.PN_NONE;
+		_number = PieceNumber.NONE;
 		_rank = PieceRank.NONE;
 		_startRX = -1; // These are relative for each army
 		_startRY = -1;

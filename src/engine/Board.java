@@ -97,7 +97,7 @@ public class Board
 			{
 				_position[x][y]._colour = Colour.NONE;
 				_position[x][y]._rank = PieceRank.NONE;
-				_position[x][y]._number = pieceNumberType.PN_NONE;
+				_position[x][y]._number = PieceNumber.NONE;
 			}
 		}
 
@@ -120,77 +120,77 @@ public class Board
 	{
 		Colour colour = Colour.WHITE;
 
-		_whitePieces[pieceNumberType.PN_PAWN_1] = new Pawn( colour, pieceNumberType.PN_PAWN_1);
-		_whitePieces[pieceNumberType.PN_PAWN_2] = new Pawn( colour, pieceNumberType.PN_PAWN_2);
-		_whitePieces[pieceNumberType.PN_PAWN_3] = new Pawn( colour, pieceNumberType.PN_PAWN_3);
-		_whitePieces[pieceNumberType.PN_PAWN_4] = new Pawn( colour, pieceNumberType.PN_PAWN_4);
-		_whitePieces[pieceNumberType.PN_PAWN_5] = new Pawn( colour, pieceNumberType.PN_PAWN_5);
-		_whitePieces[pieceNumberType.PN_PAWN_6] = new Pawn( colour, pieceNumberType.PN_PAWN_6);
-		_whitePieces[pieceNumberType.PN_PAWN_7] = new Pawn( colour, pieceNumberType.PN_PAWN_7);
-		_whitePieces[pieceNumberType.PN_PAWN_8] = new Pawn( colour, pieceNumberType.PN_PAWN_8);
-		_whitePieces[pieceNumberType.PN_ROOK_1] = new Rook( colour, pieceNumberType.PN_ROOK_1);
-		_whitePieces[pieceNumberType.PN_ROOK_2] = new Rook( colour, pieceNumberType.PN_ROOK_2);
-		_whitePieces[pieceNumberType.PN_KNIGHT_1] = new Knight( colour, pieceNumberType.PN_KNIGHT_1);
-		_whitePieces[pieceNumberType.PN_KNIGHT_2] = new Knight( colour, pieceNumberType.PN_KNIGHT_2);
-		_whitePieces[pieceNumberType.PN_BISHOP_1] = new Bishop( colour, pieceNumberType.PN_BISHOP_1);
-		_whitePieces[pieceNumberType.PN_BISHOP_2] = new Bishop( colour, pieceNumberType.PN_BISHOP_2);
-		_whitePieces[pieceNumberType.PN_QUEEN] = new Queen( colour, pieceNumberType.PN_QUEEN);
-		_whitePieces[pieceNumberType.PN_KING] = new King( colour, pieceNumberType.PN_KING);
+		_whitePieces[PieceNumber.PAWN_1] = new Pawn( colour, PieceNumber.PAWN_1);
+		_whitePieces[PieceNumber.PAWN_2] = new Pawn( colour, PieceNumber.PAWN_2);
+		_whitePieces[PieceNumber.PAWN_3] = new Pawn( colour, PieceNumber.PAWN_3);
+		_whitePieces[PieceNumber.PAWN_4] = new Pawn( colour, PieceNumber.PAWN_4);
+		_whitePieces[PieceNumber.PAWN_5] = new Pawn( colour, PieceNumber.PAWN_5);
+		_whitePieces[PieceNumber.PAWN_6] = new Pawn( colour, PieceNumber.PAWN_6);
+		_whitePieces[PieceNumber.PAWN_7] = new Pawn( colour, PieceNumber.PAWN_7);
+		_whitePieces[PieceNumber.PAWN_8] = new Pawn( colour, PieceNumber.PAWN_8);
+		_whitePieces[PieceNumber.ROOK_1] = new Rook( colour, PieceNumber.ROOK_1);
+		_whitePieces[PieceNumber.ROOK_2] = new Rook( colour, PieceNumber.ROOK_2);
+		_whitePieces[PieceNumber.KNIGHT_1] = new Knight( colour, PieceNumber.KNIGHT_1);
+		_whitePieces[PieceNumber.KNIGHT_2] = new Knight( colour, PieceNumber.KNIGHT_2);
+		_whitePieces[PieceNumber.BISHOP_1] = new Bishop( colour, PieceNumber.BISHOP_1);
+		_whitePieces[PieceNumber.BISHOP_2] = new Bishop( colour, PieceNumber.BISHOP_2);
+		_whitePieces[PieceNumber.QUEEN] = new Queen( colour, PieceNumber.QUEEN);
+		_whitePieces[PieceNumber.KING] = new King( colour, PieceNumber.KING);
 
 		colour = Colour.BLACK;
 
-		_blackPieces[pieceNumberType.PN_PAWN_1] = new Pawn( colour, pieceNumberType.PN_PAWN_1);
-		_blackPieces[pieceNumberType.PN_PAWN_2] = new Pawn( colour, pieceNumberType.PN_PAWN_2);
-		_blackPieces[pieceNumberType.PN_PAWN_3] = new Pawn( colour, pieceNumberType.PN_PAWN_3);
-		_blackPieces[pieceNumberType.PN_PAWN_4] = new Pawn( colour, pieceNumberType.PN_PAWN_4);
-		_blackPieces[pieceNumberType.PN_PAWN_5] = new Pawn( colour, pieceNumberType.PN_PAWN_5);
-		_blackPieces[pieceNumberType.PN_PAWN_6] = new Pawn( colour, pieceNumberType.PN_PAWN_6);
-		_blackPieces[pieceNumberType.PN_PAWN_7] = new Pawn( colour, pieceNumberType.PN_PAWN_7);
-		_blackPieces[pieceNumberType.PN_PAWN_8] = new Pawn( colour, pieceNumberType.PN_PAWN_8);
-		_blackPieces[pieceNumberType.PN_ROOK_1] = new Rook( colour, pieceNumberType.PN_ROOK_1);
-		_blackPieces[pieceNumberType.PN_ROOK_2] = new Rook( colour, pieceNumberType.PN_ROOK_2);
-		_blackPieces[pieceNumberType.PN_KNIGHT_1] = new Knight( colour, pieceNumberType.PN_KNIGHT_1);
-		_blackPieces[pieceNumberType.PN_KNIGHT_2] = new Knight( colour, pieceNumberType.PN_KNIGHT_2);
-		_blackPieces[pieceNumberType.PN_BISHOP_1] = new Bishop( colour, pieceNumberType.PN_BISHOP_1);
-		_blackPieces[pieceNumberType.PN_BISHOP_2] = new Bishop( colour, pieceNumberType.PN_BISHOP_2);
-		_blackPieces[pieceNumberType.PN_QUEEN] = new Queen( colour, pieceNumberType.PN_QUEEN);
-		_blackPieces[pieceNumberType.PN_KING] = new King( colour, pieceNumberType.PN_KING);
+		_blackPieces[PieceNumber.PAWN_1] = new Pawn( colour, PieceNumber.PAWN_1);
+		_blackPieces[PieceNumber.PAWN_2] = new Pawn( colour, PieceNumber.PAWN_2);
+		_blackPieces[PieceNumber.PAWN_3] = new Pawn( colour, PieceNumber.PAWN_3);
+		_blackPieces[PieceNumber.PAWN_4] = new Pawn( colour, PieceNumber.PAWN_4);
+		_blackPieces[PieceNumber.PAWN_5] = new Pawn( colour, PieceNumber.PAWN_5);
+		_blackPieces[PieceNumber.PAWN_6] = new Pawn( colour, PieceNumber.PAWN_6);
+		_blackPieces[PieceNumber.PAWN_7] = new Pawn( colour, PieceNumber.PAWN_7);
+		_blackPieces[PieceNumber.PAWN_8] = new Pawn( colour, PieceNumber.PAWN_8);
+		_blackPieces[PieceNumber.ROOK_1] = new Rook( colour, PieceNumber.ROOK_1);
+		_blackPieces[PieceNumber.ROOK_2] = new Rook( colour, PieceNumber.ROOK_2);
+		_blackPieces[PieceNumber.KNIGHT_1] = new Knight( colour, PieceNumber.KNIGHT_1);
+		_blackPieces[PieceNumber.KNIGHT_2] = new Knight( colour, PieceNumber.KNIGHT_2);
+		_blackPieces[PieceNumber.BISHOP_1] = new Bishop( colour, PieceNumber.BISHOP_1);
+		_blackPieces[PieceNumber.BISHOP_2] = new Bishop( colour, PieceNumber.BISHOP_2);
+		_blackPieces[PieceNumber.QUEEN] = new Queen( colour, PieceNumber.QUEEN);
+		_blackPieces[PieceNumber.KING] = new King( colour, PieceNumber.KING);
 
 		// White
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_1], 'a', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_2], 'b', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_3], 'c', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_4], 'd', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_5], 'e', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_6], 'f', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_7], 'g', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_PAWN_8], 'h', 2);
-		PlacePiece(_whitePieces[pieceNumberType.PN_ROOK_1], 'a', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_ROOK_2], 'h', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_KNIGHT_1], 'b', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_KNIGHT_2], 'g', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_BISHOP_1], 'c', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_BISHOP_2], 'f', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_QUEEN], 'd', 1);
-		PlacePiece(_whitePieces[pieceNumberType.PN_KING], 'e', 1);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_1], 'a', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_2], 'b', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_3], 'c', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_4], 'd', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_5], 'e', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_6], 'f', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_7], 'g', 2);
+		PlacePiece(_whitePieces[PieceNumber.PAWN_8], 'h', 2);
+		PlacePiece(_whitePieces[PieceNumber.ROOK_1], 'a', 1);
+		PlacePiece(_whitePieces[PieceNumber.ROOK_2], 'h', 1);
+		PlacePiece(_whitePieces[PieceNumber.KNIGHT_1], 'b', 1);
+		PlacePiece(_whitePieces[PieceNumber.KNIGHT_2], 'g', 1);
+		PlacePiece(_whitePieces[PieceNumber.BISHOP_1], 'c', 1);
+		PlacePiece(_whitePieces[PieceNumber.BISHOP_2], 'f', 1);
+		PlacePiece(_whitePieces[PieceNumber.QUEEN], 'd', 1);
+		PlacePiece(_whitePieces[PieceNumber.KING], 'e', 1);
 
 		// Black
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_1], 'h', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_2], 'g', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_3], 'f', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_4], 'e', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_5], 'd', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_6], 'c', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_7], 'b', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_PAWN_8], 'a', 7);
-		PlacePiece(_blackPieces[pieceNumberType.PN_ROOK_1], 'h', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_ROOK_2], 'a', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_KNIGHT_1], 'g', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_KNIGHT_2], 'b', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_BISHOP_1], 'f', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_BISHOP_2], 'c', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_QUEEN], 'd', 8);
-		PlacePiece(_blackPieces[pieceNumberType.PN_KING], 'e', 8);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_1], 'h', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_2], 'g', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_3], 'f', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_4], 'e', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_5], 'd', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_6], 'c', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_7], 'b', 7);
+		PlacePiece(_blackPieces[PieceNumber.PAWN_8], 'a', 7);
+		PlacePiece(_blackPieces[PieceNumber.ROOK_1], 'h', 8);
+		PlacePiece(_blackPieces[PieceNumber.ROOK_2], 'a', 8);
+		PlacePiece(_blackPieces[PieceNumber.KNIGHT_1], 'g', 8);
+		PlacePiece(_blackPieces[PieceNumber.KNIGHT_2], 'b', 8);
+		PlacePiece(_blackPieces[PieceNumber.BISHOP_1], 'f', 8);
+		PlacePiece(_blackPieces[PieceNumber.BISHOP_2], 'c', 8);
+		PlacePiece(_blackPieces[PieceNumber.QUEEN], 'd', 8);
+		PlacePiece(_blackPieces[PieceNumber.KING], 'e', 8);
 
 	}
 
@@ -611,38 +611,6 @@ public class Board
 */
 	}
 
-/*
-	// !!! Move to Piece?
-	public static char ConvertRankToSymbol(int rank)
-	{
-		switch (rank)
-		{
-		case pieceRankType.PR_PAWN:	return 'P';
-		case pieceRankType.PR_KNIGHT: return 'N';
-		case pieceRankType.PR_BISHOP: return 'B';
-		case pieceRankType.PR_ROOK: return 'R';
-		case pieceRankType.PR_QUEEN: return 'Q';
-		case pieceRankType.PR_KING: return 'K';
-		default: return '?';
-		}
-	}
-
-	// !!! Move to Piece?
-	public static int ConvertSymbolToRank(char symbol)
-	{
-		switch (symbol)
-		{
-		case 'P': return pieceRankType.PR_PAWN;
-		case 'N': return pieceRankType.PR_KNIGHT;
-		case 'B': return pieceRankType.PR_BISHOP;
-		case 'R': return pieceRankType.PR_ROOK;
-		case 'Q': return pieceRankType.PR_QUEEN;
-		case 'K': return pieceRankType.PR_KING;
-		default: return pieceRankType.PR_NONE;
-		}
-	}
-*/
-
 	public static void ConvertRelToAbsCoords(relPosType relPos, posType absPos)
 	{
 		if(relPos._colour == Colour.WHITE)
@@ -828,7 +796,7 @@ public class Board
 
 		_position[startPos._x][startPos._y]._colour = Colour.NONE;
 		_position[startPos._x][startPos._y]._rank = PieceRank.NONE;
-		_position[startPos._x][startPos._y]._number = pieceNumberType.PN_NONE;
+		_position[startPos._x][startPos._y]._number = PieceNumber.NONE;
 
 		int colourVal = move._colour.getValue();
 
@@ -927,7 +895,7 @@ public class Board
 		// Get the current position of the king
 		relPosType relPos = new relPosType();
 
-		WhereIs(colour, pieceNumberType.PN_KING, relPos);
+		WhereIs(colour, PieceNumber.KING, relPos);
 
 		return CanCaptureAt(colour.opposite(), colour, relPos._rx, relPos._ry);
 	}
@@ -966,7 +934,7 @@ public class Board
 		int i;
 		long materialValue = 0;
 
-		for(i=0; i<pieceNumberType.PN_MAX_PIECES; i++)
+		for(i=0; i<PieceNumber.MAX_PIECES; i++)
 		{
 			if(IsPieceAlive(colour, i))
 			{

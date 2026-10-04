@@ -78,6 +78,7 @@ public abstract class Piece
 	public Colour Colour() { return _colour; }
 
 	// NOTE : This routine should NOT modify the board
+	// !!! fix this so I don't need to pass in board
 	public PieceRank Rank(Board board) { return _rank; }
 
 	public int Number() { return _number; }

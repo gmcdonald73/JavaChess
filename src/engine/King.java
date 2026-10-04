@@ -6,7 +6,7 @@ public class King extends Piece
 	{ 
 		super(colour, number);
 		_rank = PieceRank.KING;
-		_materialValue = 1; // so formulaes work if only king left
+		_materialValue = 1; // so formulas work if only king left
 	}
 
 	private King(King other)
@@ -103,7 +103,7 @@ public class King extends Piece
 		// Check for castling moves
 
 		// Has king moved?
-		if( board.HasPieceMovedThisGame(_colour, pieceNumberType.PN_KING))
+		if( board.HasPieceMovedThisGame(_colour, PieceNumber.KING))
 		{
 			// King can't castle if it has already moved
 			return;
@@ -240,8 +240,6 @@ public class King extends Piece
 
 		return true;
 	}
-
-	// protected Move[] _testMove = new Move[8];
 }
 
 

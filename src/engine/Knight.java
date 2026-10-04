@@ -112,9 +112,6 @@ public class Knight extends Piece
 			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
 		}
 	}
-
-//	protected Move[] _testMove = new Move[8];
-
 }
 
 
