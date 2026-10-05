@@ -12,7 +12,7 @@ public class ConsoleChess2 {
     public static void main(String[] args) throws Exception {
 
         ChessGame game = new ChessGame(
-                new BotPlayer("Graeme", Colour.WHITE),
+                new HumanPlayer("Graeme", Colour.WHITE),
                 new HumanPlayer("GMac", Colour.BLACK)
         );
 

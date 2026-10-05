@@ -18,5 +18,5 @@ public abstract class ChessPlayer {
         return colour;
     }
 
-    public abstract Move getMove(Board board);
+    public abstract PlayerAction getAction(Board board);
 }

@@ -7,7 +7,7 @@ public class BotPlayer extends ChessPlayer {
     }
 
     @Override
-    public Move getMove(Board board) {
+    public PlayerAction getAction(Board board) {
 
         // Calculate move
 
@@ -23,7 +23,7 @@ public class BotPlayer extends ChessPlayer {
                 Constants.NUM_MOVES_LOOKAHEAD,
                 engineMoves);
 
-        return engineMoves[0];
+        return PlayerAction.move(engineMoves[0]);
     }
 
     // Do a breadth first search, look 2 moves ahead for win or lose, then 4 moves ahead etc.

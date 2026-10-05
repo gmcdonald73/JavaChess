@@ -14,7 +14,8 @@ public class HumanPlayer extends ChessPlayer {
     }
 
     @Override
-    public Move getMove(Board board) {
+    public PlayerAction getAction(Board board)
+    {
         // Get move from console/UI
         Move move = new Move();
         String input = "";
@@ -29,6 +30,15 @@ public class HumanPlayer extends ChessPlayer {
                 System.out.println("Error reading input: " + e.getMessage());
             }
 
+            if (input.equalsIgnoreCase("quit"))
+                return PlayerAction.quit();
+
+            if (input.equalsIgnoreCase("help"))
+                return PlayerAction.help();
+
+            if (input.equalsIgnoreCase("resign"))
+                return PlayerAction.resign();
+
             //InterpretMove(board, input, move);
             MoveParseResult mpr = Move.parse(getColour(), input);
 
@@ -37,11 +47,12 @@ public class HumanPlayer extends ChessPlayer {
                 move = mpr.getMove();
                 isValidMove = true;
             }
-            else {
+            else
+            {
                 System.out.println(mpr.getErrorMessage());
             }
         } while (!isValidMove);
 
-        return move;
+        return PlayerAction.move(move);
     }
 }

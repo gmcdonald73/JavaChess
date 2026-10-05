@@ -28,7 +28,6 @@ public class ChessGame {
     public void play() {
 
         ChessPlayer currentPlayer = white;
-        Colour currentColour;
         int moveNum = 1;
 
         board.SetupForGame();
@@ -42,65 +41,100 @@ public class ChessGame {
 
             System.out.println((currentPlayer == white ? "White" : "Black") + "'s move:");
 
-            Move move = currentPlayer.getMove(board);
+            PlayerAction action = currentPlayer.getAction(board);
 
-            MoveValidationResult mvr = board.IsMoveLegal(currentPlayer.getColour(), move);
-
-            if (mvr.isValid())
+            switch (action.getType())
             {
-                board.MakeMove(move);
+                case MOVE:
+                    Move move = action.getMove();
 
-                // Display move
-                if (currentPlayer == white)
-                    System.out.println(moveNum + ": White: " + move.getSan());
-                else
-                {
-                    System.out.println(moveNum + ": Black: " + move.getSan());
-                    moveNum++;
-                }
+                    // Validate the move and update the board
+                    MoveValidationResult mvr = board.IsMoveLegal(currentPlayer.getColour(), move);
 
-                // Switch players - see if opponent is in check or mated
-                currentPlayer = (currentPlayer == white ? black : white);
-                currentColour = currentPlayer.getColour();
+                    if (mvr.isValid()) {
+                        board.MakeMove(move);
+                        moves.add(move);
 
-                move._bIsCheck = false;
-                move._bIsMate = false;
+                        // Display move
+                        if (currentPlayer == white)
+                            System.out.println(moveNum + ": White: " + move.getSan());
+                        else {
+                            System.out.println(moveNum + ": Black: " + move.getSan());
+                            moveNum++;
+                        }
 
-                if(board.IsKingInCheck(currentColour))
-                {
-                    move._bIsCheck = true;
-                }
+                        // Switch players - see if opponent is in check or mated
+                        currentPlayer = (currentPlayer == white ? black : white);
 
-                if(!board.HasAnyLegalMoves(currentColour))
-                {
-                    isGameOver = true;
+                        // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
+                        isGameOver = IsGameOver(currentPlayer, move);
 
-                    if(move._bIsCheck)
-                    {
-                        System.out.println("Checkmate!!!");
-                        move._bIsMate = true;
-                        result = currentColour == Colour.WHITE ? GameResult.BLACK_WIN : GameResult.WHITE_WIN;
+                        // !!! fix this. simple hack to break out of infinite loop so we can save the game
+                        if(moveNum > 50)
+                        {
+                            isGameOver = true;
+                        }
                     }
                     else
                     {
-                        System.out.println("Stalemate!!!");
-                        result = GameResult.DRAW;
+                        System.out.println(mvr.getError());
                     }
-                }
 
-                moves.add(move);
+                    break;
 
-                // !!! fix this. simple hack to break out of infinite loop so we can save the game
-                if(moveNum > 50)
-                {
+                case QUIT:
+                    // End the game
                     isGameOver = true;
-                }
+                    break;
 
+                case HELP:
+                    // Display help
+                    break;
+
+                case RESIGN:
+                    // End the game with the current player resigning
+                    isGameOver = true;
+                    break;
+
+                case DRAW_OFFER:
+                    // Handle draw offer
+                    break;
+            }
+
+        }
+    }
+
+    boolean IsGameOver(ChessPlayer currentPlayer, Move move)
+    {
+        boolean isGameOver = false;
+
+        Colour currentColour = currentPlayer.getColour();
+
+        move._bIsCheck = false;
+        move._bIsMate = false;
+
+        if(board.IsKingInCheck(currentColour))
+        {
+            move._bIsCheck = true;
+        }
+
+        if(!board.HasAnyLegalMoves(currentColour))
+        {
+            isGameOver = true;
+
+            if(move._bIsCheck)
+            {
+                System.out.println("Checkmate!!!");
+                move._bIsMate = true;
+                result = currentColour == Colour.WHITE ? GameResult.BLACK_WIN : GameResult.WHITE_WIN;
             }
             else
             {
-                System.out.println(mvr.getError());
+                System.out.println("Stalemate!!!");
+                result = GameResult.DRAW;
             }
         }
+
+        return isGameOver;
     }
 }

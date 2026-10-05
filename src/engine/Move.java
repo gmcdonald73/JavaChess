@@ -5,18 +5,23 @@ public class Move
 	public Colour _colour;
 	public int _number;
 	public PieceRank _rank;
-	public int _startRX; // These are relative for each army
-	public int _startRY;
-	public int _endRX; // These are relative for each army
-	public int _endRY;
 	public boolean _bIsCapture; // Is the move a capture?
 	public PieceRank _promoteTo;
 	public boolean _bCastleQueenSide;
 	public boolean _bCastleKingSide;
 	public boolean _bEnPassantCapture;
 
+	// !!! Need to store absolute co-ords
+
+
+	// Move the stuff below out of this class?
+
+	// These are mainly for bot calculations
+	public int _startRX; // These are relative for each army
+	public int _startRY;
+	public int _endRX; // These are relative for each army
+	public int _endRY;
 	public int _score;
-	public boolean _bLegalMove;
 
 	// These two are just for displaying the move. Do these belong in Move class?
 	public boolean _bIsCheck;
@@ -39,7 +44,6 @@ public class Move
 		_bCastleKingSide = false;
 		_bEnPassantCapture = false;
 		_score = Constants.MS_UNDEFINED;
-		_bLegalMove = false;
 	}
 
 	public void Copy(Move src)
@@ -47,7 +51,7 @@ public class Move
 		_colour = src._colour;
 		_number = src._number;
 		_rank = src._rank;
-		_startRX = src._startRX; 
+		_startRX = src._startRX;
 		_startRY = src._startRY;
 		_endRX = src._endRX; 
 		_endRY = src._endRY;
@@ -59,7 +63,6 @@ public class Move
 		_bCastleKingSide = src._bCastleKingSide;
 		_bEnPassantCapture = src._bEnPassantCapture;
 		_score = src._score;
-		_bLegalMove = src._bLegalMove;
 	}
 
 
@@ -242,6 +245,11 @@ public class Move
 			if(_bIsCapture)
 			{
 				// !!! pawn capture need to add source file
+				if( _rank == PieceRank.PAWN )
+				{
+					san += StartPos().charAt(0);
+				}
+
 				san += "x";
 			}
 
