@@ -23,7 +23,9 @@ public class BotPlayer extends ChessPlayer {
                 Constants.NUM_MOVES_LOOKAHEAD,
                 engineMoves);
 
-        return PlayerAction.move(engineMoves[0]);
+        // !!! need to convert move to moveRequest here
+        MoveRequest request = MoveRequest.fromMove(engineMoves[0]);
+        return PlayerAction.moveRequest(request);
     }
 
     // Do a breadth first search, look 2 moves ahead for win or lose, then 4 moves ahead etc.

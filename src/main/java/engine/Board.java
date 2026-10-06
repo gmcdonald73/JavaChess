@@ -294,6 +294,7 @@ public class Board
 		}
 	}
 
+/*
 	public MoveValidationResult IsMoveLegal(Colour colour, Move move)
 	{
 		// Determine piece
@@ -390,6 +391,7 @@ public class Board
 		return new MoveValidationResult(false, errorMessage);
 
 	}
+*/
 
 	public void MakeMove(Move move)
 	{
@@ -509,6 +511,16 @@ public class Board
 	public void WhereIs(Colour colour, int number, relPosType relPos)
 	{
 		ConvertAbsToRelCoords(colour, _piece[colour.getValue()][number]._ax, _piece[colour.getValue()][number]._ay, relPos);
+	}
+
+	public pieceDescriptionType WhatIsAtSquare(Square pos)
+	{
+		if(!IsAbsPositionOnBoard(pos.getX(), pos.getY()))
+		{
+			assert false;
+		}
+
+		return _position[pos.getX()][pos.getY()];
 	}
 
 	public pieceDescriptionType WhatIsAt(Colour colour, int rx, int ry)
@@ -1032,6 +1044,23 @@ public class Board
 		}
 
 		return false;
+	}
+
+	public Piece getPiece(Colour colour, int number)
+	{
+		Piece piece = null;
+
+		if(colour == Colour.WHITE)
+		{
+			piece = _whitePieces[number];
+		}
+		else
+		{
+			piece = _blackPieces[number];
+		}
+
+		return piece;
+
 	}
 
 /*

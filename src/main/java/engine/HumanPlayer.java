@@ -17,7 +17,7 @@ public class HumanPlayer extends ChessPlayer {
     public PlayerAction getAction(Board board)
     {
         // Get move from console/UI
-        Move move = new Move();
+        MoveRequest moveRequest = null;
         String input = "";
         boolean isValidMove = false;
 
@@ -40,11 +40,11 @@ public class HumanPlayer extends ChessPlayer {
                 return PlayerAction.resign();
 
             //InterpretMove(board, input, move);
-            MoveParseResult mpr = Move.parse(getColour(), input);
+            MoveParseResult mpr = MoveParser.parse(input);
 
             if(mpr.isValid())
             {
-                move = mpr.getMove();
+                moveRequest = mpr.getMoveRequest();
                 isValidMove = true;
             }
             else
@@ -53,6 +53,6 @@ public class HumanPlayer extends ChessPlayer {
             }
         } while (!isValidMove);
 
-        return PlayerAction.move(move);
+        return PlayerAction.moveRequest(moveRequest);
     }
 }

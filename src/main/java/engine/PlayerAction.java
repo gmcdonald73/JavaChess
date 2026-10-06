@@ -12,20 +12,20 @@ public class PlayerAction
     }
 
     private final ActionType _type;
-    private final Move _move;
+    private final MoveRequest _moveRequest;
 
-    private PlayerAction(ActionType type, Move move)
+    private PlayerAction(ActionType type, MoveRequest moveRequest)
     {
         _type = type;
-        _move = move;
+        _moveRequest = moveRequest;
     }
 
-    public static PlayerAction move(Move move)
+    public static PlayerAction moveRequest(MoveRequest moveRequest)
     {
-        if (move == null)
-            throw new IllegalArgumentException("Move cannot be null");
+        if (moveRequest == null)
+            throw new IllegalArgumentException("MoveRequest cannot be null");
 
-        return new PlayerAction(ActionType.MOVE, move);
+        return new PlayerAction(ActionType.MOVE, moveRequest);
     }
 
     public static PlayerAction quit()
@@ -53,9 +53,9 @@ public class PlayerAction
         return _type;
     }
 
-    public Move getMove()
+    public MoveRequest getMoveRequest()
     {
-        return _move;
+        return _moveRequest;
     }
 
     public boolean isMove()

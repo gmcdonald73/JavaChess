@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.Objects;
+
 public class Move
 {
 	public Colour _colour;
@@ -12,11 +14,12 @@ public class Move
 	public boolean _bEnPassantCapture;
 
 	// !!! Need to store absolute co-ords
-
+	public Square _startPosition;
+	public Square _endPosition;
 
 	// Move the stuff below out of this class?
 
-	// These are mainly for bot calculations
+	// These are mainly for bot & piece calculations
 	public int _startRX; // These are relative for each army
 	public int _startRY;
 	public int _endRX; // These are relative for each army
@@ -65,13 +68,38 @@ public class Move
 		_score = src._score;
 	}
 
-
-	public void Print(int moveNum)
+	public static Move fromMoveRequest(MoveRequest request, Colour colour)
 	{
-		String sMove;
+		Move move = new Move();
+		move._colour = colour;
+		move._rank = request.getRank();
+		move._bIsCapture = request.isCapture(); // Is the move a capture?
+		move._promoteTo = request.getPromoteTo();
+		move._bCastleQueenSide = request.isCastleQueenSide();
+		move._bCastleKingSide = request.isCastleKingSide();
+		move._startPosition = request.getStartPosition();
+		move._endPosition = request.getEndPosition();
+		return move;
+	}
 
-		sMove = Format(moveNum);
-		System.out.println(sMove);
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+
+		if (!(obj instanceof Move other))
+			return false;
+
+		return _startPosition.equals(other._startPosition)
+				&& _endPosition.equals(other._endPosition)
+				&& _promoteTo == other._promoteTo;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(_startPosition, _endPosition, _promoteTo);
 	}
 
 	public String StartPos() {
@@ -82,7 +110,7 @@ public class Move
 		return FormatRelPos(_colour, _endRX, _endRY);
 	}
 
-	public String FormatRelPos(Colour colour, int rx, int ry)
+	private String FormatRelPos(Colour colour, int rx, int ry)
 	{
 		String pos = "";
 		int absX = 0;
@@ -103,110 +131,6 @@ public class Move
 		pos = pos + ((char)('a' + absX)) + (absY + 1);
 
 		return pos;
-	}
-
-	public String Format(int moveNum)
-	{
-		String sMove = "";
-		int absStartX = 0;
-		int absStartY = 0;
-		int absEndX = 0;
-		int absEndY = 0;
-
-		if(_colour == Colour.NONE)
-		{
-			sMove = "Null Move";
-			return sMove;
-		}
-
-		sMove = moveNum + ": ";
-
-		if(_colour == Colour.WHITE)
-		{
-			sMove = sMove + "White ";
-		}
-		else
-		{
-			sMove = sMove + "Black ";
-		}
-
-		if( _bCastleKingSide )
-		{
-			sMove = sMove + "O-O";
-		}
-		else if( _bCastleQueenSide )
-		{
-			sMove = sMove + "O-O-O";
-		}
-		else
-		{
-			if( _rank != PieceRank.PAWN )
-			{
-				sMove = sMove + _rank.getSymbol(); //Board.ConvertRankToSymbol(_rank);
-			}
-
-			// Convert source and destination to absolute co-ords
-			relPosType startRelPos = new relPosType();
-			relPosType endRelPos = new relPosType();
-			posType startPos = new posType();
-			posType endPos = new posType();
-
-			startRelPos._colour = _colour;
-			startRelPos._rx = _startRX;
-			startRelPos._ry = _startRY;
-
-			Board.ConvertRelToAbsCoords(startRelPos, startPos);
-
-			absStartX = startPos._x;
-			absStartY = startPos._y;
-
-			endRelPos._colour = _colour;
-			endRelPos._rx = _endRX;
-			endRelPos._ry = _endRY;
-
-			Board.ConvertRelToAbsCoords(endRelPos, endPos);
-
-			absEndX = endPos._x;
-			absEndY = endPos._y;
-
-			// Display source
-			sMove = sMove + ((char)('a' + absStartX)) + (absStartY + 1);
-
-			if(_bIsCapture)
-			{
-				sMove = sMove + "x";
-			}
-			else
-			{
-				sMove = sMove + "-";
-			}
-
-			// Display destination
-			sMove = sMove + ((char)('a' + absEndX)) + (absEndY + 1);
-
-			// If a pawn is being promoted, display the piece that it is promoted to
-			if( (_rank == PieceRank.PAWN) && (_endRY == 8) )
-			{
-				sMove = sMove + _promoteTo.getSymbol(); //Board.ConvertRankToSymbol(_promoteTo);
-			}
-		}
-
-		// If check then display '+'
-		if( _bIsCheck )
-		{
-			sMove = sMove + "+";
-		}
-
-		// If it is mate then display another one
-		if( _bIsMate )
-		{
-			sMove = sMove + "+";
-		}
-
-		// Display score
-//		sMove = sMove + " : " + _score;
-
-		return sMove;
 	}
 
 	public String getSan()
@@ -275,6 +199,7 @@ public class Move
 		return san;
 	}
 
+/*
 	public static MoveParseResult parse(Colour colour, String input)
 	{
 		int sourceAX = 0;
@@ -289,15 +214,6 @@ public class Move
 		Move move = new Move();
 		move._colour = colour;
 
-		Piece piece = null;
-
-/*
-		if(input.compareToIgnoreCase("quit") == 0)
-		{
-			move._bLegalMove = true;
-			return true;
-		}
-*/
 		// Check for castling moves
 		if( (input.compareToIgnoreCase("O-O") == 0) || (input.compareToIgnoreCase("O-O-O") == 0))
 		{
@@ -394,96 +310,10 @@ public class Move
 				move._promoteTo = PieceRank.NONE;
 			}
 		}
-/*
-		// Determine piece
-		pieceDescriptionType pieceDescrip;
-		pieceDescrip = board.WhatIsAt(colour, move._startRX, move._startRY);
 
-		if (pieceDescrip._rank == pieceRankType.PR_NONE )
-		{
-			errorMessage = "Illegal move - there is no piece at " + sMove.charAt(1) + sMove.charAt(2);
-			return false;
-		}
-
-		if (pieceDescrip._rank != move._rank )
-		{
-			errorMessage = "Illegal move - piece at " + sMove.charAt(1) + sMove.charAt(2) + " is not a " + sMove.charAt(0);
-			return false;
-		}
-
-		if (pieceDescrip._colour != colour )
-		{
-			errorMessage = "Illegal move - piece at " + sMove.charAt(1) + sMove.charAt(2) + " is not yours";
-			return false;
-		}
-
-		move._number = pieceDescrip._number;
-*/
-/*
-        piece = _piece[pieceDescrip._number];
-
-        if(piece == null)
-        {
-            // Couldn't find piece that move is refering to
-            errorMessage = "Internal error - null piece pointer";
-            return false;
-        }
-
-        int numMoves = 0;
-        MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
-
-        // Get the moves for the piece
-        piece.GetMoves(board, moves, false);
-        numMoves = moves.getNumMoves();
-
-        // Find out if the entered move is one of them
-        int i;
-
-        for(i=0; i<numMoves; i++)
-        {
-            Move currMove;
-
-            currMove = moves.getMove(i);
-
-            if( (move._startRX == currMove._startRX) &&
-                    (move._startRY == currMove._startRY) &&
-                    (move._endRX == currMove._endRX) &&
-                    (move._endRY == currMove._endRY) &&
-                    (move._promoteTo == currMove._promoteTo))
-            {
-                // Found the move in the list of possible moves for the piece
-
-                // Update the move with the one from the moveStack so other flags eg bIsCapture etc.
-                // are set correctly
-                move.Copy(currMove);
-
-                // Now check if the move would place our king in check
-
-                // Copy the board to a test board
-                // Make a copy so that the original board is not modified
-                Board testBoard = new Board();
-                testBoard.Copy(board);
-
-                // Make the move
-                testBoard.MakeMove(move);
-
-                if( IsKingInCheck(testBoard) )
-                {
-                    errorMessage = "Illegal move - this move would place the king in check";
-                }
-                else
-                {
-                    move._bLegalMove = true;
-                }
-
-                return false;
-            }
-        }
-
-        errorMessage = "Illegal move - this move is not valid for this piece";
-*/
 		return MoveParseResult.success(move);
 	}
+*/
 }
 
 

@@ -46,40 +46,50 @@ public class ChessGame {
             switch (action.getType())
             {
                 case MOVE:
-                    Move move = action.getMove();
+                    MoveRequest moveRequest = action.getMoveRequest();
 
-                    // Validate the move and update the board
-                    MoveValidationResult mvr = board.IsMoveLegal(currentPlayer.getColour(), move);
+                    MoveResolutionResult mrr = MoveResolver.resolve(board, moveRequest, currentPlayer.getColour());
 
-                    if (mvr.isValid()) {
-                        board.MakeMove(move);
-                        moves.add(move);
-
-                        // Display move
-                        if (currentPlayer == white)
-                            System.out.println(moveNum + ": White: " + move.getSan());
-                        else {
-                            System.out.println(moveNum + ": Black: " + move.getSan());
-                            moveNum++;
-                        }
-
-                        // Switch players - see if opponent is in check or mated
-                        currentPlayer = (currentPlayer == white ? black : white);
-
-                        // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
-                        isGameOver = IsGameOver(currentPlayer, move);
-
-                        // !!! fix this. simple hack to break out of infinite loop so we can save the game
-                        if(moveNum > 50)
-                        {
-                            isGameOver = true;
-                        }
+                    if(!mrr.isSuccess())
+                    {
+                        System.out.println(mrr.getErrorMessage());
                     }
                     else
                     {
-                        System.out.println(mvr.getError());
-                    }
+                        Move move = mrr.getMove();
 
+                        // Validate the move and update the board
+                        MoveValidationResult mvr = MoveValidator.IsMoveLegal(board, currentPlayer.getColour(), move);
+
+                        if (!mvr.isValid())
+                        {
+                            System.out.println(mvr.getError());
+                        }
+                        else
+                        {
+                            board.MakeMove(move);
+                            moves.add(move);
+
+                            // Display move
+                            if (currentPlayer == white)
+                                System.out.println(moveNum + ": White: " + move.getSan());
+                            else {
+                                System.out.println(moveNum + ": Black: " + move.getSan());
+                                moveNum++;
+                            }
+
+                            // Switch players - see if opponent is in check or mated
+                            currentPlayer = (currentPlayer == white ? black : white);
+
+                            // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
+                            isGameOver = IsGameOver(currentPlayer, move);
+
+                            // !!! fix this. simple hack to break out of infinite loop so we can save the game
+                            if (moveNum > 50) {
+                                isGameOver = true;
+                            }
+                        }
+                    }
                     break;
 
                 case QUIT:
