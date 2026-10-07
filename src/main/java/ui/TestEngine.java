@@ -1,13 +1,16 @@
 package ui;
 
-import engine.*;
+import engine.board.Board;
+import engine.moves.*;
+import engine.pieces.Colour;
+import engine.players.BotPlayer;
 
 public class TestEngine {
 
     public static void main(String[] args) throws Exception {
 
         Board board = new Board();
-        BotPlayer white = new BotPlayer("whitePlayer",Colour.WHITE);
+        BotPlayer white = new BotPlayer("whitePlayer", Colour.WHITE);
         BotPlayer black = new BotPlayer("blackPlayer",Colour.BLACK);
 
         board.SetupForGame();

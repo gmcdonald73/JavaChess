@@ -4,7 +4,10 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import engine.*;
+import engine.game.ChessGame;
+import engine.pieces.Colour;
+import engine.players.BotPlayer;
+import engine.players.HumanPlayer;
 import io.PgnWriter;
 
 public class ConsoleChess2 {

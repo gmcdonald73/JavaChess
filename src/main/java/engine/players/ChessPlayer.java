@@ -1,0 +1,25 @@
+package engine.players;
+
+import engine.board.Board;
+import engine.pieces.Colour;
+
+public abstract class ChessPlayer {
+
+    private final String name;
+    private final Colour colour;
+
+    protected ChessPlayer(String name, Colour colour) {
+        this.name = name;
+        this.colour = colour;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Colour getColour() {
+        return colour;
+    }
+
+    public abstract PlayerAction getAction(Board board);
+}

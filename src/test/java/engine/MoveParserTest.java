@@ -1,5 +1,9 @@
 package engine;
 
+import engine.moves.MoveParseResult;
+import engine.moves.MoveParser;
+import engine.moves.MoveRequest;
+import engine.pieces.PieceRank;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,8 +19,20 @@ class MoveParserTest {
         MoveRequest request = mpr.getMoveRequest();
 
         assertEquals(PieceRank.PAWN, request.getRank());
-        assertEquals(4, request.getEndX());
-        assertEquals(3, request.getEndY());
+        assertEquals('e', request.getEndPosition().getFile());
+        assertEquals(4, request.getEndPosition().getRank());
         assertFalse(request.isCapture());
+
+        // test capture and that parser recognises b means pawn not bishop
+        mpr = MoveParser.parse("bxc6");
+
+        // assertions
+        assertTrue(mpr.isValid());
+        request = mpr.getMoveRequest();
+
+        assertEquals(PieceRank.PAWN, request.getRank());
+        assertEquals('c', request.getEndPosition().getFile());
+        assertEquals(6, request.getEndPosition().getRank());
+        assertTrue(request.isCapture());
     }
 }

@@ -1,6 +1,7 @@
 package io;
 
-import engine.*;
+import engine.game.ChessGame;
+import engine.moves.Move;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
