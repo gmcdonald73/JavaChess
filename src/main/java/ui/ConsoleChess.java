@@ -10,7 +10,7 @@ import engine.players.BotPlayer;
 import engine.players.HumanPlayer;
 import io.PgnWriter;
 
-public class ConsoleChess2 {
+public class ConsoleChess {
 
     public static void main(String[] args) throws Exception {
 

@@ -12,7 +12,8 @@ public class MoveRequest
     private final Square _startPosition;
     private final Square _endPosition;
     private final boolean _isCapture;
-    private final Character _disambiguation;
+    private final Integer _disambiguationRank;
+    private final Character _disambiguationFile;
     private final PieceRank _promoteTo;
     private final boolean _castleKingSide;
     private final boolean _castleQueenSide;
@@ -22,7 +23,8 @@ public class MoveRequest
             Square startPosition,
             Square endPosition,
             boolean isCapture,
-            Character disambiguation,
+            Integer disambiguationRank,
+            Character disambiguationFile,
             PieceRank promoteTo,
             boolean castleKingSide,
             boolean castleQueenSide)
@@ -31,7 +33,8 @@ public class MoveRequest
         _startPosition = startPosition;
         _endPosition = endPosition;
         _isCapture = isCapture;
-        _disambiguation = disambiguation;
+        _disambiguationRank = disambiguationRank;
+        _disambiguationFile = disambiguationFile;
         _promoteTo = promoteTo == null ? PieceRank.NONE : promoteTo;
         _castleKingSide = castleKingSide;
         _castleQueenSide = castleQueenSide;
@@ -39,9 +42,12 @@ public class MoveRequest
 
     public static MoveRequest fromMove(Move move)
     {
-        // !!! Change these - use Square from relcoords
 
         // Convert move start pos from rel to abs and create startPosition
+        Square startPosition = Square.fromRelCoords(move._colour, move._startRX, move._startRY);
+        Square endPosition = Square.fromRelCoords(move._colour, move._endRX, move._endRY);
+
+/*
         relPosType relStart = new relPosType();
         posType absStart = new posType();
         relStart._colour = move._colour;
@@ -58,12 +64,14 @@ public class MoveRequest
         relEnd._ry = move._endRY;
         Board.ConvertRelToAbsCoords(relEnd, absEnd);
         Square endPosition = new Square(absEnd._x, absEnd._y);
+*/
 
         return new MoveRequest(
                 move._rank,
                 startPosition,
                 endPosition,
                 move._bIsCapture,
+                null,
                 null,
                 move._promoteTo,
                 move._bCastleKingSide,
@@ -75,7 +83,8 @@ public class MoveRequest
     public Square getStartPosition() { return _startPosition; }
     public Square getEndPosition() { return _endPosition; }
     public boolean isCapture() { return _isCapture; }
-    public Character getDisambiguation() { return _disambiguation; }
+    public Integer getDisambiguationRank() { return _disambiguationRank; }
+    public Character getDisambiguationFile() { return _disambiguationFile; }
     public PieceRank getPromoteTo() { return _promoteTo; }
     public boolean isCastleKingSide() { return _castleKingSide; }
     public boolean isCastleQueenSide() { return _castleQueenSide; }

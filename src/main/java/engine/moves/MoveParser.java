@@ -27,6 +27,7 @@ public class MoveParser
                             false,
                             null,
                             null,
+                            null,
                             true,
                             false));
         }
@@ -39,6 +40,7 @@ public class MoveParser
                             null,
                             null,
                             false,
+                            null,
                             null,
                             null,
                             false,
@@ -97,7 +99,8 @@ public class MoveParser
         prefix = prefix.replace("x", "");
 
         PieceRank pieceRank = PieceRank.PAWN;
-        Character disambiguation = null;
+        Character disambiguationFile = null;
+        Integer disambiguationRank = null;
 
         // A piece move starts with K/Q/R/B/N.
         if (!prefix.isEmpty())
@@ -119,38 +122,60 @@ public class MoveParser
         // What remains must be SAN disambiguation.
         if (!prefix.isEmpty())
         {
-            if (prefix.length() != 1)
+            if (prefix.length() > 2)
                 return MoveParseResult.error("Invalid move disambiguation");
 
-            char c = Character.toLowerCase(prefix.charAt(0));
-
-            if (!((c >= 'a' && c <= 'h') ||
-                    (c >= '1' && c <= '8')))
+            if(prefix.length() == 2)
             {
-                return MoveParseResult.error("Invalid move disambiguation");
-            }
+                // Disambiguation should be file then rank (e.g. b1)
+                char c = Character.toLowerCase(prefix.charAt(0));
 
-            disambiguation = c;
+                if (!(c >= 'a' && c <= 'h'))
+                {
+                    return MoveParseResult.error("Invalid move disambiguation");
+                }
+
+                disambiguationFile = c;
+
+                c = Character.toLowerCase(prefix.charAt(1));
+
+                if (!(c >= '1' && c <= '8'))
+                {
+                    return MoveParseResult.error("Invalid move disambiguation");
+                }
+
+                disambiguationRank = c - '0';
+
+            }
+            else
+            {
+                // Single character disambiguation could be rank or file
+
+                char c = Character.toLowerCase(prefix.charAt(0));
+
+                if (c >= 'a' && c <= 'h')
+                {
+                    disambiguationFile = c;
+                }
+                else if (c >= '1' && c <= '8')
+                {
+                    disambiguationRank = c - '0';
+                }
+                else
+                {
+                    return MoveParseResult.error("Invalid move disambiguation");
+                }
+            }
         }
 
         // Pawn captures must contain a source file.
         if (pieceRank == PieceRank.PAWN && isCapture)
         {
-            if (disambiguation == null ||
-                    disambiguation < 'a' ||
-                    disambiguation > 'h')
+            if (disambiguationFile == null)
             {
                 return MoveParseResult.error(
                         "Pawn capture must specify source file");
             }
-        }
-
-        // Non-pawn pieces cannot use a source file/rank incorrectly.
-        if (pieceRank != PieceRank.PAWN &&
-                disambiguation != null)
-        {
-            // Both file and rank are valid SAN disambiguation,
-            // so nothing more is required here.
         }
 
         return MoveParseResult.success(
@@ -159,7 +184,8 @@ public class MoveParser
                         null,
                         new Square(endX, endY),
                         isCapture,
-                        disambiguation,
+                        disambiguationRank,
+                        disambiguationFile,
                         promoteTo,
                         false,
                         false));

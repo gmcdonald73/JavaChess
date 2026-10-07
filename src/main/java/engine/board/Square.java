@@ -15,6 +15,16 @@ public class Square
         _y = y;
     }
 
+    public static Square from(String san)
+    {
+        int x,y;
+
+        x = san.charAt(0) - 'a';
+        y = san.charAt(1) - '1';
+
+        return new Square(x,y);
+    }
+
     public static Square fromRelCoords(Colour colour, int rx, int ry)
     {
         int x = -1, y = -1;
