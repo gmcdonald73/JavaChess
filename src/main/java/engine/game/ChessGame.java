@@ -118,6 +118,9 @@ public class ChessGame {
             }
 
         }
+
+        board.DisplayBoard();
+
     }
 
     boolean IsGameOver(ChessPlayer currentPlayer, Move move)

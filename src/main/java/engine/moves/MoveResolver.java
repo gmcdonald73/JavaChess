@@ -6,6 +6,8 @@ import engine.board.Square;
 import engine.pieces.Colour;
 import engine.pieces.Piece;
 
+import java.util.List;
+
 public class MoveResolver
 {
     public static MoveResolutionResult resolve(
@@ -56,13 +58,13 @@ public class MoveResolver
         move._bCastleKingSide = true;
 
         if(colour == Colour.WHITE){
-            move._startPosition = new Square(4,0);
-            move._endPosition = new Square(6,0);
+            move.setStartPosition( new Square(4,0));
+            move.setEndPosition( new Square(6,0));
         }
         else
         {
-            move._startPosition = new Square(4,7);
-            move._endPosition = new Square(6,7);
+            move.setStartPosition( new Square(4,7));
+            move.setEndPosition( new Square(6,7));
         }
 
         return MoveResolutionResult.success(move);
@@ -75,13 +77,13 @@ public class MoveResolver
         move._bCastleQueenSide = true;
 
         if(colour == Colour.WHITE){
-            move._startPosition = new Square(4,0);
-            move._endPosition = new Square(2,0);
+            move.setStartPosition( new Square(4,0));
+            move.setEndPosition( new Square(2,0));
         }
         else
         {
-            move._startPosition = new Square(4,7);
-            move._endPosition = new Square(2,7);
+            move.setStartPosition( new Square(4,7));
+            move.setEndPosition( new Square(2,7));
         }
 
         return MoveResolutionResult.success(move);
@@ -98,15 +100,18 @@ public class MoveResolver
     private static MoveResolutionResult resolveImplicitSource(Board board, MoveRequest request, Colour colour)
     {
         Move resolvedMove = null;
+        List<Piece> pieceList;
 
-        for(int pieceNum = 0; pieceNum <16; pieceNum++)
+        if(colour == Colour.WHITE)
+            pieceList = board.getWhitePieces();
+        else
+            pieceList = board.getBlackPieces();
+
+        for(Piece piece : pieceList)
         {
-
-            if(board.IsPieceAlive(colour, pieceNum))
+            if(board.IsPieceAlive(colour, piece.Number()))
             {
-                Piece piece = board.getPiece(colour, pieceNum);
-
-                if(piece.Rank(board) == request.getRank())
+                if(piece.Rank() == request.getRank())
                 {
                     MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 
@@ -121,11 +126,11 @@ public class MoveResolver
                         currMove = moves.getMove(i);
 
                         // !!! Where does this belong?
-                        currMove._startPosition = Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY);
-                        currMove._endPosition = Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY);
+                        currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
+                        currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
 
                         // !!! should also check promotionTo
-                        if(request.getEndPosition().equals(currMove._endPosition))
+                        if(request.getEndPosition().equals(currMove.getEndPosition()))
                         {
                             if(resolvedMove == null)
                             {
@@ -139,7 +144,6 @@ public class MoveResolver
                     }
                 }
             }
-
         }
 
         if(resolvedMove == null)

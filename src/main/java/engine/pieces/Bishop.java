@@ -1,17 +1,14 @@
 package engine.pieces;
 
-import engine.board.Board;
-import engine.board.pieceDescriptionType;
-import engine.board.posType;
-import engine.board.relPosType;
+import engine.board.*;
 import engine.moves.MoveStack;
 
 public class Bishop extends Piece
 {
 
-	public Bishop(Colour colour, int number)
+	public Bishop(Colour colour, int number, Square position)
 	{ 
-		super(colour, number);
+		super(colour, number, position);
 		_rank = PieceRank.BISHOP;
 		_materialValue = 3;
 	}
@@ -43,11 +40,10 @@ public class Bishop extends Piece
 		boolean bDone;
 		relPosType relPos = new relPosType();
 
-		board.WhereIs(_colour, _number, relPos);
+		Board.ConvertAbsToRelCoords(_colour, _position.getX(), _position.getY(), relPos);
 
 		bishopRX = relPos._rx;
 		bishopRY = relPos._ry;
-
 
 		// Check NE of bishop
 		increment[0] = new posType();
@@ -69,7 +65,7 @@ public class Bishop extends Piece
 		increment[3]._x = -1;
 		increment[3]._y = -1;
 
-		pieceDescriptionType pieceDescrip;
+		Piece piece;
 
 		for(i=0; i<4; i++)
 		{
@@ -84,17 +80,17 @@ public class Bishop extends Piece
 
 				if( board.IsRelPositionOnBoard(_colour, currRelPos._x, currRelPos._y) )
 				{
-					pieceDescrip = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
+					piece = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
 
-					if( pieceDescrip._colour == _colour )
+					if( piece != null && piece._colour == _colour )
 					{
 						bDone = true;
 					}
 					else 
 					{
-						AddMove(possibleMoves, bishopRX, bishopRY, currRelPos._x, currRelPos._y, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
+						AddMove(possibleMoves, bishopRX, bishopRY, currRelPos._x, currRelPos._y, (piece != null), PieceRank.NONE);
 
-						if ( pieceDescrip._colour != Colour.NONE )
+						if ( piece != null )
 						{
 							bDone = true;
 						}

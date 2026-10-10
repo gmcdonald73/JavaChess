@@ -18,9 +18,9 @@ public class Move
 	public boolean _bCastleKingSide;
 	public boolean _bEnPassantCapture;
 
-	// !!! Need to store absolute co-ords
-	public Square _startPosition;
-	public Square _endPosition;
+	// Store absolute co-ords
+	private Square _startPosition;
+	private Square _endPosition;
 
 	// Move the stuff below out of this class?
 
@@ -38,7 +38,7 @@ public class Move
 	public Move()
 	{
 		_colour = Colour.NONE;
-		_number = PieceNumber.NONE;
+		_number = 0; //PieceNumber.NONE;
 		_rank = PieceRank.NONE;
 		_startRX = -1; // These are relative for each army
 		_startRY = -1;
@@ -106,6 +106,12 @@ public class Move
 	{
 		return Objects.hash(_startPosition, _endPosition, _promoteTo);
 	}
+
+	public void setStartPosition(Square startPosition) {_startPosition = startPosition; }
+	public Square getStartPosition() {return _startPosition; }
+
+	public void setEndPosition(Square endPosition) {_endPosition = endPosition; }
+	public Square getEndPosition() { return _endPosition; }
 
 	public String StartPos() {
 		return FormatRelPos(_colour, _startRX, _startRY);
@@ -203,122 +209,6 @@ public class Move
 
 		return san;
 	}
-
-/*
-	public static MoveParseResult parse(Colour colour, String input)
-	{
-		int sourceAX = 0;
-		int sourceAY = 0;
-		int destAX = 0;
-		int destAY = 0;
-
-		if (input == null || input.isBlank())
-			return MoveParseResult.failure("No move was entered");
-
-		// Set default values
-		Move move = new Move();
-		move._colour = colour;
-
-		// Check for castling moves
-		if( (input.compareToIgnoreCase("O-O") == 0) || (input.compareToIgnoreCase("O-O-O") == 0))
-		{
-			move._rank = PieceRank.KING;
-
-			move._startRY = 1;
-			move._endRY = 1;
-
-			if(colour == Colour.WHITE)
-			{
-				move._startRX = 5;
-
-				if(input.compareToIgnoreCase("O-O") == 0)
-				{
-					move._endRX = 7;
-					move._bCastleKingSide = true;
-				}
-				else
-				{
-					move._endRX = 3;
-					move._bCastleQueenSide = true;
-				}
-			}
-			else
-			{
-				move._startRX = 4;
-
-				if(input.compareToIgnoreCase("O-O") == 0)
-				{
-					move._endRX = 2;
-					move._bCastleKingSide = true;
-				}
-				else
-				{
-					move._endRX = 6;
-					move._bCastleQueenSide = true;
-				}
-			}
-		}
-		else
-		{
-			int moveStringLen;
-
-			moveStringLen = input.length();
-
-			if( moveStringLen < 6)
-			{
-				return MoveParseResult.failure("Illegal move - move string is too short");
-			}
-
-			// Breakdown move into component characters
-			move._rank = PieceRank.fromSymbol(input.charAt(0)); //Board.ConvertSymbolToRank(input.charAt(0));
-			sourceAX = input.charAt(1) - 'a';
-			sourceAY = input.charAt(2) - '1';
-
-			if(!Board.IsAbsPositionOnBoard(sourceAX, sourceAY))
-			{
-				return MoveParseResult.failure("Illegal move - source position is not on the board");
-			}
-
-			if( input.charAt(3) == 'x' )
-			{
-				move._bIsCapture = true;
-			}
-			else
-			{
-				move._bIsCapture = false;
-			}
-
-			destAX = input.charAt(4) - 'a';
-			destAY = input.charAt(5) - '1';
-
-			if(!Board.IsAbsPositionOnBoard(destAX, destAY))
-			{
-				return MoveParseResult.failure("Illegal move - destination position is not on the board");
-			}
-
-			relPosType startPos = new relPosType();
-			Board.ConvertAbsToRelCoords(colour, sourceAX, sourceAY, startPos);
-			move._startRX = startPos._rx;
-			move._startRY = startPos._ry;
-
-			relPosType endPos = new relPosType();
-			Board.ConvertAbsToRelCoords(colour, destAX, destAY, endPos);
-			move._endRX = endPos._rx;
-			move._endRY = endPos._ry;
-
-			if( moveStringLen == 7 )
-			{
-				move._promoteTo = PieceRank.fromSymbol(input.charAt(6)); // Board.ConvertSymbolToRank(input.charAt(6));
-			}
-			else
-			{
-				move._promoteTo = PieceRank.NONE;
-			}
-		}
-
-		return MoveParseResult.success(move);
-	}
-*/
 }
 
 

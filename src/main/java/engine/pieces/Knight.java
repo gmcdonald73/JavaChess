@@ -1,7 +1,7 @@
 package engine.pieces;
 
 import engine.board.Board;
-import engine.board.pieceDescriptionType;
+import engine.board.Square;
 import engine.board.relPosType;
 import engine.moves.Move;
 import engine.moves.MoveStack;
@@ -9,9 +9,9 @@ import engine.moves.MoveStack;
 public class Knight extends Piece
 {
 
-	public Knight(Colour colour, int number)
+	public Knight(Colour colour, int number, Square position)
 	{ 
-		super(colour, number);
+		super(colour, number, position);
 		_rank = PieceRank.KNIGHT;
 		_materialValue = 3;
 	}
@@ -40,7 +40,7 @@ public class Knight extends Piece
 		int knightRX = 0, knightRY = 0, i = 0;
 		relPosType relPos = new relPosType();
 
-		board.WhereIs(_colour, _number, relPos);
+		Board.ConvertAbsToRelCoords(_colour, _position.getX(), _position.getY(), relPos);
 
 		knightRX = relPos._rx;
 		knightRY = relPos._ry;
@@ -96,7 +96,7 @@ public class Knight extends Piece
 		_testMove[7]._endRX = knightRX + 2;
 		_testMove[7]._endRY = knightRY + 1;
 
-		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
+		Piece piece;
 
 		for(i=0; i<8; i++)
 		{
@@ -108,14 +108,17 @@ public class Knight extends Piece
 			}
 
 			// Check endpoint doesn't have a friendly piece there
-			pieceDescrip = board.WhatIsAt(_colour, _testMove[i]._endRX, _testMove[i]._endRY);
+			piece = board.WhatIsAt(_colour, _testMove[i]._endRX, _testMove[i]._endRY);
 
-			if(pieceDescrip._colour == _colour)
+			if(piece != null)
 			{
-				continue;
+				if(piece._colour == _colour)
+				{
+					continue;
+				}
 			}
 
-			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
+			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), PieceRank.NONE);
 		}
 	}
 }

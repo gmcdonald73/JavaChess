@@ -19,32 +19,16 @@ public class MoveParser
         // Castling
         if (input.equals("O-O") || input.equals("0-0"))
         {
-            return MoveParseResult.success(
-                    new MoveRequest(
-                            PieceRank.KING,
-                            null,
-                            null,
-                            false,
-                            null,
-                            null,
-                            null,
-                            true,
-                            false));
+            MoveRequest request = new MoveRequest(PieceRank.KING, null);
+            request.setCastleKingSide(true);
+            return MoveParseResult.success(request);
         }
 
         if (input.equals("O-O-O") || input.equals("0-0-0"))
         {
-            return MoveParseResult.success(
-                    new MoveRequest(
-                            PieceRank.KING,
-                            null,
-                            null,
-                            false,
-                            null,
-                            null,
-                            null,
-                            false,
-                            true));
+            MoveRequest request = new MoveRequest(PieceRank.KING, null);
+            request.setCastleQueenSide(true);
+            return MoveParseResult.success(request);
         }
 
         // Promotion
@@ -178,17 +162,17 @@ public class MoveParser
             }
         }
 
-        return MoveParseResult.success(
-                new MoveRequest(
-                        pieceRank,
-                        null,
-                        new Square(endX, endY),
-                        isCapture,
-                        disambiguationRank,
-                        disambiguationFile,
-                        promoteTo,
-                        false,
-                        false));
+        MoveRequest request = new MoveRequest(
+                pieceRank,
+                new Square(endX, endY));
+
+        request.setIsCapture(isCapture);
+        request.setDisambiguationFile(disambiguationFile);
+        request.setDisambiguationRank(disambiguationRank);
+        request.setPromoteTo(promoteTo);
+
+        return MoveParseResult.success(request);
+
     }
 
 

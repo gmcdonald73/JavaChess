@@ -1,17 +1,14 @@
 package engine.pieces;
 
-import engine.board.Board;
-import engine.board.pieceDescriptionType;
-import engine.board.posType;
-import engine.board.relPosType;
+import engine.board.*;
 import engine.moves.MoveStack;
 
 public class Rook extends Piece
 {
 
-	public Rook(Colour colour, int number)
+	public Rook(Colour colour, int number, Square position)
 	{ 
-		super(colour, number);
+		super(colour, number, position);
 		_rank = PieceRank.ROOK;
 		_materialValue = 5;
 	}
@@ -43,7 +40,7 @@ public class Rook extends Piece
 		boolean bDone = false;
 		relPosType relPos = new relPosType();
 
-		board.WhereIs(_colour, _number, relPos);
+		Board.ConvertAbsToRelCoords(_colour, _position.getX(), _position.getY(), relPos);
 
 		rookRX = relPos._rx;
 		rookRY = relPos._ry;
@@ -69,7 +66,7 @@ public class Rook extends Piece
 		increment[3]._x = 1;
 		increment[3]._y = 0;
 
-		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
+		Piece piece;
 
 		for(i=0; i<4; i++)
 		{
@@ -84,9 +81,9 @@ public class Rook extends Piece
 
 				if( board.IsRelPositionOnBoard(_colour, currRelPos._x, currRelPos._y) )
 				{
-					pieceDescrip = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
+					piece = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
 
-					if( pieceDescrip._colour == _colour )
+					if( piece != null && piece._colour == _colour )
 					{
 						bDone = true;
 					}
@@ -97,10 +94,10 @@ public class Rook extends Piece
 								rookRY, 
 								currRelPos._x, 
 								currRelPos._y, 
-								(pieceDescrip._colour != Colour.NONE),
+								(piece != null),
 								PieceRank.NONE);
 
-						if ( pieceDescrip._colour != Colour.NONE )
+						if ( piece != null )
 						{
 							bDone = true;
 						}

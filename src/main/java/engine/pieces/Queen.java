@@ -1,17 +1,14 @@
 package engine.pieces;
 
-import engine.board.Board;
-import engine.board.pieceDescriptionType;
-import engine.board.posType;
-import engine.board.relPosType;
+import engine.board.*;
 import engine.moves.MoveStack;
 
 public class Queen extends Piece
 {
 
-	public Queen(Colour colour, int number)
+	public Queen(Colour colour, int number, Square position)
 	{ 
-		super(colour, number);
+		super(colour, number, position);
 		_rank = PieceRank.QUEEN;
 		_materialValue = 9;
 	}
@@ -44,7 +41,7 @@ public class Queen extends Piece
 
 		relPosType relPos = new relPosType();
 
-		board.WhereIs(_colour, _number, relPos);
+		Board.ConvertAbsToRelCoords(_colour, _position.getX(), _position.getY(), relPos);
 
 		queenRX = relPos._rx;
 		queenRY = relPos._ry;
@@ -89,7 +86,7 @@ public class Queen extends Piece
 		increment[7]._x = 1;
 		increment[7]._y = -1;
 
-		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
+		Piece piece;
 
 		for(i=0; i<8; i++)
 		{
@@ -99,31 +96,34 @@ public class Queen extends Piece
 
 			while(!bDone)
 			{
+				boolean bAddMove = false;
+
 				currRelPos._x += increment[i]._x;
 				currRelPos._y += increment[i]._y;
 
 				if( board.IsRelPositionOnBoard(_colour, currRelPos._x, currRelPos._y) )
 				{
-					pieceDescrip = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
+					piece = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
 
-					if( pieceDescrip._colour == _colour )
+					if(piece == null)
+					{
+						bAddMove = true;
+					}
+					else
 					{
 						bDone = true;
+						if( piece._colour != _colour ) bAddMove = true;
 					}
-					else 
+
+					if(bAddMove)
 					{
 						AddMove(possibleMoves, 
 								queenRX, 
 								queenRY, 
 								currRelPos._x, 
 								currRelPos._y, 
-								(pieceDescrip._colour != Colour.NONE),
+								(piece != null),
 								PieceRank.NONE);
-
-						if ( pieceDescrip._colour != Colour.NONE )
-						{
-							bDone = true;
-						}
 					}
 				}
 				else

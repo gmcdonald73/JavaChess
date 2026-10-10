@@ -3,7 +3,7 @@ package engine.moves;
 import engine.*;
 import engine.board.Board;
 import engine.board.Square;
-import engine.board.pieceDescriptionType;
+// import engine.board.pieceDescriptionType;
 import engine.pieces.Colour;
 import engine.pieces.Piece;
 import engine.pieces.PieceRank;
@@ -14,38 +14,29 @@ public class MoveValidator
     public static MoveValidationResult IsMoveLegal(Board board, Colour colour, Move move)
     {
         // Determine piece
-        pieceDescriptionType pieceDescrip;
-        pieceDescrip = board.WhatIsAtSquare(move._startPosition);
+        Piece piece;
+        piece = board.WhatIsAtSquare(move.getStartPosition());
         String errorMessage;
 
-        if (pieceDescrip._rank == PieceRank.NONE )
+        if (piece == null )
         {
             errorMessage = "Illegal move - there is no piece at " + move.StartPos();
             return new MoveValidationResult(false, errorMessage);
         }
 
-        if (pieceDescrip._rank != move._rank )
+        if (piece.Rank() != move._rank )
         {
-            errorMessage = "Illegal move - piece at " + move.StartPos() + " is not a " + move._rank.getSymbol(); // ConvertRankToSymbol(move._rank);
+            errorMessage = "Illegal move - piece at " + move.StartPos() + " is not a " + move._rank.getSymbol();
             return new MoveValidationResult(false, errorMessage);
         }
 
-        if (pieceDescrip._colour != colour )
+        if (piece.Colour() != colour )
         {
             errorMessage = "Illegal move - piece at " + move.StartPos() + " is not yours";
             return new MoveValidationResult(false, errorMessage);
         }
 
-        move._number = pieceDescrip._number;
-
-        Piece piece = board.getPiece(colour, pieceDescrip._number);
-
-        if(piece == null)
-        {
-            // Couldn't find piece that move is referring to
-            errorMessage = "Internal error - null piece pointer";
-            return new MoveValidationResult(false, errorMessage);
-        }
+        move._number = piece.Number();
 
         int numMoves = 0;
         MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
@@ -64,8 +55,8 @@ public class MoveValidator
             currMove = moves.getMove(i);
 
             // !!! Where does this belong?
-            currMove._startPosition = Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY);
-            currMove._endPosition = Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY);
+            currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
+            currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
 
             if( move.equals(currMove))
             {
@@ -79,7 +70,7 @@ public class MoveValidator
 
                 // Copy the board to a test board
                 // Make a copy so that the original board is not modified
-                Board testBoard = board.copy();
+                Board testBoard = new Board(board);
 
                 // Make the move
                 testBoard.MakeMove(move);

@@ -2,12 +2,13 @@ package engine.players;
 
 import engine.*;
 import engine.board.Board;
-import engine.board.pieceDescriptionType;
+// import engine.board.pieceDescriptionType;
 import engine.board.relPosType;
 import engine.moves.Move;
 import engine.moves.MoveRequest;
 import engine.moves.MoveStack;
 import engine.pieces.Colour;
+import engine.pieces.Piece;
 import engine.pieces.PieceRank;
 
 public class BotPlayer extends ChessPlayer {
@@ -44,13 +45,13 @@ public class BotPlayer extends ChessPlayer {
         // Sneaky stuff, take a copy so that the original board is not modified.
         // This effectively simulates pass by value for board.
         // !!! do we need to do this here, or just in RecursiveFindBestMove?
-        Board testBoard = board.copy();
+        // Board testBoard = board.copy();
 
         int numMovesToLookAhead = 2;
 
         while(numMovesToLookAhead <= lookAheadMax)
         {
-            if( !RecursiveFindBestMove(getColour(), testBoard, 0, numMovesToLookAhead, moveStack) )
+            if( !RecursiveFindBestMove(getColour(), board, 0, numMovesToLookAhead, moveStack) )
             {
                 // no legal move
                 return false;
@@ -73,7 +74,7 @@ public class BotPlayer extends ChessPlayer {
         // Take a copy so that the original board is not modified.
         // This effectively simulates pass by value for board.
         // !!! Do we need to do this here, or just in EvaluateMove?
-        Board testBoard = board.copy();
+        // Board testBoard = board.copy();
 
         boolean bFoundLegalMove = false;
         Move[] tempMoveStack = new Move[Constants.MAX_MOVES_LOOKAHEAD];
@@ -88,7 +89,7 @@ public class BotPlayer extends ChessPlayer {
 
         // Ask board for all legal moves
         // then loop through each move and rate them
-        testBoard.GetMoves(possibleMoves, colour);
+        board.GetMoves(possibleMoves, colour);
 
         // Loop through all possible moves for the player
         for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
@@ -104,7 +105,7 @@ public class BotPlayer extends ChessPlayer {
             tempMoveStack[lookAheadLevel]._score = Constants.MS_UNDEFINED;
 
             // Evaluate the move
-            EvaluateMove(colour, tempMoveStack, testBoard, lookAheadLevel, numMovesToLookAhead);
+            EvaluateMove(colour, tempMoveStack, board, lookAheadLevel, numMovesToLookAhead);
 
             if(tempMoveStack[lookAheadLevel]._score > moveStack[lookAheadLevel]._score)
             {
@@ -134,7 +135,7 @@ public class BotPlayer extends ChessPlayer {
     {
         // Take a copy so that the original board is not modified.
         // This effectively simulates pass by value for board.
-        Board testBoard = board.copy();
+        Board testBoard = new Board(board);
 
         // Make the move
         testBoard.MakeMove(moveStack[lookAheadLevel]);
@@ -279,6 +280,7 @@ public class BotPlayer extends ChessPlayer {
         // Points for pawns defended by other pawns
 
         // Loop through pawns
+/*
         for(int i=0; i<8; i++)
         {
             if(board.IsPieceAlive(colour, i))
@@ -297,14 +299,14 @@ public class BotPlayer extends ChessPlayer {
                 // See if pawn is defend by another pawn
 
                 // Check SW pos (relative to pawn)
-                pieceDescriptionType pieceDescrip;
+                Piece piece;
 
                 if (relPos._rx > 1)
                 {
-                    pieceDescrip = board.WhatIsAt(colour, relPos._rx - 1, relPos._ry - 1);
+                    piece = board.WhatIsAt(colour, relPos._rx - 1, relPos._ry - 1);
 
-                    if ((pieceDescrip._colour == colour) &&
-                            (pieceDescrip._rank == PieceRank.PAWN))
+                    if ((piece.Colour() == colour) &&
+                            (piece.Rank() == PieceRank.PAWN))
                     {
                         score += 1;
                     }
@@ -313,16 +315,17 @@ public class BotPlayer extends ChessPlayer {
                 if (relPos._rx < 8)
                 {
                     // Check SE pos (relative to pawn)
-                    pieceDescrip = board.WhatIsAt(colour, relPos._rx + 1, relPos._ry - 1);
+                    piece = board.WhatIsAt(colour, relPos._rx + 1, relPos._ry - 1);
 
-                    if ((pieceDescrip._colour == colour) &&
-                            (pieceDescrip._rank == PieceRank.PAWN))
+                    if ((piece.Colour() == colour) &&
+                            (piece.Rank() == PieceRank.PAWN))
                     {
                         score += 1;
                     }
                 }
             }
         }
+*/
 
         score += board.MaterialValue(colour) * 10;
 

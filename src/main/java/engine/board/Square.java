@@ -15,7 +15,7 @@ public class Square
         _y = y;
     }
 
-    public static Square from(String san)
+    public static Square fromSAN(String san)
     {
         int x,y;
 

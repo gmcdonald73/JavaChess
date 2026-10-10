@@ -9,35 +9,28 @@ import engine.pieces.PieceRank;
 public class MoveRequest
 {
     private final PieceRank _rank;
-    private final Square _startPosition;
+    private Square _startPosition;
     private final Square _endPosition;
-    private final boolean _isCapture;
-    private final Integer _disambiguationRank;
-    private final Character _disambiguationFile;
-    private final PieceRank _promoteTo;
-    private final boolean _castleKingSide;
-    private final boolean _castleQueenSide;
+    private boolean _isCapture;
+    private Integer _disambiguationRank;
+    private Character _disambiguationFile;
+    private PieceRank _promoteTo;
+    private boolean _castleKingSide;
+    private boolean _castleQueenSide;
 
     public MoveRequest(
             PieceRank rank,
-            Square startPosition,
-            Square endPosition,
-            boolean isCapture,
-            Integer disambiguationRank,
-            Character disambiguationFile,
-            PieceRank promoteTo,
-            boolean castleKingSide,
-            boolean castleQueenSide)
+            Square endPosition)
     {
         _rank = rank;
-        _startPosition = startPosition;
+        _startPosition = null;
         _endPosition = endPosition;
-        _isCapture = isCapture;
-        _disambiguationRank = disambiguationRank;
-        _disambiguationFile = disambiguationFile;
-        _promoteTo = promoteTo == null ? PieceRank.NONE : promoteTo;
-        _castleKingSide = castleKingSide;
-        _castleQueenSide = castleQueenSide;
+        _isCapture = false;
+        _disambiguationRank = null;
+        _disambiguationFile = null;
+        _promoteTo = PieceRank.NONE;
+        _castleKingSide = false;
+        _castleQueenSide = false;
     }
 
     public static MoveRequest fromMove(Move move)
@@ -47,46 +40,42 @@ public class MoveRequest
         Square startPosition = Square.fromRelCoords(move._colour, move._startRX, move._startRY);
         Square endPosition = Square.fromRelCoords(move._colour, move._endRX, move._endRY);
 
-/*
-        relPosType relStart = new relPosType();
-        posType absStart = new posType();
-        relStart._colour = move._colour;
-        relStart._rx = move._startRX;
-        relStart._ry = move._startRY;
-        Board.ConvertRelToAbsCoords(relStart, absStart);
-        Square startPosition = new Square(absStart._x, absStart._y);
-
-        // Convert move end pos from rel to abs and create endPosition
-        relPosType relEnd = new relPosType();
-        posType absEnd = new posType();
-        relEnd._colour = move._colour;
-        relEnd._rx = move._endRX;
-        relEnd._ry = move._endRY;
-        Board.ConvertRelToAbsCoords(relEnd, absEnd);
-        Square endPosition = new Square(absEnd._x, absEnd._y);
-*/
-
-        return new MoveRequest(
+        MoveRequest request = new MoveRequest(
                 move._rank,
-                startPosition,
-                endPosition,
-                move._bIsCapture,
-                null,
-                null,
-                move._promoteTo,
-                move._bCastleKingSide,
-                move._bCastleQueenSide
-        );
+                endPosition );
+
+        request.setStartPosition(startPosition);
+        request.setIsCapture(move._bIsCapture);
+        request.setPromoteTo(move._promoteTo);
+        request.setCastleKingSide(move._bCastleKingSide);
+        request.setCastleQueenSide(move._bCastleQueenSide);
+
+        return request;
     }
 
     public PieceRank getRank() { return _rank; }
-    public Square getStartPosition() { return _startPosition; }
     public Square getEndPosition() { return _endPosition; }
+
+    public Square getStartPosition() { return _startPosition; }
+    public void setStartPosition(Square startPosition) { _startPosition = startPosition; }
+
     public boolean isCapture() { return _isCapture; }
+    public void setIsCapture(boolean isCapture) { _isCapture = isCapture; }
+
     public Integer getDisambiguationRank() { return _disambiguationRank; }
+    public void setDisambiguationRank(Integer disambiguationRank) { _disambiguationRank = disambiguationRank; }
+
     public Character getDisambiguationFile() { return _disambiguationFile; }
+    public void setDisambiguationFile(Character disambiguationFile) { _disambiguationFile = disambiguationFile; }
+
     public PieceRank getPromoteTo() { return _promoteTo; }
+    public void setPromoteTo(PieceRank promoteTo) { _promoteTo = promoteTo; }
+
     public boolean isCastleKingSide() { return _castleKingSide; }
+    public void setCastleKingSide(boolean castleKingSide) { _castleKingSide = castleKingSide; }
+
     public boolean isCastleQueenSide() { return _castleQueenSide; }
+    public void setCastleQueenSide(boolean castleQueenSide) { _castleQueenSide = castleQueenSide; }
+
     public boolean hasStartPosition() { return _startPosition != null; }
 }

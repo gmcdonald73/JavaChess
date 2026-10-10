@@ -1,17 +1,14 @@
 package engine.pieces;
 
-import engine.board.Board;
-import engine.board.pieceDescriptionType;
-import engine.board.posType;
-import engine.board.relPosType;
+import engine.board.*;
 import engine.moves.Move;
 import engine.moves.MoveStack;
 
 public class Pawn extends Piece
 {
-	public Pawn(Colour colour, int number)
+	public Pawn(Colour colour, int number, Square position)
 	{ 
-		super(colour, number);
+		super(colour, number, position);
 		_rank = PieceRank.PAWN;
 		_materialValue = 1;
 	}
@@ -44,14 +41,15 @@ public class Pawn extends Piece
 		posType testRelPos = new posType();
 		relPosType relPos = new relPosType();
 
-		board.WhereIs(_colour, _number, relPos);
+		Board.ConvertAbsToRelCoords(_colour, _position.getX(), _position.getY(), relPos);
 
 		pawnRX = relPos._rx;
 		pawnRY = relPos._ry;
 
+/*
 		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
 
-		// Check if pawn has been promoted
+		// Check if pawn has been promoted - !!! need to change all this and just replace the pawn with a new piece
 		pieceDescrip = board.WhatIsAt(_colour, pawnRX, pawnRY);
 
 		if(pieceDescrip._rank == PieceRank.KNIGHT)
@@ -81,17 +79,20 @@ public class Pawn extends Piece
 			queen.GetMoves(board, possibleMoves, false);
 			return;
 		}
+*/
 
 		// Check the pawn can move forward one square
 		testRelPos._x = pawnRX;
 		testRelPos._y = pawnRY + 1;
 
+		Piece piece;
+
 		if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
-			pieceDescrip = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
 			// If the position is empty then we can move there
-			if( pieceDescrip._colour == Colour.NONE)
+			if( piece == null)
 			{
 				AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, false, PieceRank.NONE);
 
@@ -104,10 +105,10 @@ public class Pawn extends Piece
 
 					if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 					{
-						pieceDescrip = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+						piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
 						// If the position is empty then we can move there
-						if( pieceDescrip._colour == Colour.NONE)
+						if( piece == null)
 						{
 							AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, false, PieceRank.NONE);
 						}
@@ -124,12 +125,15 @@ public class Pawn extends Piece
 
 		if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
-			pieceDescrip = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
-			// If the position is occupied by an enemy piece then we can move there
-			if( pieceDescrip._colour == _colour.opposite() )
+			if(piece != null)
 			{
-				AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, PieceRank.NONE);
+				// If the position is occupied by an enemy piece then we can move there
+				if (piece._colour == _colour.opposite())
+				{
+					AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, PieceRank.NONE);
+				}
 			}
 		}
 
@@ -139,12 +143,15 @@ public class Pawn extends Piece
 
 		if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
-			pieceDescrip = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
-			// If the position is occupied by an enemy piece then we can move there
-			if( pieceDescrip._colour == _colour.opposite() )
+			if(piece != null)
 			{
-				AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, PieceRank.NONE);
+				// If the position is occupied by an enemy piece then we can move there
+				if( piece._colour == _colour.opposite() )
+				{
+					AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, PieceRank.NONE);
+				}
 			}
 		}
 
@@ -161,11 +168,11 @@ public class Pawn extends Piece
 
 			if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 			{
-				pieceDescrip = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+				piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
-				if( pieceDescrip._rank == PieceRank.PAWN )
+				if( piece != null && piece._rank == PieceRank.PAWN )
 				{
-					if(board.HasPawnMovedTwoStepsLastTurn(pieceDescrip._colour, pieceDescrip._number))
+					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, piece._number))
 					{
 						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, PieceRank.NONE);
 						possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
@@ -181,11 +188,11 @@ public class Pawn extends Piece
 
 			if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 			{
-				pieceDescrip = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+				piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
-				if( pieceDescrip._rank == PieceRank.PAWN )
+				if(piece != null && piece._rank == PieceRank.PAWN )
 				{
-					if(board.HasPawnMovedTwoStepsLastTurn(pieceDescrip._colour, pieceDescrip._number))
+					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, piece._number))
 					{
 						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, PieceRank.NONE);
 						possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
@@ -241,6 +248,7 @@ public class Pawn extends Piece
 		}
 	}
 
+/*
 	@Override
 	// NOTE : This routine should NOT modify the board
 	// !!! update pawn rank when it is promoted rather than having to check board?
@@ -264,11 +272,7 @@ public class Pawn extends Piece
 		// In case the pawn hasn't been placed onto the board yet
 		return PieceRank.PAWN;
 	}
-
-	public void PromoteTo(Board board, PieceRank promoteTo)
-	{
-		board.PromotePawn(_colour, _number, promoteTo);
-	}
+*/
 }
 
 

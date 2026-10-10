@@ -1,17 +1,14 @@
 package engine.pieces;
 
-import engine.board.Board;
-import engine.board.PieceNumber;
-import engine.board.pieceDescriptionType;
-import engine.board.relPosType;
+import engine.board.*;
 import engine.moves.Move;
 import engine.moves.MoveStack;
 
 public class King extends Piece
 {
-	public King(Colour colour, int number)
+	public King(Colour colour, int number, Square position)
 	{ 
-		super(colour, number);
+		super(colour, number, position);
 		_rank = PieceRank.KING;
 		_materialValue = 1; // so formulas work if only king left
 	}
@@ -41,7 +38,7 @@ public class King extends Piece
 		int kingRX = 0, kingRY = 0, i = 0;
 		relPosType relPos = new relPosType();
 
-		board.WhereIs(_colour, _number, relPos);
+		Board.ConvertAbsToRelCoords(_colour, _position.getX(), _position.getY(), relPos);
 
 		kingRX = relPos._rx;
 		kingRY = relPos._ry;
@@ -85,17 +82,17 @@ public class King extends Piece
 		_testMove[7]._endRX = kingRX + 1;
 		_testMove[7]._endRY = kingRY - 1;
 
-		pieceDescriptionType pieceDescrip;
+		Piece piece;
 
 		for(i=0; i<8; i++)
 		{
 			if( board.IsRelPositionOnBoard(_colour, _testMove[i]._endRX, _testMove[i]._endRY) )
 			{
-				pieceDescrip = board.WhatIsAt(_colour, _testMove[i]._endRX, _testMove[i]._endRY);
+				piece = board.WhatIsAt(_colour, _testMove[i]._endRX, _testMove[i]._endRY);
 
-				if( pieceDescrip._colour != _colour )
+				if( piece == null || piece._colour != _colour )
 				{
-					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (pieceDescrip._colour != Colour.NONE), PieceRank.NONE);
+					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), PieceRank.NONE);
 				}
 			}
 		}
@@ -110,7 +107,7 @@ public class King extends Piece
 		// Check for castling moves
 
 		// Has king moved?
-		if( board.HasPieceMovedThisGame(_colour, PieceNumber.KING))
+		if( HasMovedThisGame())
 		{
 			// King can't castle if it has already moved
 			return;
@@ -165,7 +162,7 @@ public class King extends Piece
 		// Check for castling
 		int rookStartX;
 		int kingRX;
-		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
+		Piece piece;
 
 		if( _colour == Colour.WHITE )
 		{
@@ -186,15 +183,17 @@ public class King extends Piece
 		}
 
 		// See if there is a rook at the correct position
-		pieceDescrip = board.WhatIsAt(_colour, rookStartX, 1);
+		piece = board.WhatIsAt(_colour, rookStartX, 1);
 
-		if( !((pieceDescrip._rank == PieceRank.ROOK) && (pieceDescrip._colour == _colour)) )
+		if(piece == null) return false;
+
+		if( !((piece._rank == PieceRank.ROOK) && (piece._colour == _colour)) )
 		{
 			return false;
 		}
 
 		// Has rook moved?
-		if( board.HasPieceMovedThisGame(_colour, pieceDescrip._number))
+		if( piece.HasMovedThisGame())
 		{
 			return false;
 		}
@@ -217,9 +216,9 @@ public class King extends Piece
 		// Are the squares between the king and the rook clear?
 		for(rx=startRX; rx<=endRX; rx++)
 		{
-			pieceDescrip = board.WhatIsAt(_colour, rx, 1);
+			piece = board.WhatIsAt(_colour, rx, 1);
 
-			if(pieceDescrip._rank != PieceRank.NONE)
+			if(piece != null)
 			{
 				return false;
 			}

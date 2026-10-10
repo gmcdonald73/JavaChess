@@ -22,7 +22,7 @@ class MoveParserTest {
         MoveRequest request = mpr.getMoveRequest();
 
         assertEquals(PieceRank.PAWN, request.getRank());
-        assertEquals(Square.from("e4"), request.getEndPosition());
+        assertEquals(Square.fromSAN("e4"), request.getEndPosition());
         assertFalse(request.isCapture());
     }
 
@@ -35,7 +35,7 @@ class MoveParserTest {
         MoveRequest request = parser.parse("Nf3").getMoveRequest();
 
         assertEquals(PieceRank.KNIGHT, request.getRank());
-        assertEquals(Square.from("f3"), request.getEndPosition());
+        assertEquals(Square.fromSAN("f3"), request.getEndPosition());
         assertFalse(request.isCapture());
     }
 
@@ -44,7 +44,7 @@ class MoveParserTest {
         MoveRequest request = parser.parse("Bc4").getMoveRequest();
 
         assertEquals(PieceRank.BISHOP, request.getRank());
-        assertEquals(Square.from("c4"), request.getEndPosition());
+        assertEquals(Square.fromSAN("c4"), request.getEndPosition());
     }
 
     @Test
@@ -52,7 +52,7 @@ class MoveParserTest {
         MoveRequest request = parser.parse("Ra1").getMoveRequest();
 
         assertEquals(PieceRank.ROOK, request.getRank());
-        assertEquals(Square.from("a1"), request.getEndPosition());
+        assertEquals(Square.fromSAN("a1"), request.getEndPosition());
     }
 
     @Test
@@ -60,7 +60,7 @@ class MoveParserTest {
         MoveRequest request = parser.parse("Qd4").getMoveRequest();
 
         assertEquals(PieceRank.QUEEN, request.getRank());
-        assertEquals(Square.from("d4"), request.getEndPosition());
+        assertEquals(Square.fromSAN("d4"), request.getEndPosition());
     }
 
     @Test
@@ -68,7 +68,7 @@ class MoveParserTest {
         MoveRequest request = parser.parse("Kf2").getMoveRequest();
 
         assertEquals(PieceRank.KING, request.getRank());
-        assertEquals(Square.from("f2"), request.getEndPosition());
+        assertEquals(Square.fromSAN("f2"), request.getEndPosition());
     }
 
     // ------------------------------------------------------------
@@ -82,7 +82,7 @@ class MoveParserTest {
         assertEquals(PieceRank.PAWN, request.getRank());
         assertTrue(request.isCapture());
         assertEquals('b', request.getDisambiguationFile());
-        assertEquals(Square.from("c6"), request.getEndPosition());
+        assertEquals(Square.fromSAN("c6"), request.getEndPosition());
     }
 
     @Test
@@ -91,7 +91,7 @@ class MoveParserTest {
 
         assertEquals(PieceRank.BISHOP, request.getRank());
         assertTrue(request.isCapture());
-        assertEquals(Square.from("c6"), request.getEndPosition());
+        assertEquals(Square.fromSAN("c6"), request.getEndPosition());
     }
 
     @Test
@@ -100,7 +100,7 @@ class MoveParserTest {
 
         assertEquals(PieceRank.KNIGHT, request.getRank());
         assertTrue(request.isCapture());
-        assertEquals(Square.from("f3"), request.getEndPosition());
+        assertEquals(Square.fromSAN("f3"), request.getEndPosition());
     }
 
     // ------------------------------------------------------------
@@ -113,7 +113,7 @@ class MoveParserTest {
 
         assertEquals(PieceRank.KNIGHT, request.getRank());
         assertEquals('b', request.getDisambiguationFile());
-        assertEquals(Square.from("d2"), request.getEndPosition());
+        assertEquals(Square.fromSAN("d2"), request.getEndPosition());
     }
 
     @Test
@@ -122,7 +122,7 @@ class MoveParserTest {
 
         assertEquals(PieceRank.KNIGHT, request.getRank());
         assertEquals(1, request.getDisambiguationRank());
-        assertEquals(Square.from("d2"), request.getEndPosition());
+        assertEquals(Square.fromSAN("d2"), request.getEndPosition());
     }
 
     @Test
@@ -132,7 +132,7 @@ class MoveParserTest {
         assertEquals(PieceRank.KNIGHT, request.getRank());
         assertEquals('b', request.getDisambiguationFile());
         assertEquals(1, request.getDisambiguationRank());
-        assertEquals(Square.from("d2"), request.getEndPosition());
+        assertEquals(Square.fromSAN("d2"), request.getEndPosition());
     }
 
     @Test
@@ -142,7 +142,7 @@ class MoveParserTest {
         assertEquals(PieceRank.KNIGHT, request.getRank());
         assertEquals('b', request.getDisambiguationFile());
         assertTrue(request.isCapture());
-        assertEquals(Square.from("d2"), request.getEndPosition());
+        assertEquals(Square.fromSAN("d2"), request.getEndPosition());
     }
 
 }
