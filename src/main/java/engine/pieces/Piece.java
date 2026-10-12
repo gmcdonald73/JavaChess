@@ -14,17 +14,14 @@ import engine.moves.MoveStack;
 public abstract class Piece
 {
 	protected final Colour _colour;
-	protected final int _number;
-
 	protected PieceRank _rank;
 	protected long _materialValue;
 	protected Square _position;
 	protected boolean _hasMovedThisGame;
 
-	public Piece(Colour colour, int number, Square position)
+	public Piece(Colour colour, Square position)
 	{
 		_colour = colour;
-		_number = number;
 		_position = position;
 		_hasMovedThisGame = false;
 	}
@@ -32,7 +29,6 @@ public abstract class Piece
 	protected Piece(Piece other)
 	{
 		_colour = other._colour;
-		_number = other._number;
 		_rank = other._rank;
 		_materialValue = other._materialValue;
 		_position = other._position; // !!! should this create a new Square?
@@ -42,9 +38,6 @@ public abstract class Piece
 
 	public PieceRank Rank() { return _rank; }
 
-	public int Number() { return _number; }
-
-	// NOTE : This routine should NOT modify the board
 	public char Symbol()
 	{
 		return Rank().getSymbol();
@@ -116,13 +109,13 @@ public abstract class Piece
 		return false;
 	}
 
+	// !!! Change this to accept a move?
 	protected void AddMove(MoveStack moveStack, int startX, int startY, int endX, int endY, boolean bIsCapture, PieceRank promoteTo)
 	{
 		Move move = new Move();
 
 		// !!! put all this in a move constructor
 		move._colour = _colour;
-		move._number = _number;
 		move._rank = _rank;
 		move._startRX = startX;
 		move._startRY = startY;

@@ -109,37 +109,50 @@ public class MoveResolver
 
         for(Piece piece : pieceList)
         {
-            if(board.IsPieceAlive(colour, piece.Number()))
+            if(piece.Rank() == request.getRank())
             {
-                if(piece.Rank() == request.getRank())
+                if(request.getDisambiguationFile() != null)
                 {
-                    MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
-
-                    // Get the moves for the piece
-                    piece.GetMoves(board, moves, false);
-                    int numMoves = moves.getNumMoves();
-
-                    for(int i=0; i<numMoves; i++)
+                    if(piece.getPosition().getFile() != request.getDisambiguationFile())
                     {
-                        Move currMove;
+                        continue;
+                    }
+                }
 
-                        currMove = moves.getMove(i);
+                if(request.getDisambiguationRank() != null)
+                {
+                    if(piece.getPosition().getRank() != request.getDisambiguationRank())
+                    {
+                        continue;
+                    }
+                }
 
-                        // !!! Where does this belong?
-                        currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
-                        currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
+                MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 
-                        // !!! should also check promotionTo
-                        if(request.getEndPosition().equals(currMove.getEndPosition()))
+                // Get the moves for the piece
+                piece.GetMoves(board, moves, false);
+                int numMoves = moves.getNumMoves();
+
+                for(int i=0; i<numMoves; i++)
+                {
+                    Move currMove;
+
+                    currMove = moves.getMove(i);
+
+                    // !!! Where does this belong?
+                    currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
+                    currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
+
+                    if(request.getEndPosition().equals(currMove.getEndPosition())
+                             && (request.getPromoteTo() == currMove._promoteTo))
+                    {
+                        if(resolvedMove == null)
                         {
-                            if(resolvedMove == null)
-                            {
-                                resolvedMove = currMove;
-                            }
-                            else
-                            {
-                                return MoveResolutionResult.error("Move is ambiguous");
-                            }
+                            resolvedMove = currMove;
+                        }
+                        else
+                        {
+                            return MoveResolutionResult.error("Move is ambiguous");
                         }
                     }
                 }

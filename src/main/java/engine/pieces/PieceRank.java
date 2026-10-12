@@ -6,8 +6,8 @@ public enum PieceRank {
 	BISHOP('B'),
 	KNIGHT('N'),
 	ROOK('R'),
-	PAWN('P'),
-	NONE(' ');
+	PAWN('P');
+	//  NONE(' ');
 
 	private final char symbol;
 

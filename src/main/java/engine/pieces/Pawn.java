@@ -6,9 +6,9 @@ import engine.moves.MoveStack;
 
 public class Pawn extends Piece
 {
-	public Pawn(Colour colour, int number, Square position)
+	public Pawn(Colour colour, Square position)
 	{ 
-		super(colour, number, position);
+		super(colour, position);
 		_rank = PieceRank.PAWN;
 		_materialValue = 1;
 	}
@@ -30,12 +30,6 @@ public class Pawn extends Piece
 	{
 		int startNumMoves = possibleMoves.getNumMoves();
 
-		if( !board.IsPieceAlive(_colour, _number) )
-		{
-			// return no moves if the piece is dead
-			return;
-		}
-
 		// Get the current position of the pawn
 		int pawnRX = 0, pawnRY = 0;
 		posType testRelPos = new posType();
@@ -46,55 +40,20 @@ public class Pawn extends Piece
 		pawnRX = relPos._rx;
 		pawnRY = relPos._ry;
 
-/*
-		pieceDescriptionType pieceDescrip = new pieceDescriptionType();
-
-		// Check if pawn has been promoted - !!! need to change all this and just replace the pawn with a new piece
-		pieceDescrip = board.WhatIsAt(_colour, pawnRX, pawnRY);
-
-		if(pieceDescrip._rank == PieceRank.KNIGHT)
-		{
-			Knight knight = new Knight(_colour, _number);
-			knight.GetMoves(board, possibleMoves, false);
-			return;
-		}
-
-		if(pieceDescrip._rank == PieceRank.BISHOP)
-		{
-			Bishop bishop = new Bishop(_colour, _number);
-			bishop.GetMoves(board, possibleMoves, false);
-			return;
-		}
-
-		if(pieceDescrip._rank == PieceRank.ROOK)
-		{
-			Rook rook = new Rook(_colour, _number);
-			rook.GetMoves(board, possibleMoves, false);
-			return;
-		}
-
-		if(pieceDescrip._rank == PieceRank.QUEEN)
-		{
-			Queen queen = new Queen(_colour, _number);
-			queen.GetMoves(board, possibleMoves, false);
-			return;
-		}
-*/
-
 		// Check the pawn can move forward one square
 		testRelPos._x = pawnRX;
 		testRelPos._y = pawnRY + 1;
 
 		Piece piece;
 
-		if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
+		if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
 			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
 			// If the position is empty then we can move there
 			if( piece == null)
 			{
-				AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, false, PieceRank.NONE);
+				AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, false, null);
 
 				// Check if the pawn can move forward two squares
 				// It can only do this if it is on the second row (starting row), and it could
@@ -110,7 +69,7 @@ public class Pawn extends Piece
 						// If the position is empty then we can move there
 						if( piece == null)
 						{
-							AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, false, PieceRank.NONE);
+							AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, false, null);
 						}
 					}
 				}
@@ -132,7 +91,7 @@ public class Pawn extends Piece
 				// If the position is occupied by an enemy piece then we can move there
 				if (piece._colour == _colour.opposite())
 				{
-					AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, PieceRank.NONE);
+					AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, null);
 				}
 			}
 		}
@@ -150,7 +109,7 @@ public class Pawn extends Piece
 				// If the position is occupied by an enemy piece then we can move there
 				if( piece._colour == _colour.opposite() )
 				{
-					AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, PieceRank.NONE);
+					AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y, true, null);
 				}
 			}
 		}
@@ -172,9 +131,9 @@ public class Pawn extends Piece
 
 				if( piece != null && piece._rank == PieceRank.PAWN )
 				{
-					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, piece._number))
+					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, 0))
 					{
-						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, PieceRank.NONE);
+						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, null);
 						possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
 					}
 				}
@@ -192,9 +151,9 @@ public class Pawn extends Piece
 
 				if(piece != null && piece._rank == PieceRank.PAWN )
 				{
-					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, piece._number))
+					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, 0))
 					{
-						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, PieceRank.NONE);
+						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, null);
 						possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
 					}
 				}

@@ -6,9 +6,9 @@ import engine.moves.MoveStack;
 
 public class King extends Piece
 {
-	public King(Colour colour, int number, Square position)
+	public King(Colour colour, Square position)
 	{ 
-		super(colour, number, position);
+		super(colour, position);
 		_rank = PieceRank.KING;
 		_materialValue = 1; // so formulas work if only king left
 	}
@@ -28,12 +28,6 @@ public class King extends Piece
 	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
-		if( !board.IsPieceAlive(_colour, _number) )
-		{
-			// return no moves if the piece is dead
-			return;
-		}
-
 		// Get the current position of the king
 		int kingRX = 0, kingRY = 0, i = 0;
 		relPosType relPos = new relPosType();
@@ -92,7 +86,7 @@ public class King extends Piece
 
 				if( piece == null || piece._colour != _colour )
 				{
-					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), PieceRank.NONE);
+					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), null);
 				}
 			}
 		}
@@ -124,7 +118,7 @@ public class King extends Piece
 		// (queenside for white, king side for black)
 		if(CanKingCastle(board, true))
 		{
-			AddMove(possibleMoves, kingRX, kingRY, kingRX - 2, kingRY, false, PieceRank.NONE);
+			AddMove(possibleMoves, kingRX, kingRY, kingRX - 2, kingRY, false, null);
 
 			if(_colour == Colour.WHITE)
 			{
@@ -140,7 +134,7 @@ public class King extends Piece
 		// king side for white, queen side for black
 		if(CanKingCastle(board, false))
 		{
-			AddMove(possibleMoves, kingRX, kingRY, kingRX + 2, kingRY, false, PieceRank.NONE);
+			AddMove(possibleMoves, kingRX, kingRY, kingRX + 2, kingRY, false, null);
 
 			if(_colour == Colour.WHITE)
 			{

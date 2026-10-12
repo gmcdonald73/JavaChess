@@ -9,6 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MoveResolverTest {
 
+    /*
+    tests to add:
+    resolve move using rank disambiguation
+    when rank or file disambiguation fails and you need both
+     */
+
     @Test
     void resolveFullySpecifiedMove()
     {
@@ -29,6 +35,27 @@ public class MoveResolverTest {
 
         assertEquals(Square.fromSAN("g1"), move.getStartPosition());
         assertEquals(Square.fromSAN("f3"), move.getEndPosition());
+    }
+
+    @Test
+    void resolveFailsForAmbiguousMove()
+    {
+        // White knights on b1 and f3.
+        // "Nd2" should fail.
+
+        Board board = new Board();
+
+        board.PlacePiece(Colour.WHITE, PieceRank.KNIGHT, "b1");
+        board.PlacePiece(Colour.WHITE, PieceRank.KNIGHT, "f3");
+
+        MoveRequest request = new MoveRequest(
+                PieceRank.KNIGHT,
+                Square.fromSAN("d2")
+        );
+
+        MoveResolutionResult result = MoveResolver.resolve(board, request, Colour.WHITE);
+
+        assertFalse(result.isSuccess());
     }
 
     @Test

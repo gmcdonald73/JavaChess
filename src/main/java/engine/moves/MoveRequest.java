@@ -28,7 +28,7 @@ public class MoveRequest
         _isCapture = false;
         _disambiguationRank = null;
         _disambiguationFile = null;
-        _promoteTo = PieceRank.NONE;
+        _promoteTo = null;
         _castleKingSide = false;
         _castleQueenSide = false;
     }

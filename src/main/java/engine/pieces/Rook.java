@@ -6,9 +6,9 @@ import engine.moves.MoveStack;
 public class Rook extends Piece
 {
 
-	public Rook(Colour colour, int number, Square position)
+	public Rook(Colour colour, Square position)
 	{ 
-		super(colour, number, position);
+		super(colour, position);
 		_rank = PieceRank.ROOK;
 		_materialValue = 5;
 	}
@@ -27,12 +27,6 @@ public class Rook extends Piece
 	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
-		if( !board.IsPieceAlive(_colour, _number) )
-		{
-			// return no moves if the piece is dead
-			return;
-		}
-
 		// Get the current position of the rook
 		int rookRX = 0, rookRY = 0, i = 0;
 		posType[] increment = new posType[4];
@@ -95,7 +89,7 @@ public class Rook extends Piece
 								currRelPos._x, 
 								currRelPos._y, 
 								(piece != null),
-								PieceRank.NONE);
+								null);
 
 						if ( piece != null )
 						{

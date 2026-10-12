@@ -10,7 +10,6 @@ import java.util.Objects;
 public class Move
 {
 	public Colour _colour;
-	public int _number;
 	public PieceRank _rank;
 	public boolean _bIsCapture; // Is the move a capture?
 	public PieceRank _promoteTo;
@@ -38,14 +37,13 @@ public class Move
 	public Move()
 	{
 		_colour = Colour.NONE;
-		_number = 0; //PieceNumber.NONE;
-		_rank = PieceRank.NONE;
+		_rank = null;
 		_startRX = -1; // These are relative for each army
 		_startRY = -1;
 		_endRX = -1; // These are relative for each army
 		_endRY = -1;
 		_bIsCapture = false; // Is the move a capture?
-		_promoteTo = PieceRank.NONE;
+		_promoteTo = null;
 		_bIsCheck = false;
 		_bIsMate = false;
 		_bCastleQueenSide = false;
@@ -57,7 +55,6 @@ public class Move
 	public void Copy(Move src)
 	{
 		_colour = src._colour;
-		_number = src._number;
 		_rank = src._rank;
 		_startRX = src._startRX;
 		_startRY = src._startRY;
@@ -113,10 +110,16 @@ public class Move
 	public void setEndPosition(Square endPosition) {_endPosition = endPosition; }
 	public Square getEndPosition() { return _endPosition; }
 
+	public void UpdateAbsolutePositions()
+	{
+		setStartPosition( Square.fromRelCoords(_colour, _startRX, _startRY));
+		setEndPosition( Square.fromRelCoords(_colour, _endRX, _endRY));
+	}
+
+
 	public String StartPos() {
 		return FormatRelPos(_colour, _startRX, _startRY);
 	}
-
 	public String EndPos() {
 		return FormatRelPos(_colour, _endRX, _endRY);
 	}

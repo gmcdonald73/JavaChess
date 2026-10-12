@@ -4,11 +4,20 @@ import engine.board.Board;
 import engine.moves.*;
 import engine.pieces.Colour;
 
+import engine.pieces.PieceRank;
 import org.junit.jupiter.api.Test;
+
+import static engine.ChessTestUtils.makeMove;
+//import static engine.ChessTestUtils.makeMove2;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MoveValidatorTest
 {
+    /*
+    Tests to add:
+    check it recognises pinned pieces when determining legal moves
+     */
+
     @Test
     void foolsMateTest()
     {
@@ -26,34 +35,5 @@ public class MoveValidatorTest
 
     }
 
-    static void makeMove(Board board, Colour colour, String input)
-    {
-        MoveParseResult mpr = MoveParser.parse(input);
 
-        if (!mpr.isValid())
-        {
-            throw new AssertionError(input + " - " + mpr.getErrorMessage());
-        }
-
-        MoveRequest moveRequest = mpr.getMoveRequest();
-
-        MoveResolutionResult mrr = MoveResolver.resolve(board, moveRequest, colour);
-
-        if (!mrr.isSuccess())
-        {
-            throw new AssertionError(input + " - " + mrr.getErrorMessage());
-        }
-
-        Move move = mrr.getMove();
-
-        MoveValidationResult mvr = MoveValidator.IsMoveLegal(board, colour, move);
-
-        if (!mvr.isValid())
-        {
-            throw new AssertionError(input + " - " + mvr.getError());
-        }
-
-        board.MakeMove(move);
-
-    }
 }

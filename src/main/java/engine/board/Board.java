@@ -21,6 +21,8 @@ public class Board
 	private Piece _whiteKing;
 	private Piece _blackKing;
 
+	private Square _enPassantTarget;
+
 	// The positions on the board, lookup what piece is there
 	private Piece[][] _position = new Piece[Board.MAX_X][Board.MAX_Y];
 
@@ -43,6 +45,10 @@ public class Board
 
 		_whitePieces.clear();
 		_blackPieces.clear();
+
+		_whiteKing = null;
+		_blackKing = null;
+		_enPassantTarget = null;
 
 		for(x=0; x<MAX_X; x++)
 		{
@@ -104,7 +110,7 @@ public class Board
 		if (colour == null)
 			throw new IllegalArgumentException("Colour cannot be null");
 
-		if (rank == null || rank == PieceRank.NONE)
+		if (rank == null)
 			throw new IllegalArgumentException("Invalid piece rank");
 
 		if (square == null)
@@ -140,7 +146,7 @@ public class Board
 			if(rank == PieceRank.KING )
 			{
 				if(_blackKing != null)
-					throw new IllegalArgumentException("White already has a king");
+					throw new IllegalArgumentException("Black already has a king");
 
 				_blackKing = piece;
 			}
@@ -159,12 +165,12 @@ public class Board
 	{
 		return switch (rank)
 		{
-			case KING   -> new King(colour, 0, square);
-			case QUEEN  -> new Queen(colour, 0, square);
-			case ROOK   -> new Rook(colour, 0, square);
-			case BISHOP -> new Bishop(colour, 0, square);
-			case KNIGHT -> new Knight(colour, 0, square);
-			case PAWN   -> new Pawn(colour, 0, square);
+			case KING   -> new King(colour, square);
+			case QUEEN  -> new Queen(colour, square);
+			case ROOK   -> new Rook(colour, square);
+			case BISHOP -> new Bishop(colour, square);
+			case KNIGHT -> new Knight(colour, square);
+			case PAWN   -> new Pawn(colour, square);
 			default -> throw new IllegalArgumentException(
 					"Unsupported piece rank: " + rank);
 		};
@@ -207,7 +213,7 @@ public class Board
 			rookMove._colour = move._colour;
 			rookMove._rank = PieceRank.ROOK;
 			rookMove._bIsCapture = false; // Is the move a capture?
-			rookMove._promoteTo = PieceRank.NONE;
+			rookMove._promoteTo = null;
 			rookMove._startRY = 1;
 			rookMove._endRY = 1;
 			rookMove._bIsCheck = false;
@@ -251,16 +257,10 @@ public class Board
 				assert false;;
 			}
 
-			rookMove._number = piece.Number();
+			rookMove.UpdateAbsolutePositions();
 
 			MovePiece(rookMove);
 		}
-	}
-
-	public boolean IsPieceAlive(Colour colour, int number)
-	{
-		// !!! remove this method
-		return true;
 	}
 
 	public boolean HasPawnMovedTwoStepsLastTurn(Colour colour, int number)
@@ -470,6 +470,7 @@ public class Board
 			}
 		}
 
+
 		// !!! Fix this later
 /*
 		// Handle en passant captures
@@ -487,9 +488,17 @@ public class Board
 			RemovePiece(_position[epCapturePos._x][epCapturePos._y].Colour(), _position[epCapturePos._x][epCapturePos._y].Number(), epCapturePos._x, epCapturePos._y);
 		}
 */
+		if(piece.Rank() == PieceRank.PAWN)
+		{
+			// Pawn has moved two squares then set en passant target square
+			if(Math.abs(endY - startY) == 2)
+				_enPassantTarget = new Square(endX, (startY + endY) / 2);
+			else
+				_enPassantTarget = null;
+		}
 
 		// Move piece to destination
-		if(move._promoteTo != PieceRank.NONE)
+		if(move._promoteTo != null)
 		{
 			RemovePiece(piece.Colour(), piece.Rank(), startPos);
 			PlacePiece(piece.Colour(), move._promoteTo, endPos);
@@ -505,7 +514,12 @@ public class Board
 
 	}
 
-	private	void RemovePiece(Colour colour, PieceRank rank, Square position)
+	public void RemovePiece(Colour colour, PieceRank rank, String pos)
+	{
+		RemovePiece(colour, rank, Square.fromSAN(pos));
+	}
+
+	public void RemovePiece(Colour colour, PieceRank rank, Square position)
 	{
 		int ax = position.getX();
 		int ay = position.getY();
@@ -597,12 +611,9 @@ public class Board
 
 		for (Piece piece : pieceList)
 		{
-			if (IsPieceAlive(playerColour, piece.Number()))
+			if (piece.CanPieceCaptureAt(this, rColour, rx, ry))
 			{
-				if (piece.CanPieceCaptureAt(this, rColour, rx, ry))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 
@@ -622,10 +633,7 @@ public class Board
 
 		for (Piece piece : pieceList)
 		{
-			if (IsPieceAlive(playerColour, piece.Number()))
-			{
-				materialValue += piece.MaterialValue();
-			}
+			materialValue += piece.MaterialValue();
 		}
 
 		return materialValue;
@@ -664,10 +672,7 @@ public class Board
 
 		for (Piece piece : pieceList)
 		{
-			if (IsPieceAlive(playerColour, piece.Number()))
-			{
-				piece.GetMoves(this, moves, false);
-			}
+			piece.GetMoves(this, moves, false);
 		}
 	}
 
@@ -687,18 +692,15 @@ public class Board
 
 		for (Piece piece : pieceList)
 		{
-			if (IsPieceAlive(playerColour, piece.Number()))
-			{
-				possibleMoves.Clear();
-				piece.GetMoves(this, possibleMoves, false);
+			possibleMoves.Clear();
+			piece.GetMoves(this, possibleMoves, false);
 
-				for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
+			for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
+			{
+				// Is the move legal?
+				if( !WillMovePutKingInCheck(possibleMoves.getMove(idxMove), playerColour) )
 				{
-					// Is the move legal?
-					if( !WillMovePutKingInCheck(possibleMoves.getMove(idxMove), playerColour) )
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}

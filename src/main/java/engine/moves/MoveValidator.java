@@ -36,8 +36,6 @@ public class MoveValidator
             return new MoveValidationResult(false, errorMessage);
         }
 
-        move._number = piece.Number();
-
         int numMoves = 0;
         MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 

@@ -9,9 +9,9 @@ import engine.moves.MoveStack;
 public class Knight extends Piece
 {
 
-	public Knight(Colour colour, int number, Square position)
+	public Knight(Colour colour, Square position)
 	{ 
-		super(colour, number, position);
+		super(colour, position);
 		_rank = PieceRank.KNIGHT;
 		_materialValue = 3;
 	}
@@ -30,12 +30,6 @@ public class Knight extends Piece
 	@Override
 	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
 	{
-		if( !board.IsPieceAlive(_colour, _number) )
-		{
-			// return no moves if the piece is dead
-			return;
-		}
-
 		// Get the current position of the knight
 		int knightRX = 0, knightRY = 0, i = 0;
 		relPosType relPos = new relPosType();
@@ -118,7 +112,7 @@ public class Knight extends Piece
 				}
 			}
 
-			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), PieceRank.NONE);
+			AddMove(possibleMoves, knightRX, knightRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), null);
 		}
 	}
 }
