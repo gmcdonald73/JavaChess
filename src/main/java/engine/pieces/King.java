@@ -1,5 +1,6 @@
 package engine.pieces;
 
+import engine.Constants;
 import engine.board.*;
 import engine.moves.Move;
 import engine.moves.MoveStack;
@@ -230,12 +231,17 @@ public class King extends Piece
 			endRX = kingRX + 2;
 		}
 
+		Board testBoard = new Board(board);
+
 		for(rx=startRX; rx<=endRX; rx++)
 		{
-			if( board.CanCaptureAt(_colour.opposite(), _colour, rx, 1) )
-			{
+			Piece king = testBoard.getKing(_colour);
+
+			testBoard.RemovePiece(_colour, PieceRank.KING, king.getPosition());
+			testBoard.PlacePiece(_colour, PieceRank.KING, Square.fromRelCoords(_colour, rx, 1));
+
+			if(testBoard.IsKingInCheck(_colour))
 				return false;
-			}
 		}
 
 		return true;

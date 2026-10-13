@@ -1,9 +1,5 @@
 package engine.pieces;
 
-// IMPORTANT : Pieces should not retain any state information. All state information should be
-// stored in (or derived from) the cBoard class
-
-
 import engine.*;
 import engine.board.Board;
 import engine.board.Square;

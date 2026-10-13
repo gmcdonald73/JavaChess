@@ -21,7 +21,11 @@ public class Board
 	private Piece _whiteKing;
 	private Piece _blackKing;
 
+	public Piece getKing(Colour colour) { return colour == Colour.WHITE ? _whiteKing : _blackKing; }
+
 	private Square _enPassantTarget;
+
+	public Square getEnPassantTarget() { return _enPassantTarget; }
 
 	// The positions on the board, lookup what piece is there
 	private Piece[][] _position = new Piece[Board.MAX_X][Board.MAX_Y];
@@ -179,29 +183,8 @@ public class Board
 
 	public void MakeMove(Move move)
 	{
-		// Clear the PawnMovedTwoStepsLastTurn flags
-/*
-		int pieceNum;
-
-		for(pieceNum=0; pieceNum<Constants.PIECES_PER_SIDE; pieceNum++)
-		{
-			_piece[move._colour.getValue()][pieceNum]._bPawnMovedTwoStepsLastTurn = false;
-		}
-*/
-
 		// Move the piece
 		MovePiece(move);
-
-		// If the pawn moved two steps then flag it
-/*
-		if(move._rank == PieceRank.PAWN)
-		{
-			if((move._endRY - move._startRY) == 2)
-			{
-				_piece[move._colour.getValue()][move._number]._bPawnMovedTwoStepsLastTurn = true;
-			}
-		}
-*/
 
 		// Castling stuff
 		if((move._bCastleQueenSide) || (move._bCastleKingSide))
@@ -261,12 +244,6 @@ public class Board
 
 			MovePiece(rookMove);
 		}
-	}
-
-	public boolean HasPawnMovedTwoStepsLastTurn(Colour colour, int number)
-	{
-		// !!! Fix this
-		return false;
 	}
 
 	public Piece WhatIsAtSquare(Square pos)
@@ -451,7 +428,6 @@ public class Board
 		Piece piece = _position[startX][startY];
 
         assert piece != null;
-
 		assert piece.Colour() == move._colour;
 		assert piece.Rank() == move._rank;
 
@@ -470,9 +446,6 @@ public class Board
 			}
 		}
 
-
-		// !!! Fix this later
-/*
 		// Handle en passant captures
 		if( move._bEnPassantCapture )
 		{
@@ -485,9 +458,17 @@ public class Board
 
 			ConvertRelToAbsCoords(epCaptureRelPos, epCapturePos);
 
-			RemovePiece(_position[epCapturePos._x][epCapturePos._y].Colour(), _position[epCapturePos._x][epCapturePos._y].Number(), epCapturePos._x, epCapturePos._y);
+			Square epPawnSq = new Square(epCapturePos._x, epCapturePos._y);
+
+			Piece epCapturePiece = WhatIsAtSquare(epPawnSq);
+
+			assert epCapturePiece != null;
+			assert epCapturePiece.Colour() != move._colour;
+			assert epCapturePiece.Rank() == PieceRank.PAWN;
+
+			RemovePiece(epCapturePiece.Colour(), epCapturePiece.Rank(), epPawnSq);
 		}
-*/
+
 		if(piece.Rank() == PieceRank.PAWN)
 		{
 			// Pawn has moved two squares then set en passant target square
@@ -542,9 +523,15 @@ public class Board
 
 		// Remove piece from the list of pieces
 		if (piece.Colour() == Colour.WHITE)
+		{
 			_whitePieces.remove(piece);
+			if(rank == PieceRank.KING) _whiteKing = null;
+		}
 		else
+		{
 			_blackPieces.remove(piece);
+			if(rank == PieceRank.KING) _blackKing = null;
+		}
 	}
 
 	public Board(Board other)
@@ -579,6 +566,8 @@ public class Board
 			Square square = copy.getPosition();
 			_position[square.getX()][square.getY()] = copy;
 		}
+
+		// !!! Also copy _enPassantTarget
 	}
 
 	public boolean IsKingInCheck(Colour colour)

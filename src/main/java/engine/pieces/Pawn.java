@@ -115,48 +115,29 @@ public class Pawn extends Piece
 		}
 
 		// Check for en passant captures
+		Square enPassantTarget = board.getEnPassantTarget();
 
 		// Theses are only applicable if the pawn is on the 5th row
-		if( pawnRY == 5)
+		if( enPassantTarget != null && pawnRY == 5)
 		{
-			// Check left
-			// If we are on the 5th row and there is a pawn to the left and that pawn moved two steps last turn 
-			// then we can do an en passant capture
-			testRelPos._x = pawnRX - 1;
-			testRelPos._y = pawnRY;
+			int epAbsX = enPassantTarget.getX();
+			int epAbsY = enPassantTarget.getY();
+			relPosType epRelPos = new relPosType();
 
-			if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
+			Board.ConvertAbsToRelCoords(_colour, epAbsX, epAbsY, epRelPos);
+
+			// Is ep target on square NW of pawn
+			if((epRelPos._rx == pawnRX - 1) && (epRelPos._ry == pawnRY + 1))
 			{
-				piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
-
-				if( piece != null && piece._rank == PieceRank.PAWN )
-				{
-					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, 0))
-					{
-						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, null);
-						possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
-					}
-				}
+				AddMove(possibleMoves, pawnRX, pawnRY, epRelPos._rx, epRelPos._ry, true, null);
+				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
 			}
 
-			// Check right
-			// If we are on the 5th row and there is a pawn to the right and that pawn moved two steps last turn 
-			// then we can do an en passant capture
-			testRelPos._x = pawnRX + 1;
-			testRelPos._y = pawnRY;
-
-			if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
+			// Is ep target on square NE of pawn
+			if((epRelPos._rx == pawnRX + 1) && (epRelPos._ry == pawnRY + 1))
 			{
-				piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
-
-				if(piece != null && piece._rank == PieceRank.PAWN )
-				{
-					if(board.HasPawnMovedTwoStepsLastTurn(piece._colour, 0))
-					{
-						AddMove(possibleMoves, pawnRX, pawnRY, testRelPos._x, testRelPos._y + 1, true, null);
-						possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
-					}
-				}
+				AddMove(possibleMoves, pawnRX, pawnRY, epRelPos._rx, epRelPos._ry, true, null);
+				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
 			}
 		}
 
@@ -206,32 +187,6 @@ public class Pawn extends Piece
 			}
 		}
 	}
-
-/*
-	@Override
-	// NOTE : This routine should NOT modify the board
-	// !!! update pawn rank when it is promoted rather than having to check board?
-	public PieceRank Rank(Board board)
-	{
-		// Get the current position of the pawn
-		relPosType relPos = new relPosType();
-
-		board.WhereIs(_colour, _number, relPos);
-
-		if( board.IsRelPositionOnBoard(_colour, relPos._rx, relPos._ry) )
-		{
-			pieceDescriptionType pieceDescrip = new pieceDescriptionType();
-
-			// Check if pawn has been promoted
-			pieceDescrip = board.WhatIsAt(_colour, relPos._rx, relPos._ry);
-
-			return pieceDescrip._rank;
-		}
-
-		// In case the pawn hasn't been placed onto the board yet
-		return PieceRank.PAWN;
-	}
-*/
 }
 
 
