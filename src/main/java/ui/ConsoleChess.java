@@ -16,7 +16,7 @@ public class ConsoleChess {
 
         ChessGame game = new ChessGame(
                 new HumanPlayer("Graeme", Colour.WHITE),
-                new HumanPlayer("GMac", Colour.BLACK)
+                new BotPlayer("GMac", Colour.BLACK)
         );
 
         game.play();

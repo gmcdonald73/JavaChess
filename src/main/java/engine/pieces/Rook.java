@@ -25,7 +25,7 @@ public class Rook extends Piece
 	}
 
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
+	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the rook
 		int rookRX = 0, rookRY = 0, i = 0;

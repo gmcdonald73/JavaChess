@@ -25,7 +25,7 @@ public class Bishop extends Piece
 	}
 
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
+	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the bishop
 		int bishopRX = 0, bishopRY = 0, i = 0;

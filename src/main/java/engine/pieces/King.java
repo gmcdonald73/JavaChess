@@ -1,6 +1,5 @@
 package engine.pieces;
 
-import engine.Constants;
 import engine.board.*;
 import engine.moves.Move;
 import engine.moves.MoveStack;
@@ -27,7 +26,7 @@ public class King extends Piece
 
 	// NOTE : This routine should NOT modify the board
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
+	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the king
 		int kingRX = 0, kingRY = 0, i = 0;
@@ -92,7 +91,7 @@ public class King extends Piece
 			}
 		}
 
-		if(bCapturesOnly)
+		if(bNoCastling)
 		{
 			// If only looking for captures then don't bother with castling moves
 			// This is important - it prevents an infinite loop

@@ -68,6 +68,10 @@ public class Move
 		_bCastleKingSide = src._bCastleKingSide;
 		_bEnPassantCapture = src._bEnPassantCapture;
 		_score = src._score;
+
+		// !!! Should this be a deep copy?
+		_startPosition = src._startPosition;
+		_endPosition = src._endPosition;
 	}
 
 	public static Move fromMoveRequest(MoveRequest request, Colour colour)
@@ -149,6 +153,11 @@ public class Move
 
 	public String getSan()
 	{
+		return getSan(false,false);
+	}
+
+	public String getSan(boolean showFileDisambiguation, boolean showRankDisambiguation)
+	{
 		String san = "";
 		int absStartX = 0;
 		int absStartY = 0;
@@ -175,14 +184,18 @@ public class Move
 			{
 				san += _rank.getSymbol(); // Board.ConvertRankToSymbol(_rank);
 
-				// !!! Also need to add stuff for disambiguation here
+				if(showFileDisambiguation)
+					san += _startPosition.getFile();
+
+				if(showRankDisambiguation)
+					san += _startPosition.getRank();
 			}
 
 			// san += StartPos();
 
 			if(_bIsCapture)
 			{
-				// !!! pawn capture need to add source file
+				// pawn capture need to add source file
 				if( _rank == PieceRank.PAWN )
 				{
 					san += StartPos().charAt(0);

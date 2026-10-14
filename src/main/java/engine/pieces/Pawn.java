@@ -26,7 +26,7 @@ public class Pawn extends Piece
 
 	// NOTE : This routine should NOT modify the board
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
+	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
 	{
 		int startNumMoves = possibleMoves.getNumMoves();
 

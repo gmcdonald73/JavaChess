@@ -28,7 +28,7 @@ public class Knight extends Piece
 	}
 
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
+	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the knight
 		int knightRX = 0, knightRY = 0, i = 0;

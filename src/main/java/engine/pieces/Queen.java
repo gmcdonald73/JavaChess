@@ -25,7 +25,7 @@ public class Queen extends Piece
 	}
 
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly)
+	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the queen
 		int queenRX = 0, queenRY = 0, i = 0;

@@ -59,7 +59,7 @@ public abstract class Piece
 	public abstract Piece copy();
 
 	// NOTE : This routine should NOT modify the board
-	public abstract void GetMoves(Board board, MoveStack possibleMoves, boolean bCapturesOnly);
+	public abstract void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling);
 
 	// NOTE : This routine should NOT modify the board
 	public boolean CanPieceCaptureAt(Board board, Colour colour, int rx, int ry)
@@ -92,8 +92,7 @@ public abstract class Piece
 		{
 			// !!! This won't work for en passant captures (Doesn't matter at the moment as
 			// this method is currently only called for determining if king is in check )
-			// !!! may need to remove iscapture check
-			if( possibleMoves.getMove(i)._bIsCapture && 
+			if( possibleMoves.getMove(i)._bIsCapture &&
 				(possibleMoves.getMove(i)._endRX == posMyCoords._rx) &&
 				(possibleMoves.getMove(i)._endRY == posMyCoords._ry))
 			{
