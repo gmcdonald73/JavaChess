@@ -4,7 +4,8 @@ import engine.board.Board;
 import engine.board.Square;
 import engine.board.relPosType;
 import engine.moves.Move;
-import engine.moves.MoveStack;
+
+import java.util.List;
 
 public class Knight extends Piece
 {
@@ -28,7 +29,7 @@ public class Knight extends Piece
 	}
 
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
+	public void GetMoves(Board board, List<Move> possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the knight
 		int knightRX = 0, knightRY = 0, i = 0;
@@ -96,7 +97,7 @@ public class Knight extends Piece
 		{
 
 			// Check end point is on board
-			if( !board.IsRelPositionOnBoard(_colour, _testMove[i]._endRX, _testMove[i]._endRY) )
+			if( !Board.IsRelPositionOnBoard(_colour, _testMove[i]._endRX, _testMove[i]._endRY) )
 			{
 				continue;
 			}

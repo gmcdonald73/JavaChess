@@ -5,7 +5,8 @@ import engine.board.Board;
 import engine.board.Square;
 import engine.board.relPosType;
 import engine.moves.Move;
-import engine.moves.MoveStack;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Piece
 {
@@ -59,7 +60,7 @@ public abstract class Piece
 	public abstract Piece copy();
 
 	// NOTE : This routine should NOT modify the board
-	public abstract void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling);
+	public abstract void GetMoves(Board board, List<Move> possibleMoves, boolean bNoCastling);
 
 	// NOTE : This routine should NOT modify the board
 	public boolean CanPieceCaptureAt(Board board, Colour colour, int rx, int ry)
@@ -74,7 +75,7 @@ public abstract class Piece
 			posEnemyCoords._rx = rx;
 			posEnemyCoords._ry = ry;
 
-			board.InvertCoords(posEnemyCoords, posMyCoords);
+			Board.InvertCoords(posEnemyCoords, posMyCoords);
 		}
 		else
 		{
@@ -84,17 +85,18 @@ public abstract class Piece
 			posMyCoords._ry = ry;
 		}
 
-		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+		// MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+		List<Move> possibleMoves = new ArrayList<>();
 
 		GetMoves(board, possibleMoves, true);
 
-		for(int i=0; i<possibleMoves.getNumMoves(); i++)
+		for(Move move : possibleMoves)
 		{
 			// !!! This won't work for en passant captures (Doesn't matter at the moment as
 			// this method is currently only called for determining if king is in check )
-			if( possibleMoves.getMove(i)._bIsCapture &&
-				(possibleMoves.getMove(i)._endRX == posMyCoords._rx) &&
-				(possibleMoves.getMove(i)._endRY == posMyCoords._ry))
+			if( move._bIsCapture &&
+				(move._endRX == posMyCoords._rx) &&
+				(move._endRY == posMyCoords._ry))
 			{
 				// This piece can make a capture at the given square
 				return true;
@@ -104,8 +106,8 @@ public abstract class Piece
 		return false;
 	}
 
-	// !!! Change this to accept a move?
-	protected void AddMove(MoveStack moveStack, int startX, int startY, int endX, int endY, boolean bIsCapture, PieceRank promoteTo)
+	// !!! Change this to accept a move? or change this to a new constructor for Move and add to List outside of this method?
+	protected void AddMove(List<Move> moveStack, int startX, int startY, int endX, int endY, boolean bIsCapture, PieceRank promoteTo)
 	{
 		Move move = new Move();
 
@@ -128,7 +130,7 @@ public abstract class Piece
 		move.setStartPosition( Square.fromRelCoords(move._colour, move._startRX, move._startRY));
 		move.setEndPosition( Square.fromRelCoords(move._colour, move._endRX, move._endRY));
 
-		moveStack.AddMove(move);
+		moveStack.add(move);
 	}
 
 }

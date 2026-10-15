@@ -182,7 +182,7 @@ public class Move
 		{
 			if( _rank != PieceRank.PAWN )
 			{
-				san += _rank.getSymbol(); // Board.ConvertRankToSymbol(_rank);
+				san += _rank.getSymbol();
 
 				if(showFileDisambiguation)
 					san += _startPosition.getFile();
@@ -191,14 +191,12 @@ public class Move
 					san += _startPosition.getRank();
 			}
 
-			// san += StartPos();
-
 			if(_bIsCapture)
 			{
 				// pawn capture need to add source file
 				if( _rank == PieceRank.PAWN )
 				{
-					san += StartPos().charAt(0);
+					san += _startPosition.getFile();
 				}
 
 				san += "x";
@@ -210,7 +208,7 @@ public class Move
 			// If a pawn is being promoted, display the piece that it is promoted to
 			if( (_rank == PieceRank.PAWN) && (_endRY == 8) )
 			{
-				san += "=" + _promoteTo.getSymbol();  //Board.ConvertRankToSymbol(_promoteTo);
+				san += "=" + _promoteTo.getSymbol();
 			}
 		}
 

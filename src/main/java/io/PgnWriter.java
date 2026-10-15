@@ -68,7 +68,7 @@ public class PgnWriter
                 }
 
                 move = moves.get(i);
-                sMove = getDisambiguousMove(testBoard, playerColour, move);
+                sMove = getUnambiguousMove(testBoard, playerColour, move);
 
                 MoveValidationResult mvr = MoveValidator.IsMoveLegal(testBoard, playerColour, move);
                 assert mvr.isValid();
@@ -86,7 +86,7 @@ public class PgnWriter
         }
     }
 
-    private static String getDisambiguousMove(Board testBoard, Colour playerColour, Move move)
+    private static String getUnambiguousMove(Board testBoard, Colour playerColour, Move move)
     {
         String sMove;
         MoveParseResult mpr;

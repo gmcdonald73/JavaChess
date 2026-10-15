@@ -2,7 +2,8 @@ package engine.pieces;
 
 import engine.board.*;
 import engine.moves.Move;
-import engine.moves.MoveStack;
+
+import java.util.List;
 
 public class King extends Piece
 {
@@ -26,7 +27,7 @@ public class King extends Piece
 
 	// NOTE : This routine should NOT modify the board
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
+	public void GetMoves(Board board, List<Move> possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the king
 		int kingRX = 0, kingRY = 0, i = 0;
@@ -80,7 +81,7 @@ public class King extends Piece
 
 		for(i=0; i<8; i++)
 		{
-			if( board.IsRelPositionOnBoard(_colour, _testMove[i]._endRX, _testMove[i]._endRY) )
+			if( Board.IsRelPositionOnBoard(_colour, _testMove[i]._endRX, _testMove[i]._endRY) )
 			{
 				piece = board.WhatIsAt(_colour, _testMove[i]._endRX, _testMove[i]._endRY);
 
@@ -122,11 +123,11 @@ public class King extends Piece
 
 			if(_colour == Colour.WHITE)
 			{
-				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bCastleQueenSide = true;	
+				possibleMoves.getLast()._bCastleQueenSide = true;
 			}
 			else
 			{
-				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bCastleKingSide = true;	
+				possibleMoves.getLast()._bCastleKingSide = true;
 			}
 		}
 
@@ -138,11 +139,11 @@ public class King extends Piece
 
 			if(_colour == Colour.WHITE)
 			{
-				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bCastleKingSide = true;	
+				possibleMoves.getLast()._bCastleKingSide = true;
 			}
 			else
 			{
-				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bCastleQueenSide = true;	
+				possibleMoves.getLast()._bCastleQueenSide = true;
 			}
 		}
 	}

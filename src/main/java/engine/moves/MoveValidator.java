@@ -3,10 +3,11 @@ package engine.moves;
 import engine.*;
 import engine.board.Board;
 import engine.board.Square;
-// import engine.board.pieceDescriptionType;
 import engine.pieces.Colour;
 import engine.pieces.Piece;
-import engine.pieces.PieceRank;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MoveValidator
 {
@@ -36,22 +37,14 @@ public class MoveValidator
             return new MoveValidationResult(false, errorMessage);
         }
 
-        int numMoves = 0;
-        MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+        List<Move> moves = new ArrayList<>();
 
         // Get the moves for the piece
         piece.GetMoves(board, moves, false);
-        numMoves = moves.getNumMoves();
 
         // Find out if the entered move is one of them
-        int i;
-
-        for(i=0; i<numMoves; i++)
+        for(Move currMove : moves)
         {
-            Move currMove;
-
-            currMove = moves.getMove(i);
-
             // !!! Where does this belong?
             currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
             currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));

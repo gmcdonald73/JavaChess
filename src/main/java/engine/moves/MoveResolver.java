@@ -6,6 +6,7 @@ import engine.board.Square;
 import engine.pieces.Colour;
 import engine.pieces.Piece;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoveResolver
@@ -96,16 +97,10 @@ public class MoveResolver
         return MoveResolutionResult.success(move);
     }
 
-    // !!! need to handle disambiguation in this method
     private static MoveResolutionResult resolveImplicitSource(Board board, MoveRequest request, Colour colour)
     {
         Move resolvedMove = null;
-        List<Piece> pieceList;
-
-        if(colour == Colour.WHITE)
-            pieceList = board.getWhitePieces();
-        else
-            pieceList = board.getBlackPieces();
+        List<Piece> pieceList = board.getPiecesForColour(colour);
 
         for(Piece piece : pieceList)
         {
@@ -127,26 +122,21 @@ public class MoveResolver
                     }
                 }
 
-                MoveStack moves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+                List<Move> moves = new ArrayList<>();
 
                 // Get the moves for the piece
                 piece.GetMoves(board, moves, false);
-                int numMoves = moves.getNumMoves();
 
-                for(int i=0; i<numMoves; i++)
+                for (Move currMove : moves)
                 {
-                    Move currMove;
-
-                    currMove = moves.getMove(i);
-
                     // !!! Where does this belong?
-                    currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
-                    currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
+                    currMove.setStartPosition(Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
+                    currMove.setEndPosition(Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
 
-                    if(request.getEndPosition().equals(currMove.getEndPosition())
-                             && (request.getPromoteTo() == currMove._promoteTo))
+                    if (request.getEndPosition().equals(currMove.getEndPosition())
+                            && (request.getPromoteTo() == currMove._promoteTo))
                     {
-                        if(resolvedMove == null)
+                        if (resolvedMove == null)
                         {
                             resolvedMove = currMove;
                         }

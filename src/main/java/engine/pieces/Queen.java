@@ -1,7 +1,9 @@
 package engine.pieces;
 
 import engine.board.*;
-import engine.moves.MoveStack;
+import engine.moves.Move;
+
+import java.util.List;
 
 public class Queen extends Piece
 {
@@ -25,7 +27,7 @@ public class Queen extends Piece
 	}
 
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
+	public void GetMoves(Board board, List<Move> possibleMoves, boolean bNoCastling)
 	{
 		// Get the current position of the queen
 		int queenRX = 0, queenRY = 0, i = 0;
@@ -95,7 +97,7 @@ public class Queen extends Piece
 				currRelPos._x += increment[i]._x;
 				currRelPos._y += increment[i]._y;
 
-				if( board.IsRelPositionOnBoard(_colour, currRelPos._x, currRelPos._y) )
+				if( Board.IsRelPositionOnBoard(_colour, currRelPos._x, currRelPos._y) )
 				{
 					piece = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
 

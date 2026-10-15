@@ -2,14 +2,12 @@ package engine.players;
 
 import engine.*;
 import engine.board.Board;
-// import engine.board.pieceDescriptionType;
-import engine.board.relPosType;
 import engine.moves.Move;
 import engine.moves.MoveRequest;
-import engine.moves.MoveStack;
 import engine.pieces.Colour;
-import engine.pieces.Piece;
-import engine.pieces.PieceRank;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BotPlayer extends ChessPlayer {
 
@@ -34,19 +32,13 @@ public class BotPlayer extends ChessPlayer {
                 Constants.NUM_MOVES_LOOKAHEAD,
                 engineMoves);
 
-        // !!! need to convert move to moveRequest here
         MoveRequest request = MoveRequest.fromMove(engineMoves[0]);
         return PlayerAction.moveRequest(request);
     }
 
     // Do a breadth first search, look 2 moves ahead for win or lose, then 4 moves ahead etc.
-    public boolean FindBestMove(Board board, int lookAheadMax, Move moveStack[])
+    public boolean FindBestMove(Board board, int lookAheadMax, Move[] moveStack)
     {
-        // Sneaky stuff, take a copy so that the original board is not modified.
-        // This effectively simulates pass by value for board.
-        // !!! do we need to do this here, or just in RecursiveFindBestMove?
-        // Board testBoard = board.copy();
-
         int numMovesToLookAhead = 2;
 
         while(numMovesToLookAhead <= lookAheadMax)
@@ -69,30 +61,22 @@ public class BotPlayer extends ChessPlayer {
         return true;
     }
 
-    public boolean RecursiveFindBestMove(Colour colour, Board board, int lookAheadLevel, int numMovesToLookAhead, Move moveStack[])
+    public boolean RecursiveFindBestMove(Colour colour, Board board, int lookAheadLevel, int numMovesToLookAhead, Move[] moveStack)
     {
-        // Take a copy so that the original board is not modified.
-        // This effectively simulates pass by value for board.
-        // !!! Do we need to do this here, or just in EvaluateMove?
-        // Board testBoard = board.copy();
-
         boolean bFoundLegalMove = false;
         Move[] tempMoveStack = new Move[Constants.MAX_MOVES_LOOKAHEAD];
         int msi;
 
         moveStack[lookAheadLevel]._score = Constants.MS_ILLEGAL;
-        MoveStack possibleMoves = new MoveStack(Constants.PIECES_PER_SIDE * Constants.MAX_PIECE_POSSIBLE_MOVES);
-
-        int idxMove;
-
-        possibleMoves.Clear();
+        List<Move> possibleMoves = new ArrayList<>();
 
         // Ask board for all legal moves
         // then loop through each move and rate them
         board.GetMoves(possibleMoves, colour);
 
         // Loop through all possible moves for the player
-        for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
+        // for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
+        for(Move move : possibleMoves)
         {
             // Copy the move stack to temp
             for(msi=0; msi<Constants.MAX_MOVES_LOOKAHEAD; msi++)
@@ -101,7 +85,7 @@ public class BotPlayer extends ChessPlayer {
                 tempMoveStack[msi].Copy(moveStack[msi]);
             }
 
-            tempMoveStack[lookAheadLevel].Copy(possibleMoves.getMove(idxMove));
+            tempMoveStack[lookAheadLevel].Copy(move);
             tempMoveStack[lookAheadLevel]._score = Constants.MS_UNDEFINED;
 
             // Evaluate the move
@@ -123,7 +107,7 @@ public class BotPlayer extends ChessPlayer {
                 {
                     // If the move will win the game for us, then stop looking for a better move because
                     // there isn't any
-                    return bFoundLegalMove;
+                    return true;
                 }
             }
         }
@@ -131,7 +115,7 @@ public class BotPlayer extends ChessPlayer {
         return bFoundLegalMove;
     }
 
-    public void EvaluateMove(Colour colour, Move moveStack[], Board board, int lookAheadLevel, int numMovesToLookAhead)
+    public void EvaluateMove(Colour colour, Move[] moveStack, Board board, int lookAheadLevel, int numMovesToLookAhead)
     {
         // Take a copy so that the original board is not modified.
         // This effectively simulates pass by value for board.
@@ -189,14 +173,7 @@ public class BotPlayer extends ChessPlayer {
         // See if we have won or stalemated, also set flags for displaying checks
         if( bEnemyHasLegalMoves )
         {
-            if(  testBoard.IsKingInCheck(colour.opposite()) )
-            {
-                moveStack[lookAheadLevel]._bIsCheck = true;
-            }
-            else
-            {
-                moveStack[lookAheadLevel]._bIsCheck = false;
-            }
+            moveStack[lookAheadLevel]._bIsCheck = testBoard.IsKingInCheck(colour.opposite());
         }
         else
         {
@@ -246,14 +223,15 @@ public class BotPlayer extends ChessPlayer {
 
     public long RateArmy(Board board, Colour colour)
     {
-        MoveStack moves = new MoveStack(Constants.PIECES_PER_SIDE * Constants.MAX_PIECE_POSSIBLE_MOVES);
+        List<Move> moves = new ArrayList<>();
+
         long score;
         // int i;
 
         // Rate your forces
         board.GetMoves(moves, colour);
 
-        score = moves.getNumMoves();
+        score = moves.size();
 
 /*
 		// Give bonus points for knight or bishop moves

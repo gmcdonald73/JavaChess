@@ -2,7 +2,8 @@ package engine.pieces;
 
 import engine.board.*;
 import engine.moves.Move;
-import engine.moves.MoveStack;
+
+import java.util.List;
 
 public class Pawn extends Piece
 {
@@ -26,9 +27,9 @@ public class Pawn extends Piece
 
 	// NOTE : This routine should NOT modify the board
 	@Override
-	public void GetMoves(Board board, MoveStack possibleMoves, boolean bNoCastling)
+	public void GetMoves(Board board, List<Move> possibleMoves, boolean bNoCastling)
 	{
-		int startNumMoves = possibleMoves.getNumMoves();
+		int startNumMoves = possibleMoves.size();
 
 		// Get the current position of the pawn
 		int pawnRX = 0, pawnRY = 0;
@@ -62,7 +63,7 @@ public class Pawn extends Piece
 				{
 					testRelPos._y++;
 
-					if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
+					if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 					{
 						piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
@@ -82,7 +83,7 @@ public class Pawn extends Piece
 		testRelPos._x = pawnRX - 1;
 		testRelPos._y = pawnRY + 1;
 
-		if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
+		if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
 			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
@@ -100,7 +101,7 @@ public class Pawn extends Piece
 		testRelPos._x = pawnRX + 1;
 		testRelPos._y = pawnRY + 1;
 
-		if( board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
+		if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
 			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
 
@@ -130,14 +131,14 @@ public class Pawn extends Piece
 			if((epRelPos._rx == pawnRX - 1) && (epRelPos._ry == pawnRY + 1))
 			{
 				AddMove(possibleMoves, pawnRX, pawnRY, epRelPos._rx, epRelPos._ry, true, null);
-				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
+				possibleMoves.getLast()._bEnPassantCapture = true;
 			}
 
 			// Is ep target on square NE of pawn
 			if((epRelPos._rx == pawnRX + 1) && (epRelPos._ry == pawnRY + 1))
 			{
 				AddMove(possibleMoves, pawnRX, pawnRY, epRelPos._rx, epRelPos._ry, true, null);
-				possibleMoves.getMove(possibleMoves.getNumMoves()-1)._bEnPassantCapture = true;
+				possibleMoves.getLast()._bEnPassantCapture = true;
 			}
 		}
 
@@ -145,15 +146,15 @@ public class Pawn extends Piece
 		int i;
 		int stopPoint;
 
-		stopPoint = possibleMoves.getNumMoves();
+		stopPoint = possibleMoves.size();
 
 		for(i=startNumMoves; i<stopPoint; i++)
 		{
-			if( possibleMoves.getMove(i)._endRY == 8 )
+			if( possibleMoves.get(i)._endRY == 8 )
 			{
 				Move currMove;
 
-				currMove = possibleMoves.getMove(i);
+				currMove = possibleMoves.get(i);
 
 				// Promote pawn to queen
 				currMove._promoteTo = PieceRank.QUEEN;

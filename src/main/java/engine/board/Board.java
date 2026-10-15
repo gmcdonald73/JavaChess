@@ -2,7 +2,6 @@ package engine.board;
 
 import engine.*;
 import engine.moves.Move;
-import engine.moves.MoveStack;
 import engine.pieces.*;
 
 import java.util.ArrayList;
@@ -13,10 +12,11 @@ public class Board
 
 	public static final int MAX_X = 8;
 	public static final int MAX_Y = 8;
-	public static final int MAX_ARMIES = 2;
 
 	private List<Piece> _whitePieces = new ArrayList<Piece>();
 	private List<Piece> _blackPieces = new ArrayList<Piece>();
+
+	public List<Piece> getPiecesForColour(Colour colour) { return colour == Colour.WHITE ? _whitePieces : _blackPieces; }
 
 	private Piece _whiteKing;
 	private Piece _blackKing;
@@ -29,13 +29,6 @@ public class Board
 
 	// The positions on the board, lookup what piece is there
 	private Piece[][] _position = new Piece[Board.MAX_X][Board.MAX_Y];
-
-	public List<Piece> getWhitePieces() {
-		return _whitePieces;
-	}
-	public List<Piece> getBlackPieces() {
-		return _blackPieces;
-	}
 
 	// public methods
 	public Board()
@@ -190,21 +183,11 @@ public class Board
 		if((move._bCastleQueenSide) || (move._bCastleKingSide))
 		{
 			Move rookMove = new Move(); // if castling
-			Piece piece;
 
-			// !!! Do I need to set all of these?
 			rookMove._colour = move._colour;
 			rookMove._rank = PieceRank.ROOK;
-			rookMove._bIsCapture = false; // Is the move a capture?
-			rookMove._promoteTo = null;
 			rookMove._startRY = 1;
 			rookMove._endRY = 1;
-			rookMove._bIsCheck = false;
-			rookMove._bIsMate = false;
-			rookMove._bCastleQueenSide = false;
-			rookMove._bCastleKingSide = false;
-			rookMove._bEnPassantCapture = false;
-			rookMove._score = Constants.MS_UNDEFINED;
 
 			if(move._bCastleQueenSide)
 			{
@@ -233,7 +216,7 @@ public class Board
 				}
 			}
 
-			piece = WhatIsAt(move._colour, rookMove._startRX, rookMove._startRY);
+			Piece piece = WhatIsAt(move._colour, rookMove._startRX, rookMove._startRY);
 
 			if((piece == null) || (piece.Rank() != PieceRank.ROOK))
 			{
@@ -248,10 +231,7 @@ public class Board
 
 	public Piece WhatIsAtSquare(Square pos)
 	{
-		if(!IsAbsPositionOnBoard(pos.getX(), pos.getY()))
-		{
-			assert false;
-		}
+        assert IsAbsPositionOnBoard(pos.getX(), pos.getY());
 
 		return _position[pos.getX()][pos.getY()];
 	}
@@ -267,10 +247,7 @@ public class Board
 
 		ConvertRelToAbsCoords(relPos, absPos);
 
-		if(!IsAbsPositionOnBoard(absPos._x, absPos._y))
-		{
-			assert false;
-		}
+        assert IsAbsPositionOnBoard(absPos._x, absPos._y);
 
 		return _position[absPos._x][absPos._y];
 	}
@@ -369,27 +346,8 @@ public class Board
 
 	public static boolean IsAbsPositionOnBoard(int ax, int ay)
 	{
-		if(ax < 0)
-		{
-			return false;
-		}
-
-		if(ay < 0)
-		{
-			return false;
-		}
-
-		if(ax >= MAX_X)
-		{
-			return false;
-		}
-
-		if(ay >= MAX_Y)
-		{
-			return false;
-		}
-
-		return true;
+		return ax >= 0 && ax < MAX_X &&
+				ay >= 0 && ay < MAX_Y;
 	}
 
 	public static boolean IsRelPositionOnBoard(Colour colour, int rx, int ry)
@@ -507,10 +465,7 @@ public class Board
 		Piece piece;
 
 		// Check position is on the board
-		if(!IsAbsPositionOnBoard(ax, ay))
-		{
-			assert false;
-		}
+        assert IsAbsPositionOnBoard(ax, ay);
 
 		piece = _position[ax][ay];
 
@@ -567,7 +522,8 @@ public class Board
 			_position[square.getX()][square.getY()] = copy;
 		}
 
-		// !!! Also copy _enPassantTarget
+		// Also copy _enPassantTarget
+		_enPassantTarget = other._enPassantTarget;
 	}
 
 	public boolean IsKingInCheck(Colour colour)
@@ -575,7 +531,7 @@ public class Board
 		Piece king;
 		boolean isInCheck = false;
 
-		king = colour == Colour.WHITE ? _whiteKing : _blackKing;
+		king = getKing(colour);
 
 		if(king != null)
 		{
@@ -591,12 +547,7 @@ public class Board
 	// Can the playerColour army capture a piece at the relative co-ordinate (rColour, rx, ry)?
 	public boolean CanCaptureAt(Colour playerColour, Colour rColour, int rx, int ry)
 	{
-		List<Piece> pieceList;
-
-		if(playerColour == Colour.WHITE)
-			pieceList = _whitePieces;
-		else
-			pieceList = _blackPieces;
+		List<Piece> pieceList = getPiecesForColour(playerColour);
 
 		for (Piece piece : pieceList)
 		{
@@ -613,12 +564,7 @@ public class Board
 	{
 		long materialValue = 0;
 
-		List<Piece> pieceList;
-
-		if(playerColour == Colour.WHITE)
-			pieceList = _whitePieces;
-		else
-			pieceList = _blackPieces;
+		List<Piece> pieceList = getPiecesForColour(playerColour);
 
 		for (Piece piece : pieceList)
 		{
@@ -637,27 +583,17 @@ public class Board
 		// Make the move
 		testBoard.MakeMove(move);
 
-		if( testBoard.IsKingInCheck(colour) )
-		{
-			return true;
-		}
-
-		return false;
+		return testBoard.IsKingInCheck(colour);
 	}
 
 	// NOTE : This routine should NOT modify the board
 	// !!! Modify this (or GetMoves on Piece) to exclude moves that would place king in check?
-	public void GetMoves(MoveStack moves, Colour playerColour)
+	public void GetMoves(List<Move> moves, Colour playerColour)
 	{
-		List<Piece> pieceList;
-
-		if(playerColour == Colour.WHITE)
-			pieceList = _whitePieces;
-		else
-			pieceList = _blackPieces;
+		List<Piece> pieceList = getPiecesForColour(playerColour);
 
 		// Empty the movestack
-		moves.Clear();
+		moves.clear();
 
 		for (Piece piece : pieceList)
 		{
@@ -669,25 +605,18 @@ public class Board
 	// Returns false if the army is checkmated or stalemated
 	public boolean HasAnyLegalMoves(Colour playerColour)
 	{
-		List<Piece> pieceList;
-
-		if(playerColour == Colour.WHITE)
-			pieceList = _whitePieces;
-		else
-			pieceList = _blackPieces;
-
-		int idxMove;
-		MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
+		List<Piece> pieceList = getPiecesForColour(playerColour);
+		List<Move> possibleMoves = new ArrayList<>();
 
 		for (Piece piece : pieceList)
 		{
-			possibleMoves.Clear();
+			possibleMoves.clear();
 			piece.GetMoves(this, possibleMoves, false);
 
-			for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
+			for(Move move : possibleMoves)
 			{
 				// Is the move legal?
-				if( !WillMovePutKingInCheck(possibleMoves.getMove(idxMove), playerColour) )
+				if( !WillMovePutKingInCheck(move, playerColour) )
 				{
 					return true;
 				}
