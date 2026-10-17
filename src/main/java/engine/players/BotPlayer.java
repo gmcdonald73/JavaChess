@@ -11,6 +11,10 @@ import java.util.List;
 
 public class BotPlayer extends ChessPlayer {
 
+    private int _numPositionsAnalysed;
+
+    public int getNumPositionsAnalysed() { return _numPositionsAnalysed; }
+
     public BotPlayer(String name, Colour colour) {
         super(name, colour);
     }
@@ -19,6 +23,8 @@ public class BotPlayer extends ChessPlayer {
     public PlayerAction getAction(Board board) {
 
         // Calculate move
+
+        _numPositionsAnalysed = 0;
 
         Move[] engineMoves =
                 new Move[Constants.MAX_MOVES_LOOKAHEAD];
@@ -41,9 +47,9 @@ public class BotPlayer extends ChessPlayer {
     {
         int numMovesToLookAhead = 2;
 
-        while(numMovesToLookAhead <= lookAheadMax)
+        // while(numMovesToLookAhead <= lookAheadMax)
         {
-            if( !RecursiveFindBestMove(getColour(), board, 0, numMovesToLookAhead, moveStack) )
+            if( !RecursiveFindBestMove(getColour(), board, 0, lookAheadMax, moveStack) )
             {
                 // no legal move
                 return false;
@@ -75,7 +81,6 @@ public class BotPlayer extends ChessPlayer {
         board.GetMoves(possibleMoves, colour);
 
         // Loop through all possible moves for the player
-        // for(idxMove=0; idxMove<possibleMoves.getNumMoves(); idxMove++)
         for(Move move : possibleMoves)
         {
             // Copy the move stack to temp
@@ -90,6 +95,11 @@ public class BotPlayer extends ChessPlayer {
 
             // Evaluate the move
             EvaluateMove(colour, tempMoveStack, board, lookAheadLevel, numMovesToLookAhead);
+
+            if(lookAheadLevel == 0)
+            {
+                System.out.println(tempMoveStack[0].getSan() + " = " +tempMoveStack[0]._score);
+            }
 
             if(tempMoveStack[lookAheadLevel]._score > moveStack[lookAheadLevel]._score)
             {
@@ -212,6 +222,8 @@ public class BotPlayer extends ChessPlayer {
         int rating;
         long score, enemyScore;
 
+        _numPositionsAnalysed++;
+
         score = RateArmy(board, colour);
         enemyScore = RateArmy(board, colour.opposite());
 
@@ -231,7 +243,12 @@ public class BotPlayer extends ChessPlayer {
         // Rate your forces
         board.GetMoves(moves, colour);
 
-        score = moves.size();
+        score = moves.size() * 5;
+
+        // increase score if piece hasn't moved
+        // or if pawn move advanced
+        // or for castling?
+        // or if pieces are defended / not hanging
 
 /*
 		// Give bonus points for knight or bishop moves

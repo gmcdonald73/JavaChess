@@ -1,0 +1,8 @@
+[Event "JavaChess Game"]
+[Site "JavaChess"]
+[Date "2026.10.16"]
+[White "Graeme"]
+[Black "GMac"]
+[Result "0-1"]
+
+1. e4 e5 2. Nf3 Qf6 3. Bb5 a6 4. Ba4 b5 5. Bb3 d5 6. exd5 Qf4 7. d3 Bb4+ 8. c3 Qg4 9. O-O Qh5 10. cxb4 a5 11. bxa5 Rxa5 12. Re1 Qg4 13. Rxe5+ Ne7 14. Bg5 Ra6 15. Rxe7+ Kf8 16. Qe2 Be6 17. dxe6 h6 18. Re8+ Kxe8 19. exf7+ Kd7 20. Qe7+ Kc8 21. Qe8+ Rxe8 22. fxe8=Q+ Kb7 23. Bd5+ c6 24. Qe7+ Nd7 25. Ne5 Qd1# 0-1

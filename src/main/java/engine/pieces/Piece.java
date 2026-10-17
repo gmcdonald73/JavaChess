@@ -132,7 +132,6 @@ public abstract class Piece
 
 		moveStack.add(move);
 	}
-
 }
 
 

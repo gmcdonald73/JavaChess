@@ -3,8 +3,10 @@ package engine.game;
 import engine.board.Board;
 import engine.moves.*;
 import engine.pieces.Colour;
+import engine.players.BotPlayer;
 import engine.players.ChessPlayer;
 import engine.players.PlayerAction;
+import ui.GraphicalChess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,8 @@ public class ChessGame {
 
     public void play() {
 
+        GraphicalChess gui = new GraphicalChess(board);
+
         ChessPlayer currentPlayer = white;
         int moveNum = 1;
 
@@ -44,10 +48,23 @@ public class ChessGame {
         {
 
             board.DisplayBoard();
+            gui.refresh();
 
             System.out.println((currentPlayer == white ? "White" : "Black") + "'s move:");
 
+            long startTime = System.nanoTime();
+
             PlayerAction action = currentPlayer.getAction(board);
+
+            long elapsedTime = System.nanoTime() - startTime;
+            double elapsedSeconds = elapsedTime / 1_000_000_000.0;
+
+            if(currentPlayer instanceof BotPlayer bot)
+            {
+                System.out.println("Num positions analysed: " + bot.getNumPositionsAnalysed());
+                System.out.printf("Time taken: %.3f seconds%n", elapsedSeconds);
+                Sleep(100);
+            }
 
             switch (action.getType())
             {
@@ -120,6 +137,7 @@ public class ChessGame {
         }
 
         board.DisplayBoard();
+        gui.refresh();
 
     }
 
@@ -155,5 +173,22 @@ public class ChessGame {
         }
 
         return isGameOver;
+    }
+
+    private void Sleep(int ms)
+    {
+        // Pause before the next move.
+        //if (currentPlayer instanceof BotPlayer)
+        {
+            try
+            {
+                Thread.sleep(ms);
+            }
+            catch (InterruptedException e)
+            {
+                Thread.currentThread().interrupt();
+                //break;
+            }
+        }
     }
 }
