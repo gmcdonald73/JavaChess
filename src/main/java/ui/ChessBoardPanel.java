@@ -91,8 +91,8 @@ public class ChessBoardPanel extends JPanel
                 boolean lightSquare = (x + y) % 2 == 1;
 
                 g.setColor(lightSquare
-                        ? new Color(127, 184, 219)
-                        : new Color(10, 103, 161));
+                        ? new Color(87, 106, 138)
+                        : new Color(3, 41, 102));
 
                 g.fillRect(
                         x * SQUARE_SIZE,

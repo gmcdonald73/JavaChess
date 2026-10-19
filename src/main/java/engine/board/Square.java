@@ -25,6 +25,13 @@ public class Square
         return new Square(x,y);
     }
 
+    public String toSAN()
+    {
+        String pos = String.valueOf(getFile());
+        pos += getRank();
+        return pos;
+    }
+
     public static Square fromRelCoords(Colour colour, int rx, int ry)
     {
         int x = -1, y = -1;

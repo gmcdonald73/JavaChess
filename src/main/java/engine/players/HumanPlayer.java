@@ -1,6 +1,7 @@
 package engine.players;
 
 import engine.board.Board;
+import engine.moves.Move;
 import engine.pieces.Colour;
 import engine.moves.MoveParseResult;
 import engine.moves.MoveParser;
@@ -9,6 +10,7 @@ import engine.moves.MoveRequest;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.util.List;
 
 public class HumanPlayer extends ChessPlayer {
 
@@ -20,7 +22,7 @@ public class HumanPlayer extends ChessPlayer {
     }
 
     @Override
-    public PlayerAction getAction(Board board)
+    public PlayerAction getAction(Board board, List<Move> moveHistory)
     {
         // Get move from console/UI
         MoveRequest moveRequest = null;

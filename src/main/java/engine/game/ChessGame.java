@@ -54,7 +54,7 @@ public class ChessGame {
 
             long startTime = System.nanoTime();
 
-            PlayerAction action = currentPlayer.getAction(board);
+            PlayerAction action = currentPlayer.getAction(board, moves);
 
             long elapsedTime = System.nanoTime() - startTime;
             double elapsedSeconds = elapsedTime / 1_000_000_000.0;

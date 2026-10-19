@@ -8,6 +8,7 @@ import engine.game.ChessGame;
 import engine.pieces.Colour;
 import engine.players.BotPlayer;
 import engine.players.HumanPlayer;
+import engine.players.StockFishPlayer;
 import io.PgnWriter;
 
 public class ConsoleChess {
@@ -15,8 +16,8 @@ public class ConsoleChess {
     public static void main(String[] args) throws Exception {
 
         ChessGame game = new ChessGame(
-                new BotPlayer("Graeme", Colour.WHITE),
-                new BotPlayer("GMac", Colour.BLACK)
+                new StockFishPlayer("StockFish", Colour.WHITE),
+                new BotPlayer("Bot", Colour.BLACK)
         );
 
         game.play();

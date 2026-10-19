@@ -1,7 +1,10 @@
 package engine.players;
 
 import engine.board.Board;
+import engine.moves.Move;
 import engine.pieces.Colour;
+
+import java.util.List;
 
 public abstract class ChessPlayer {
 
@@ -21,5 +24,5 @@ public abstract class ChessPlayer {
         return colour;
     }
 
-    public abstract PlayerAction getAction(Board board);
+    public abstract PlayerAction getAction(Board board, List<Move> moveHistory);
 }

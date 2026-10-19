@@ -20,7 +20,7 @@ public class BotPlayer extends ChessPlayer {
     }
 
     @Override
-    public PlayerAction getAction(Board board) {
+    public PlayerAction getAction(Board board, List<Move> moveHistory) {
 
         // Calculate move
 
