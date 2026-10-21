@@ -58,6 +58,11 @@ public class Board
 
 	public void SetupForGame()
 	{
+		setupFromFEN(
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+		);
+
+/*
 		// Place white pieces
 		PlacePiece(Colour.WHITE, PieceRank.PAWN, "a2");
 		PlacePiece(Colour.WHITE, PieceRank.PAWN, "b2");
@@ -95,7 +100,107 @@ public class Board
 		PlacePiece(Colour.BLACK, PieceRank.BISHOP, "f8");
 		PlacePiece(Colour.BLACK, PieceRank.KNIGHT, "g8");
 		PlacePiece(Colour.BLACK, PieceRank.ROOK, "h8");
+*/
 	}
+
+
+
+	public void setupFromFEN(String fen)
+	{
+		if (fen == null || fen.isBlank())
+		{
+			throw new IllegalArgumentException("FEN cannot be empty");
+		}
+
+		String[] fields = fen.trim().split("\\s+");
+
+		if (fields.length != 6)
+		{
+			throw new IllegalArgumentException(
+					"FEN must contain six fields");
+		}
+
+		// 1. Clear the current position.
+		EmptyBoard();
+
+		// 2. Set up piece placement.
+		String[] ranks = fields[0].split("/");
+
+		if (ranks.length != 8)
+		{
+			throw new IllegalArgumentException(
+					"FEN must contain eight ranks");
+		}
+
+		for (int fenRank = 0; fenRank < 8; fenRank++)
+		{
+			int file = 0;
+			int y = 7 - fenRank;
+
+			for (char c : ranks[fenRank].toCharArray())
+			{
+				if (Character.isDigit(c))
+				{
+					file += Character.digit(c, 10);
+				} else
+				{
+					Colour colour =
+							Character.isUpperCase(c)
+									? Colour.WHITE
+									: Colour.BLACK;
+
+					PieceRank rank = switch (
+							Character.toLowerCase(c)) {
+						case 'k' -> PieceRank.KING;
+						case 'q' -> PieceRank.QUEEN;
+						case 'r' -> PieceRank.ROOK;
+						case 'b' -> PieceRank.BISHOP;
+						case 'n' -> PieceRank.KNIGHT;
+						case 'p' -> PieceRank.PAWN;
+						default -> throw new IllegalArgumentException(
+								"Invalid FEN piece: " + c);
+					};
+
+					if (file >= 8) {
+						throw new IllegalArgumentException(
+								"Too many squares in rank");
+					}
+
+					PlacePiece(colour, rank, new Square(file, y));
+					file++;
+				}
+			}
+
+			if (file != 8)
+			{
+				throw new IllegalArgumentException(
+						"Each FEN rank must describe eight squares");
+			}
+		}
+
+/*
+		// 3. Active colour.
+		sideToMove = switch (fields[1]) {
+			case "w" -> PieceColour.WHITE;
+			case "b" -> PieceColour.BLACK;
+			default -> throw new IllegalArgumentException(
+					"Invalid active colour: " + fields[1]);
+		};
+
+		// 4. Castling rights.
+		castlingRights = fields[2];
+
+		// 5. En passant target square.
+		enPassantTarget = fields[3].equals("-")
+				? null
+				: parseSquare(fields[3]);
+
+		// 6. Halfmove clock and fullmove number.
+		halfmoveClock = Integer.parseInt(fields[4]);
+		fullmoveNumber = Integer.parseInt(fields[5]);
+*/
+	}
+
 
 	public Piece PlacePiece(Colour colour, PieceRank rank, String pos)
 	{

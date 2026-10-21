@@ -1,0 +1,8 @@
+[Event "JavaChess Game"]
+[Site "JavaChess"]
+[Date "2026.10.20"]
+[White "Bot"]
+[Black "StockFish"]
+[Result "1-0"]
+
+1. e3 c5 2. Qg4 d5 3. Bb5+ Bd7 4. Bxd7+ Nxd7 5. Nc3 Ngf6 6. Qf5 d4 7. exd4 cxd4 8. Nb5 Rc8 9. Nxd4 g6 10. Qb5 Rc5 11. Qxb7 e5 12. Nde2 Rc7 13. Qa6 Nc5 14. Qb5+ Qd7 15. Qxd7+ Rxd7 16. Nf3 e4 17. Ne5 Rd5 18. Nc6 Kd7 19. Nxa7 Ng4 20. Nb5 Bg7 21. d4 Nd3+ 22. cxd3 e3 23. Nbc3 Rxd4 24. Nxd4 Nxf2 25. Bxe3 Nxd3+ 26. Ke2 Nf4+ 27. Bxf4 Ra8 28. Nc6 Re8+ 29. Ne7 Bxc3 30. bxc3 f5 31. Rab1 Rxe7+ 32. Kd3 Re4 33. Rb7+ Kc8 34. Rc7+ Kd8 35. Bd6 Rd4+ 36. cxd4 h6 37. Re1 f4 38. Bxf4 h5 39. Bd6 h4 40. h3 g5 41. Rb7 Kc8 42. Rc7+ Kd8 43. Rb7 g4 44. hxg4 Kc8 45. Rc7+ Kd8 46. Bh2 h3 47. Rg1 hxg2 48. Rxg2 Ke8 49. Rb7 Kf8 50. Bf4 Ke8 51. Re2+ Kf8 52. Re6 Kg8 53. Re8# 1-0

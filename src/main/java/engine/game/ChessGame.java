@@ -108,7 +108,7 @@ public class ChessGame {
                             isGameOver = IsGameOver(currentPlayer, move);
 
                             // !!! fix this. simple hack to break out of infinite loop so we can save the game
-                            if (moveNum > 50) {
+                            if (moveNum > 100) {
                                 isGameOver = true;
                             }
                         }

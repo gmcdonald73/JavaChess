@@ -70,7 +70,7 @@ public class StockFishPlayer extends ChessPlayer
         try
         {
             // Get best move from stockfish
-            move = _engine.getBestMove(uciMoves, 5);
+            move = _engine.getBestMove(uciMoves, 1);
         }
         catch (IOException e)
         {

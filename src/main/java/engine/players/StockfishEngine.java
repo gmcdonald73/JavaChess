@@ -74,6 +74,8 @@ public class StockfishEngine implements AutoCloseable
         }
 
         sendCommand(position.toString());
+        sendCommand("setoption name UCI_LimitStrength value false");
+        sendCommand("setoption name Skill Level value 0");
         sendCommand("go depth " + depth);
 
         String line;

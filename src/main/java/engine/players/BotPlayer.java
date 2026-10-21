@@ -243,7 +243,7 @@ public class BotPlayer extends ChessPlayer {
         // Rate your forces
         board.GetMoves(moves, colour);
 
-        score = moves.size() * 5;
+        score = moves.size();
 
         // increase score if piece hasn't moved
         // or if pawn move advanced

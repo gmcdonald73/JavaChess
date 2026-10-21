@@ -29,31 +29,50 @@ public class ChessBoardPanel extends JPanel
 
         pieceImages = new HashMap<>();
 
-        // Load images when the panel is created.
-        pieceImages.put("WK", loadImage("3King.gif"));
-        pieceImages.put("WQ", loadImage("3Queen.gif"));
-        pieceImages.put("WR", loadImage("3Rook.gif"));
-        pieceImages.put("WB", loadImage("3Bishop.gif"));
-        pieceImages.put("WN", loadImage("3Knight.gif"));
-        pieceImages.put("WP", loadImage("3Pawn.gif"));
+        if (true)
+        {
+            // Load images when the panel is created.
+            pieceImages.put("WK", loadImage("wikipedia", "wK.png"));
+            pieceImages.put("WQ", loadImage("wikipedia", "wQ.png"));
+            pieceImages.put("WR", loadImage("wikipedia", "wR.png"));
+            pieceImages.put("WB", loadImage("wikipedia", "wB.png"));
+            pieceImages.put("WN", loadImage("wikipedia", "wN.png"));
+            pieceImages.put("WP", loadImage("wikipedia", "wP.png"));
 
-        pieceImages.put("BK", loadImage("4King.gif"));
-        pieceImages.put("BQ", loadImage("4Queen.gif"));
-        pieceImages.put("BR", loadImage("4Rook.gif"));
-        pieceImages.put("BB", loadImage("4Bishop.gif"));
-        pieceImages.put("BN", loadImage("4Knight.gif"));
-        pieceImages.put("BP", loadImage("4Pawn.gif"));
+            pieceImages.put("BK", loadImage("wikipedia", "bK.png"));
+            pieceImages.put("BQ", loadImage("wikipedia", "bQ.png"));
+            pieceImages.put("BR", loadImage("wikipedia", "bR.png"));
+            pieceImages.put("BB", loadImage("wikipedia", "bB.png"));
+            pieceImages.put("BN", loadImage("wikipedia", "bN.png"));
+            pieceImages.put("BP", loadImage("wikipedia", "bP.png"));
+
+        } else
+        {
+            // Load images when the panel is created.
+            pieceImages.put("WK", loadImage("set1", "3King.gif"));
+            pieceImages.put("WQ", loadImage("set1", "3Queen.gif"));
+            pieceImages.put("WR", loadImage("set1", "3Rook.gif"));
+            pieceImages.put("WB", loadImage("set1", "3Bishop.gif"));
+            pieceImages.put("WN", loadImage("set1", "3Knight.gif"));
+            pieceImages.put("WP", loadImage("set1", "3Pawn.gif"));
+
+            pieceImages.put("BK", loadImage("set1", "4King.gif"));
+            pieceImages.put("BQ", loadImage("set1", "4Queen.gif"));
+            pieceImages.put("BR", loadImage("set1", "4Rook.gif"));
+            pieceImages.put("BB", loadImage("set1", "4Bishop.gif"));
+            pieceImages.put("BN", loadImage("set1", "4Knight.gif"));
+            pieceImages.put("BP", loadImage("set1", "4Pawn.gif"));
+        }
     }
-
-    private Image loadImage(String filename)
+    
+    private Image loadImage(String set, String filename)
     {
-        URL url = getClass().getResource(
-                "/gui/" + filename);
+        String path = "/gui/" + set + "/" + filename;
+        URL url = getClass().getResource(path);
 
         if (url == null)
         {
-            throw new IllegalArgumentException(
-                    "Image not found: " + filename);
+            throw new IllegalArgumentException("Image not found: " + path);
         }
 
         return new ImageIcon(url).getImage();
@@ -84,6 +103,9 @@ public class ChessBoardPanel extends JPanel
 
     private void drawPieces(Graphics g)
     {
+        Color lightSq =  new Color(223,233,235);
+        Color darkSq = new Color(88, 195,214);
+
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -91,8 +113,14 @@ public class ChessBoardPanel extends JPanel
                 boolean lightSquare = (x + y) % 2 == 1;
 
                 g.setColor(lightSquare
+                        ? lightSq
+                        : darkSq);
+
+/*
+                g.setColor(lightSquare
                         ? new Color(87, 106, 138)
                         : new Color(3, 41, 102));
+*/
 
                 g.fillRect(
                         x * SQUARE_SIZE,
