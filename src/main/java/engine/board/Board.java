@@ -532,13 +532,14 @@ public class Board
 			RemovePiece(epCapturePiece.Colour(), epCapturePiece.Rank(), epPawnSq);
 		}
 
-		if(piece.Rank() == PieceRank.PAWN)
+		if(piece.Rank() == PieceRank.PAWN && (Math.abs(endY - startY) == 2))
 		{
 			// Pawn has moved two squares then set en passant target square
-			if(Math.abs(endY - startY) == 2)
-				_enPassantTarget = new Square(endX, (startY + endY) / 2);
-			else
-				_enPassantTarget = null;
+			_enPassantTarget = new Square(endX, (startY + endY) / 2);
+		}
+		else
+		{
+			_enPassantTarget = null;
 		}
 
 		// Move piece to destination

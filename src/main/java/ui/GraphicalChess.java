@@ -25,6 +25,13 @@ public class GraphicalChess
     {
         chessBoardPanel.repaint();
     }
+
+    public void close() {
+        if (frame != null) {
+            frame.dispose();
+            // frame = null;
+        }
+    }
 }
 
 /*

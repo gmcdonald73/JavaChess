@@ -15,8 +15,8 @@ public class BotPlayer extends ChessPlayer {
 
     public int getNumPositionsAnalysed() { return _numPositionsAnalysed; }
 
-    public BotPlayer(String name, Colour colour) {
-        super(name, colour);
+    public BotPlayer(String name) {
+        super(name);
     }
 
     @Override
@@ -96,10 +96,13 @@ public class BotPlayer extends ChessPlayer {
             // Evaluate the move
             EvaluateMove(colour, tempMoveStack, board, lookAheadLevel, numMovesToLookAhead);
 
+            // Display score for the move if top level move
+/*
             if(lookAheadLevel == 0)
             {
                 System.out.println(tempMoveStack[0].getSan() + " = " +tempMoveStack[0]._score);
             }
+*/
 
             if(tempMoveStack[lookAheadLevel]._score > moveStack[lookAheadLevel]._score)
             {

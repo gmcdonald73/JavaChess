@@ -8,21 +8,21 @@ import java.util.List;
 
 public abstract class ChessPlayer {
 
-    private final String name;
-    private final Colour colour;
+    private final String _name;
+    private Colour _colour;
 
-    protected ChessPlayer(String name, Colour colour) {
-        this.name = name;
-        this.colour = colour;
+    protected ChessPlayer(String name) {
+        this._name = name;
     }
 
     public String getName() {
-        return name;
+        return _name;
     }
 
     public Colour getColour() {
-        return colour;
+        return _colour;
     }
+    public void setColour(Colour colour) { _colour = colour; }
 
     public abstract PlayerAction getAction(Board board, List<Move> moveHistory);
 }

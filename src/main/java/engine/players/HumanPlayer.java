@@ -16,8 +16,8 @@ public class HumanPlayer extends ChessPlayer {
 
     BufferedReader reader;
 
-    public HumanPlayer(String name, Colour colour) {
-        super(name, colour);
+    public HumanPlayer(String name) {
+        super(name);
         reader = new BufferedReader(new InputStreamReader(System.in));
     }
 

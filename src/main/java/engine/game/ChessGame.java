@@ -14,30 +14,40 @@ import java.util.List;
 
 public class ChessGame {
 
-    private final ChessPlayer white;
-    private final ChessPlayer black;
+    private final ChessPlayer _white;
+    private final ChessPlayer _black;
     private final Board board;
     private List<Move> moves = new ArrayList<>();
     private GameResult result;
 
     public ChessGame(ChessPlayer white, ChessPlayer black) {
 
-        this.white = white;
-        this.black = black;
+        _white = white;
+        _white.setColour(Colour.WHITE);
+
+        _black = black;
+        _black.setColour(Colour.BLACK);
+
         this.board = new Board();
         this.result = GameResult.UNFINISHED;
     }
 
-    public ChessPlayer getWhitePlayer() { return white; }
-    public ChessPlayer getBlackPlayer() { return black; }
+    public ChessPlayer getWhitePlayer() { return _white; }
+    public ChessPlayer getBlackPlayer() { return _black; }
     public GameResult getResult() {return result;}
     public List<Move> getMoves() { return moves; }
 
-    public void play() {
+    public GameResult play(boolean showGUI, boolean showConsoleMessages)
+    {
 
-        GraphicalChess gui = new GraphicalChess(board);
+        GraphicalChess gui = null;
 
-        ChessPlayer currentPlayer = white;
+        if(showGUI)
+        {
+            gui = new GraphicalChess(board);
+        }
+
+        ChessPlayer currentPlayer = _white;
         int moveNum = 1;
 
         board.SetupForGame();
@@ -47,10 +57,13 @@ public class ChessGame {
         while (!isGameOver)
         {
 
-            board.DisplayBoard();
-            gui.refresh();
+            if(gui != null) gui.refresh();
 
-            System.out.println((currentPlayer == white ? "White" : "Black") + "'s move:");
+            if(showConsoleMessages)
+            {
+                board.DisplayBoard();
+                System.out.println((currentPlayer == _white ? "White" : "Black") + "'s move:");
+            }
 
             long startTime = System.nanoTime();
 
@@ -59,11 +72,11 @@ public class ChessGame {
             long elapsedTime = System.nanoTime() - startTime;
             double elapsedSeconds = elapsedTime / 1_000_000_000.0;
 
-            if(currentPlayer instanceof BotPlayer bot)
+            if(showConsoleMessages && currentPlayer instanceof BotPlayer bot)
             {
                 System.out.println("Num positions analysed: " + bot.getNumPositionsAnalysed());
                 System.out.printf("Time taken: %.3f seconds%n", elapsedSeconds);
-                Sleep(100);
+                // Sleep(100);
             }
 
             switch (action.getType())
@@ -94,15 +107,18 @@ public class ChessGame {
                             moves.add(move);
 
                             // Display move
-                            if (currentPlayer == white)
-                                System.out.println(moveNum + ": White: " + move.getSan());
-                            else {
-                                System.out.println(moveNum + ": Black: " + move.getSan());
-                                moveNum++;
+                            if(showConsoleMessages)
+                            {
+                                if (currentPlayer == _white)
+                                    System.out.println(moveNum + ": White: " + move.getSan());
+                                else
+                                    System.out.println(moveNum + ": Black: " + move.getSan());
                             }
 
+                            if(currentPlayer == _black) moveNum++;
+
                             // Switch players - see if opponent is in check or mated
-                            currentPlayer = (currentPlayer == white ? black : white);
+                            currentPlayer = (currentPlayer == _white ? _black : _white);
 
                             // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
                             isGameOver = IsGameOver(currentPlayer, move);
@@ -136,8 +152,15 @@ public class ChessGame {
 
         }
 
-        board.DisplayBoard();
-        gui.refresh();
+        if(showConsoleMessages) board.DisplayBoard();
+
+        // Should really display board, then wait for player to close game? (if human player)
+        // gui.refresh();
+
+        // !!! should also close on exceptions
+        if(gui != null) gui.close();
+
+        return result;
 
     }
 
@@ -161,13 +184,13 @@ public class ChessGame {
 
             if(move._bIsCheck)
             {
-                System.out.println("Checkmate!!!");
+                // System.out.println("Checkmate!!!");
                 move._bIsMate = true;
                 result = currentColour == Colour.WHITE ? GameResult.BLACK_WIN : GameResult.WHITE_WIN;
             }
             else
             {
-                System.out.println("Stalemate!!!");
+                // System.out.println("Stalemate!!!");
                 result = GameResult.DRAW;
             }
         }

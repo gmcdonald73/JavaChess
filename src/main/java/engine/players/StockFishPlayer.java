@@ -28,9 +28,9 @@ public class StockFishPlayer extends ChessPlayer
                     "stockfish-windows-x86-64-universal.exe");
 
 
-    public StockFishPlayer(String name, Colour colour)
+    public StockFishPlayer(String name)
     {
-        super(name, colour);
+        super(name);
 
         assertTrue(
                 Files.isRegularFile(STOCKFISH_PATH),
@@ -83,8 +83,10 @@ public class StockFishPlayer extends ChessPlayer
                 move.matches("[a-h][1-8][a-h][1-8][qrbn]?"),
                 "Invalid UCI move returned: " + move);
 
+/*
         System.out.println(
                 "Stockfish response : " + move);
+*/
 
         // Convert stockfish response to a move request
         moveRequest = toMoveRequest(move, board);
