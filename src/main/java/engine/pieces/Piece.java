@@ -65,6 +65,9 @@ public abstract class Piece
 	// NOTE : This routine should NOT modify the board
 	public boolean CanPieceCaptureAt(Board board, Colour colour, int rx, int ry)
 	{
+		Square pos = Square.fromRelCoords(colour, rx, ry);
+
+/*
 		relPosType posMyCoords = new relPosType(); // The position to capture at in our co-ordinate system
 
 		if(colour != _colour)
@@ -84,6 +87,7 @@ public abstract class Piece
 			posMyCoords._rx = rx;
 			posMyCoords._ry = ry;
 		}
+*/
 
 		// MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 		List<Move> possibleMoves = new ArrayList<>();
@@ -94,9 +98,7 @@ public abstract class Piece
 		{
 			// !!! This won't work for en passant captures (Doesn't matter at the moment as
 			// this method is currently only called for determining if king is in check )
-			if( move._bIsCapture &&
-				(move._endRX == posMyCoords._rx) &&
-				(move._endRY == posMyCoords._ry))
+			if( move.isCapture() && move.getEndPosition().equals(pos) )
 			{
 				// This piece can make a capture at the given square
 				return true;
@@ -109,26 +111,13 @@ public abstract class Piece
 	// !!! Change this to accept a move? or change this to a new constructor for Move and add to List outside of this method?
 	protected void AddMove(List<Move> moveStack, int startX, int startY, int endX, int endY, boolean bIsCapture, PieceRank promoteTo)
 	{
-		Move move = new Move();
+		Square startPos = Square.fromRelCoords(_colour, startX, startY);
+		Square endPos = Square.fromRelCoords(_colour, endX, endY);
 
-		// !!! put all this in a move constructor
-		move._colour = _colour;
-		move._rank = _rank;
-		move._startRX = startX;
-		move._startRY = startY;
-		move._endRX = endX;
-		move._endRY = endY;
-		move._bIsCapture = bIsCapture;
-		move._promoteTo = promoteTo;
-		move._bIsCheck = false;
-		move._bIsMate = false;
-		move._score = Constants.MS_UNDEFINED;
-		move._bCastleQueenSide = false;
-		move._bCastleKingSide = false;
-		move._bEnPassantCapture = false;
+		Move move = new Move(_colour, _rank,  startPos, endPos);
 
-		move.setStartPosition( Square.fromRelCoords(move._colour, move._startRX, move._startRY));
-		move.setEndPosition( Square.fromRelCoords(move._colour, move._endRX, move._endRY));
+		move.setIsCapture(bIsCapture);
+		move.setPromoteTo(promoteTo);
 
 		moveStack.add(move);
 	}

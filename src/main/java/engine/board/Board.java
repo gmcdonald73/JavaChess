@@ -285,50 +285,39 @@ public class Board
 		MovePiece(move);
 
 		// Castling stuff
-		if((move._bCastleQueenSide) || (move._bCastleKingSide))
+		if((move.isCastleQueenSide()) || (move.isCastleKingSide()))
 		{
-			Move rookMove = new Move(); // if castling
+			Move rookMove;
 
-			rookMove._colour = move._colour;
-			rookMove._rank = PieceRank.ROOK;
-			rookMove._startRY = 1;
-			rookMove._endRY = 1;
-
-			if(move._bCastleQueenSide)
+			if(move.isCastleQueenSide())
 			{
-				if(move._colour == Colour.WHITE)
+				if(move.getColour() == Colour.WHITE)
 				{
-					rookMove._startRX = 1; 
-					rookMove._endRX = 4; 
+					rookMove = new Move(move.getColour(), PieceRank.ROOK, Square.fromSAN("a1"), Square.fromSAN("d1"));
 				}
 				else
 				{
-					rookMove._startRX = 8; 
-					rookMove._endRX = 5; 
+					rookMove = new Move(move.getColour(), PieceRank.ROOK, Square.fromSAN("a8"), Square.fromSAN("d8"));
 				}
 			}
-			else // if(move._bCastleKingSide)
+			else
 			{
-				if(move._colour == Colour.WHITE)
+				if(move.getColour() == Colour.WHITE)
 				{
-					rookMove._startRX = 8; 
-					rookMove._endRX = 6; 
+					rookMove = new Move(move.getColour(), PieceRank.ROOK, Square.fromSAN("h1"), Square.fromSAN("f1"));
 				}
 				else
 				{
-					rookMove._startRX = 1; 
-					rookMove._endRX = 3; 
+					rookMove = new Move(move.getColour(), PieceRank.ROOK, Square.fromSAN("h8"), Square.fromSAN("f8"));
 				}
 			}
 
-			Piece piece = WhatIsAt(move._colour, rookMove._startRX, rookMove._startRY);
+			Piece piece = WhatIsAtSquare(rookMove.getStartPosition());
 
 			if((piece == null) || (piece.Rank() != PieceRank.ROOK))
 			{
 				assert false;;
 			}
-
-			rookMove.UpdateAbsolutePositions();
 
 			MovePiece(rookMove);
 		}
@@ -491,8 +480,8 @@ public class Board
 		Piece piece = _position[startX][startY];
 
         assert piece != null;
-		assert piece.Colour() == move._colour;
-		assert piece.Rank() == move._rank;
+		assert piece.Colour() == move.getColour();
+		assert piece.Rank() == move.getRank();
 
 		// Check if anything is at the end point
 		Piece pieceAtEndPos = _position[endX][endY];
@@ -500,33 +489,34 @@ public class Board
 		if(pieceAtEndPos != null)
 		{
 			// If it is a friendly piece then the move is illegal
-			assert pieceAtEndPos.Colour() != move._colour;
+			assert pieceAtEndPos.Colour() != move.getColour();
 
 			// If it is an enemy then remove it
-			if(pieceAtEndPos.Colour() == move._colour.opposite())
+			if(pieceAtEndPos.Colour() == move.getColour().opposite())
 			{
 				RemovePiece(pieceAtEndPos.Colour(), pieceAtEndPos.Rank(), endPos);
 			}
 		}
 
 		// Handle en passant captures
-		if( move._bEnPassantCapture )
+		if( move.isEnPassantCapture() )
 		{
-			relPosType epCaptureRelPos = new relPosType();
-			posType epCapturePos = new posType();
+			// This is the square the pawn moves to
+			int endPosX = move.getEndPosition().getX();
+			int endPosY = move.getEndPosition().getY();
 
-			epCaptureRelPos._colour = move._colour;
-			epCaptureRelPos._rx = move._endRX;
-			epCaptureRelPos._ry = move._endRY - 1;
+			// Determine tne square of the pawn being captured
+			if(move.getColour() == Colour.WHITE)
+				endPosY--;
+			else
+				endPosY++;
 
-			ConvertRelToAbsCoords(epCaptureRelPos, epCapturePos);
-
-			Square epPawnSq = new Square(epCapturePos._x, epCapturePos._y);
+			Square epPawnSq = new Square(endPosX, endPosY);
 
 			Piece epCapturePiece = WhatIsAtSquare(epPawnSq);
 
 			assert epCapturePiece != null;
-			assert epCapturePiece.Colour() != move._colour;
+			assert epCapturePiece.Colour() != move.getColour();
 			assert epCapturePiece.Rank() == PieceRank.PAWN;
 
 			RemovePiece(epCapturePiece.Colour(), epCapturePiece.Rank(), epPawnSq);
@@ -543,10 +533,10 @@ public class Board
 		}
 
 		// Move piece to destination
-		if(move._promoteTo != null)
+		if(move.getPromoteTo() != null)
 		{
 			RemovePiece(piece.Colour(), piece.Rank(), startPos);
-			PlacePiece(piece.Colour(), move._promoteTo, endPos);
+			PlacePiece(piece.Colour(), move.getPromoteTo(), endPos);
 		}
 		else
 		{

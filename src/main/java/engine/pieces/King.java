@@ -38,56 +38,56 @@ public class King extends Piece
 		kingRX = relPos._rx;
 		kingRY = relPos._ry;
 
-		Move[] _testMove = new Move[8];
+		relPosType[] _testMove = new relPosType[8];
 
 		for(i=0; i<8; i++)
 		{
-			_testMove[i] = new Move();
+			_testMove[i] = new relPosType();
 		}
 
 		// check NW is on the board, has no friendly piece, if so add to list
-		_testMove[0]._endRX = kingRX - 1;
-		_testMove[0]._endRY = kingRY + 1;
+		_testMove[0]._rx = kingRX - 1;
+		_testMove[0]._ry = kingRY + 1;
 
 		// check N is on the board, has no friendly piece, if so add to list
-		_testMove[1]._endRX = kingRX;
-		_testMove[1]._endRY = kingRY + 1;
+		_testMove[1]._rx = kingRX;
+		_testMove[1]._ry = kingRY + 1;
 
 		// check NE is on the board, has no friendly piece, if so add to list
-		_testMove[2]._endRX = kingRX + 1;
-		_testMove[2]._endRY = kingRY + 1;
+		_testMove[2]._rx = kingRX + 1;
+		_testMove[2]._ry = kingRY + 1;
 
 		// check W is on the board, has no friendly piece, if so add to list
-		_testMove[3]._endRX = kingRX - 1;
-		_testMove[3]._endRY = kingRY;
+		_testMove[3]._rx = kingRX - 1;
+		_testMove[3]._ry = kingRY;
 
 		// check E is on the board, has no friendly piece, if so add to list
-		_testMove[4]._endRX = kingRX + 1;
-		_testMove[4]._endRY = kingRY;
+		_testMove[4]._rx = kingRX + 1;
+		_testMove[4]._ry = kingRY;
 
 		// check SW is on the board, has no friendly piece, if so add to list
-		_testMove[5]._endRX = kingRX - 1;
-		_testMove[5]._endRY = kingRY - 1;
+		_testMove[5]._rx = kingRX - 1;
+		_testMove[5]._ry = kingRY - 1;
 
 		// check S is on the board, has no friendly piece, if so add to list
-		_testMove[6]._endRX = kingRX;
-		_testMove[6]._endRY = kingRY - 1;
+		_testMove[6]._rx = kingRX;
+		_testMove[6]._ry = kingRY - 1;
 
 		// check SE is on the board, has no friendly piece, if so add to list
-		_testMove[7]._endRX = kingRX + 1;
-		_testMove[7]._endRY = kingRY - 1;
+		_testMove[7]._rx = kingRX + 1;
+		_testMove[7]._ry = kingRY - 1;
 
 		Piece piece;
 
 		for(i=0; i<8; i++)
 		{
-			if( Board.IsRelPositionOnBoard(_colour, _testMove[i]._endRX, _testMove[i]._endRY) )
+			if( Board.IsRelPositionOnBoard(_colour, _testMove[i]._rx, _testMove[i]._ry) )
 			{
-				piece = board.WhatIsAt(_colour, _testMove[i]._endRX, _testMove[i]._endRY);
+				piece = board.WhatIsAt(_colour, _testMove[i]._rx, _testMove[i]._ry);
 
 				if( piece == null || piece._colour != _colour )
 				{
-					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._endRX, _testMove[i]._endRY, (piece != null), null);
+					AddMove(possibleMoves, kingRX, kingRY, _testMove[i]._rx, _testMove[i]._ry, (piece != null), null);
 				}
 			}
 		}
@@ -123,11 +123,11 @@ public class King extends Piece
 
 			if(_colour == Colour.WHITE)
 			{
-				possibleMoves.getLast()._bCastleQueenSide = true;
+				possibleMoves.getLast().setCastleQueenSide(true);
 			}
 			else
 			{
-				possibleMoves.getLast()._bCastleKingSide = true;
+				possibleMoves.getLast().setCastleKingSide(true);
 			}
 		}
 
@@ -139,11 +139,11 @@ public class King extends Piece
 
 			if(_colour == Colour.WHITE)
 			{
-				possibleMoves.getLast()._bCastleKingSide = true;
+				possibleMoves.getLast().setCastleKingSide(true);
 			}
 			else
 			{
-				possibleMoves.getLast()._bCastleQueenSide = true;
+				possibleMoves.getLast().setCastleQueenSide(true);
 			}
 		}
 	}

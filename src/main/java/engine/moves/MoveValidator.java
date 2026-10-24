@@ -21,19 +21,19 @@ public class MoveValidator
 
         if (piece == null )
         {
-            errorMessage = "Illegal move - there is no piece at " + move.StartPos();
+            errorMessage = "Illegal move - there is no piece at " + move.getStartPosition().toSAN();
             return new MoveValidationResult(false, errorMessage);
         }
 
-        if (piece.Rank() != move._rank )
+        if (piece.Rank() != move.getRank() )
         {
-            errorMessage = "Illegal move - piece at " + move.StartPos() + " is not a " + move._rank.getSymbol();
+            errorMessage = "Illegal move - piece at " + move.getStartPosition().toSAN() + " is not a " + move.getRank().getSymbol();
             return new MoveValidationResult(false, errorMessage);
         }
 
         if (piece.Colour() != colour )
         {
-            errorMessage = "Illegal move - piece at " + move.StartPos() + " is not yours";
+            errorMessage = "Illegal move - piece at " + move.getStartPosition().toSAN() + " is not yours";
             return new MoveValidationResult(false, errorMessage);
         }
 
@@ -45,10 +45,6 @@ public class MoveValidator
         // Find out if the entered move is one of them
         for(Move currMove : moves)
         {
-            // !!! Where does this belong?
-            currMove.setStartPosition( Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
-            currMove.setEndPosition( Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
-
             if( move.equals(currMove))
             {
                 // Found the move in the list of possible moves for the piece

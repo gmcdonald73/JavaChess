@@ -131,14 +131,14 @@ public class Pawn extends Piece
 			if((epRelPos._rx == pawnRX - 1) && (epRelPos._ry == pawnRY + 1))
 			{
 				AddMove(possibleMoves, pawnRX, pawnRY, epRelPos._rx, epRelPos._ry, true, null);
-				possibleMoves.getLast()._bEnPassantCapture = true;
+				possibleMoves.getLast().setEnPassantCapture(true);
 			}
 
 			// Is ep target on square NE of pawn
 			if((epRelPos._rx == pawnRX + 1) && (epRelPos._ry == pawnRY + 1))
 			{
 				AddMove(possibleMoves, pawnRX, pawnRY, epRelPos._rx, epRelPos._ry, true, null);
-				possibleMoves.getLast()._bEnPassantCapture = true;
+				possibleMoves.getLast().setEnPassantCapture(true);
 			}
 		}
 
@@ -150,41 +150,29 @@ public class Pawn extends Piece
 
 		for(i=startNumMoves; i<stopPoint; i++)
 		{
-			if( possibleMoves.get(i)._endRY == 8 )
+			Move currMove = possibleMoves.get(i);
+
+			if( (currMove.getColour() == Colour.WHITE && currMove.getEndPosition().getY() == 7 ) ||
+				(currMove.getColour() == Colour.BLACK && currMove.getEndPosition().getY() == 0 ) )
 			{
-				Move currMove;
-
-				currMove = possibleMoves.get(i);
-
 				// Promote pawn to queen
-				currMove._promoteTo = PieceRank.QUEEN;
+				currMove.setPromoteTo(PieceRank.QUEEN);
 
 				// Add promotion to Knight move
-				AddMove(possibleMoves, 
-						currMove._startRX, 
-						currMove._startRY, 
-						currMove._endRX, 
-						currMove._endRY, 
-						currMove._bIsCapture, 
-						PieceRank.KNIGHT);
+				Move promoteToKnightMove = new Move(currMove);
+				promoteToKnightMove.setPromoteTo(PieceRank.KNIGHT);
+				possibleMoves.add(promoteToKnightMove);
 
 				// Add promotion to Bishop move
-				AddMove(possibleMoves, 
-						currMove._startRX, 
-						currMove._startRY, 
-						currMove._endRX, 
-						currMove._endRY, 
-						currMove._bIsCapture, 
-						PieceRank.BISHOP);
+				Move promoteToBishopMove = new Move(currMove);
+				promoteToBishopMove.setPromoteTo(PieceRank.BISHOP);
+				possibleMoves.add(promoteToBishopMove);
 
 				// Add promotion to Rook move
-				AddMove(possibleMoves, 
-						currMove._startRX, 
-						currMove._startRY, 
-						currMove._endRX, 
-						currMove._endRY, 
-						currMove._bIsCapture, 
-						PieceRank.ROOK);
+				Move promoteToRookMove = new Move(currMove);
+				promoteToRookMove.setPromoteTo(PieceRank.ROOK);
+				possibleMoves.add(promoteToRookMove);
+
 			}
 		}
 	}

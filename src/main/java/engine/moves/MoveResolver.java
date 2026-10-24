@@ -56,7 +56,7 @@ public class MoveResolver
     {
         Move move = Move.fromMoveRequest(request, colour);
 
-        move._bCastleKingSide = true;
+        move.setCastleKingSide(true);
 
         if(colour == Colour.WHITE){
             move.setStartPosition( new Square(4,0));
@@ -75,7 +75,7 @@ public class MoveResolver
     {
         Move move = Move.fromMoveRequest(request, colour);
 
-        move._bCastleQueenSide = true;
+        move.setCastleQueenSide(true);
 
         if(colour == Colour.WHITE){
             move.setStartPosition( new Square(4,0));
@@ -129,12 +129,8 @@ public class MoveResolver
 
                 for (Move currMove : moves)
                 {
-                    // !!! Where does this belong?
-                    currMove.setStartPosition(Square.fromRelCoords(currMove._colour, currMove._startRX, currMove._startRY));
-                    currMove.setEndPosition(Square.fromRelCoords(currMove._colour, currMove._endRX, currMove._endRY));
-
                     if (request.getEndPosition().equals(currMove.getEndPosition())
-                            && (request.getPromoteTo() == currMove._promoteTo))
+                            && (request.getPromoteTo() == currMove.getPromoteTo()))
                     {
                         if (resolvedMove == null)
                         {

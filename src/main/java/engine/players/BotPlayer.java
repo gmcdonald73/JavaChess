@@ -11,12 +11,25 @@ import java.util.List;
 
 public class BotPlayer extends ChessPlayer {
 
+    public static final int MAX_MOVES_LOOKAHEAD = 4;
+
+    public static final int MS_UNDEFINED = -1;
+    public static final int MS_ILLEGAL = -2;
+    public static final int MS_LOSE = 0;
+    public static final int MS_DRAW = 500;
+    public static final int MS_WIN	= 1000;
+
+    private int _depth;
+
+    public void setDepth(int depth) { _depth = depth; }
     private int _numPositionsAnalysed;
 
     public int getNumPositionsAnalysed() { return _numPositionsAnalysed; }
 
-    public BotPlayer(String name) {
+    public BotPlayer(String name)
+    {
         super(name);
+        _depth = 2;
     }
 
     @Override
@@ -27,7 +40,7 @@ public class BotPlayer extends ChessPlayer {
         _numPositionsAnalysed = 0;
 
         Move[] engineMoves =
-                new Move[Constants.MAX_MOVES_LOOKAHEAD];
+                new Move[MAX_MOVES_LOOKAHEAD];
 
         for (int i = 0; i < engineMoves.length; i++) {
             engineMoves[i] = new Move();
@@ -35,7 +48,7 @@ public class BotPlayer extends ChessPlayer {
 
         FindBestMove(
                 board,
-                Constants.NUM_MOVES_LOOKAHEAD,
+                _depth,
                 engineMoves);
 
         MoveRequest request = MoveRequest.fromMove(engineMoves[0]);
@@ -56,7 +69,7 @@ public class BotPlayer extends ChessPlayer {
             }
 
             // !!! Should also terminate here for obvious stalemate / other draw
-            if( (moveStack[0]._score == Constants.MS_WIN) || (moveStack[0]._score == Constants.MS_LOSE) )
+            if( (moveStack[0]._score == MS_WIN) || (moveStack[0]._score == MS_LOSE) )
             {
                 return true;
             }
@@ -70,10 +83,10 @@ public class BotPlayer extends ChessPlayer {
     public boolean RecursiveFindBestMove(Colour colour, Board board, int lookAheadLevel, int numMovesToLookAhead, Move[] moveStack)
     {
         boolean bFoundLegalMove = false;
-        Move[] tempMoveStack = new Move[Constants.MAX_MOVES_LOOKAHEAD];
+        Move[] tempMoveStack = new Move[MAX_MOVES_LOOKAHEAD];
         int msi;
 
-        moveStack[lookAheadLevel]._score = Constants.MS_ILLEGAL;
+        moveStack[lookAheadLevel]._score = MS_ILLEGAL;
         List<Move> possibleMoves = new ArrayList<>();
 
         // Ask board for all legal moves
@@ -84,14 +97,14 @@ public class BotPlayer extends ChessPlayer {
         for(Move move : possibleMoves)
         {
             // Copy the move stack to temp
-            for(msi=0; msi<Constants.MAX_MOVES_LOOKAHEAD; msi++)
+            for(msi=0; msi<MAX_MOVES_LOOKAHEAD; msi++)
             {
                 tempMoveStack[msi] = new Move();
                 tempMoveStack[msi].Copy(moveStack[msi]);
             }
 
             tempMoveStack[lookAheadLevel].Copy(move);
-            tempMoveStack[lookAheadLevel]._score = Constants.MS_UNDEFINED;
+            tempMoveStack[lookAheadLevel]._score = MS_UNDEFINED;
 
             // Evaluate the move
             EvaluateMove(colour, tempMoveStack, board, lookAheadLevel, numMovesToLookAhead);
@@ -109,14 +122,14 @@ public class BotPlayer extends ChessPlayer {
                 moveStack[lookAheadLevel]._score = tempMoveStack[lookAheadLevel]._score;
 
                 // Copy the temp move stack back
-                for(msi=0; msi<Constants.MAX_MOVES_LOOKAHEAD; msi++)
+                for(msi=0; msi<MAX_MOVES_LOOKAHEAD; msi++)
                 {
                     moveStack[msi].Copy(tempMoveStack[msi]);
                 }
 
                 bFoundLegalMove = true;
 
-                if(moveStack[lookAheadLevel]._score == Constants.MS_WIN)
+                if(moveStack[lookAheadLevel]._score == MS_WIN)
                 {
                     // If the move will win the game for us, then stop looking for a better move because
                     // there isn't any
@@ -141,7 +154,7 @@ public class BotPlayer extends ChessPlayer {
         // !!! should MakeMove be checking if move is illegal?
         if( testBoard.IsKingInCheck(colour) )
         {
-            moveStack[lookAheadLevel]._score = Constants.MS_ILLEGAL;
+            moveStack[lookAheadLevel]._score = MS_ILLEGAL;
             return;
         }
 
@@ -179,7 +192,7 @@ public class BotPlayer extends ChessPlayer {
             {
                 // Found a legal move for the enemy, our score for our move is the inverse of the
                 // best move for the enemy after making our move.
-                moveStack[lookAheadLevel]._score = Constants.MS_WIN - moveStack[lookAheadLevel + 1]._score;
+                moveStack[lookAheadLevel]._score = MS_WIN - moveStack[lookAheadLevel + 1]._score;
             }
         }
 
@@ -194,14 +207,14 @@ public class BotPlayer extends ChessPlayer {
             if( testBoard.IsKingInCheck(colour.opposite()) )
             {
                 // Enemy is checkmated, we win
-                moveStack[lookAheadLevel]._score = Constants.MS_WIN;
+                moveStack[lookAheadLevel]._score = MS_WIN;
                 moveStack[lookAheadLevel]._bIsCheck = true;
                 moveStack[lookAheadLevel]._bIsMate = true;
             }
             else
             {
                 // Enemy is stalemated, we draw
-                moveStack[lookAheadLevel]._score = Constants.MS_DRAW;
+                moveStack[lookAheadLevel]._score = MS_DRAW;
                 moveStack[lookAheadLevel]._bIsCheck = false;
             }
         }
@@ -231,7 +244,7 @@ public class BotPlayer extends ChessPlayer {
         enemyScore = RateArmy(board, colour.opposite());
 
         // Rate position
-        rating = (int)((score * Constants.MS_WIN) / (score + enemyScore));
+        rating = (int)((score * MS_WIN) / (score + enemyScore));
 
         return rating;
     }

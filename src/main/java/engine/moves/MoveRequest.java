@@ -35,20 +35,15 @@ public class MoveRequest
 
     public static MoveRequest fromMove(Move move)
     {
-
-        // Convert move start pos from rel to abs and create startPosition
-        Square startPosition = Square.fromRelCoords(move._colour, move._startRX, move._startRY);
-        Square endPosition = Square.fromRelCoords(move._colour, move._endRX, move._endRY);
-
         MoveRequest request = new MoveRequest(
-                move._rank,
-                endPosition );
+                move.getRank(),
+                move.getEndPosition() );
 
-        request.setStartPosition(startPosition);
-        request.setIsCapture(move._bIsCapture);
-        request.setPromoteTo(move._promoteTo);
-        request.setCastleKingSide(move._bCastleKingSide);
-        request.setCastleQueenSide(move._bCastleQueenSide);
+        request.setStartPosition(move.getStartPosition());
+        request.setIsCapture(move.isCapture());
+        request.setPromoteTo(move.getPromoteTo());
+        request.setCastleKingSide(move.isCastleKingSide());
+        request.setCastleQueenSide(move.isCastleQueenSide());
 
         return request;
     }

@@ -107,9 +107,9 @@ public class StockFishPlayer extends ChessPlayer
         uci.append(move.getStartPosition().toSAN());
         uci.append(move.getEndPosition().toSAN());
 
-        if (move._promoteTo != null)
+        if (move.getPromoteTo() != null)
         {
-            uci.append(Character.toLowerCase(move._promoteTo.getSymbol()));
+            uci.append(Character.toLowerCase(move.getPromoteTo().getSymbol()));
         }
 
         return uci.toString();

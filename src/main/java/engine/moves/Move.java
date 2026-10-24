@@ -9,39 +9,89 @@ import java.util.Objects;
 
 public class Move
 {
-	public Colour _colour;
-	public PieceRank _rank;
-	public boolean _bIsCapture; // Is the move a capture?
-	public PieceRank _promoteTo;
-	public boolean _bCastleQueenSide;
-	public boolean _bCastleKingSide;
-	public boolean _bEnPassantCapture;
+	private Colour _colour;
+	private PieceRank _rank;
+	private boolean _bIsCapture; // Is the move a capture?
+	private PieceRank _promoteTo;
+	private boolean _bCastleQueenSide;
+	private boolean _bCastleKingSide;
+	private boolean _bEnPassantCapture;
 
 	// Store absolute co-ords
 	private Square _startPosition;
 	private Square _endPosition;
 
-	// Move the stuff below out of this class?
-
-	// These are mainly for bot & piece calculations
-	public int _startRX; // These are relative for each army
-	public int _startRY;
-	public int _endRX; // These are relative for each army
-	public int _endRY;
+	// Does this belong in this class?
 	public int _score;
 
 	// These two are just for displaying the move. Do these belong in Move class?
 	public boolean _bIsCheck;
 	public boolean _bIsMate;
 
+	public Colour getColour()
+	{
+		return _colour;
+	}
+
+	public PieceRank getRank()
+	{
+		return _rank;
+	}
+
+	public boolean isCapture()
+	{
+		return _bIsCapture;
+	}
+
+	public PieceRank getPromoteTo()
+	{
+		return _promoteTo;
+	}
+
+	public boolean isCastleQueenSide()
+	{
+		return _bCastleQueenSide;
+	}
+
+	public boolean isCastleKingSide()
+	{
+		return _bCastleKingSide;
+	}
+
+	public boolean isEnPassantCapture()
+	{
+		return _bEnPassantCapture;
+	}
+
+	public void setIsCapture(boolean bIsCapture)
+	{
+		this._bIsCapture = bIsCapture;
+	}
+
+	public void setPromoteTo(PieceRank promoteTo)
+	{
+		this._promoteTo = promoteTo;
+	}
+
+	public void setCastleQueenSide(boolean bCastleQueenSide)
+	{
+		this._bCastleQueenSide = bCastleQueenSide;
+	}
+
+	public void setCastleKingSide(boolean bCastleKingSide)
+	{
+		this._bCastleKingSide = bCastleKingSide;
+	}
+
+	public void setEnPassantCapture(boolean bEnPassantCapture)
+	{
+		this._bEnPassantCapture = bEnPassantCapture;
+	}
+
 	public Move()
 	{
 		_colour = Colour.NONE;
 		_rank = null;
-		_startRX = -1; // These are relative for each army
-		_startRY = -1;
-		_endRX = -1; // These are relative for each army
-		_endRY = -1;
 		_bIsCapture = false; // Is the move a capture?
 		_promoteTo = null;
 		_bIsCheck = false;
@@ -49,18 +99,31 @@ public class Move
 		_bCastleQueenSide = false;
 		_bCastleKingSide = false;
 		_bEnPassantCapture = false;
-		_score = Constants.MS_UNDEFINED;
+		_score = -1;
 	}
 
-	public void Copy(Move src)
+	public Move(Colour colour, PieceRank rank, Square startPosition, Square endPosition)
+	{
+		_colour = colour;
+		_rank = rank;
+		_startPosition = startPosition;
+		_endPosition = endPosition;
+
+		_bIsCapture = false; // Is the move a capture?
+		_promoteTo = null;
+		_bIsCheck = false;
+		_bIsMate = false;
+		_bCastleQueenSide = false;
+		_bCastleKingSide = false;
+		_bEnPassantCapture = false;
+		_score = -1;
+	}
+
+	public Move(Move src)
 	{
 		_colour = src._colour;
 		_rank = src._rank;
-		_startRX = src._startRX;
-		_startRY = src._startRY;
-		_endRX = src._endRX; 
-		_endRY = src._endRY;
-		_bIsCapture = src._bIsCapture; 
+		_bIsCapture = src._bIsCapture;
 		_promoteTo = src._promoteTo;
 		_bIsCheck = src._bIsCheck;
 		_bIsMate = src._bIsMate;
@@ -69,22 +132,39 @@ public class Move
 		_bEnPassantCapture = src._bEnPassantCapture;
 		_score = src._score;
 
-		// !!! Should this be a deep copy?
+		// Square is immutable, so sharing references is safe
+		_startPosition = src._startPosition;
+		_endPosition = src._endPosition;
+	}
+
+	// !!! Remove this and just use copy constructor?
+	public void Copy(Move src)
+	{
+		_colour = src._colour;
+		_rank = src._rank;
+		_bIsCapture = src._bIsCapture;
+		_promoteTo = src._promoteTo;
+		_bIsCheck = src._bIsCheck;
+		_bIsMate = src._bIsMate;
+		_bCastleQueenSide = src._bCastleQueenSide;
+		_bCastleKingSide = src._bCastleKingSide;
+		_bEnPassantCapture = src._bEnPassantCapture;
+		_score = src._score;
+
+		// Square is immutable, so sharing references is safe
 		_startPosition = src._startPosition;
 		_endPosition = src._endPosition;
 	}
 
 	public static Move fromMoveRequest(MoveRequest request, Colour colour)
 	{
-		Move move = new Move();
-		move._colour = colour;
-		move._rank = request.getRank();
+		Move move = new Move(colour, request.getRank(), request.getStartPosition(), request.getEndPosition());
+
 		move._bIsCapture = request.isCapture(); // Is the move a capture?
 		move._promoteTo = request.getPromoteTo();
 		move._bCastleQueenSide = request.isCastleQueenSide();
 		move._bCastleKingSide = request.isCastleKingSide();
-		move._startPosition = request.getStartPosition();
-		move._endPosition = request.getEndPosition();
+
 		return move;
 	}
 
@@ -114,20 +194,25 @@ public class Move
 	public void setEndPosition(Square endPosition) {_endPosition = endPosition; }
 	public Square getEndPosition() { return _endPosition; }
 
+/*
 	public void UpdateAbsolutePositions()
 	{
 		setStartPosition( Square.fromRelCoords(_colour, _startRX, _startRY));
 		setEndPosition( Square.fromRelCoords(_colour, _endRX, _endRY));
 	}
+*/
 
 
+/*
 	public String StartPos() {
 		return FormatRelPos(_colour, _startRX, _startRY);
 	}
 	public String EndPos() {
 		return FormatRelPos(_colour, _endRX, _endRY);
 	}
+*/
 
+/*
 	private String FormatRelPos(Colour colour, int rx, int ry)
 	{
 		String pos = "";
@@ -150,6 +235,7 @@ public class Move
 
 		return pos;
 	}
+*/
 
 	public String getSan()
 	{
@@ -203,10 +289,10 @@ public class Move
 			}
 
 			// Display destination
-			san += EndPos();
+			san += _endPosition.toSAN();
 
 			// If a pawn is being promoted, display the piece that it is promoted to
-			if( (_rank == PieceRank.PAWN) && (_endRY == 8) )
+			if( (_rank == PieceRank.PAWN) && (_promoteTo != null) )
 			{
 				san += "=" + _promoteTo.getSymbol();
 			}

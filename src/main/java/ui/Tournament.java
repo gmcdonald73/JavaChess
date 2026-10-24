@@ -13,13 +13,17 @@ public class Tournament {
     private final ChessPlayer playerA;
     private final ChessPlayer playerB;
     private final int numberOfGames;
+    private final boolean showGUI;
+    private final boolean showConsoleMessages;
 
     private final List<GameRecord> results = new ArrayList<>();
 
     public Tournament(
             ChessPlayer playerA,
             ChessPlayer playerB,
-            int numberOfGames) {
+            int numberOfGames,
+            boolean showGUI,
+            boolean showConsoleMessages) {
 
         if (playerA == null || playerB == null) {
             throw new IllegalArgumentException(
@@ -39,6 +43,8 @@ public class Tournament {
         this.playerA = playerA;
         this.playerB = playerB;
         this.numberOfGames = numberOfGames;
+        this.showGUI = showGUI;
+        this.showConsoleMessages = showConsoleMessages;
     }
 
     public List<GameRecord> run() {
@@ -60,7 +66,7 @@ public class Tournament {
             long start = System.nanoTime();
 
             ChessGame game = new ChessGame(white, black);
-            GameResult result = game.play(false, false);
+            GameResult result = game.play(showGUI, showConsoleMessages);
 
             long elapsedMillis =
                     (System.nanoTime() - start) / 1_000_000;

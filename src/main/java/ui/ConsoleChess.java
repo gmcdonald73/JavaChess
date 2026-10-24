@@ -17,10 +17,13 @@ public class ConsoleChess {
 
     public static void main(String[] args) throws Exception
     {
-        ChessPlayer playerA = new BotPlayer("Bot");
-        ChessPlayer playerB = new StockFishPlayer("StockFish");
+//        ChessPlayer playerA = new BotPlayer("Bot");
+        ChessPlayer playerA = new HumanPlayer("GMac");
+//        ChessPlayer playerB = new StockFishPlayer("StockFish");
+        BotPlayer playerB = new BotPlayer("BotB");
+//        playerB.setDepth(4);
 
-        Tournament tournament = new Tournament(playerA, playerB, 100);
+        Tournament tournament = new Tournament(playerA, playerB, 1, true, true);
 
         List<Tournament.GameRecord> results = tournament.run();
 
