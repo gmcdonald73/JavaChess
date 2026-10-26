@@ -197,25 +197,18 @@ public class BotPlayer extends ChessPlayer {
         }
 
         // See if we have won or stalemated, also set flags for displaying checks
-        if( bEnemyHasLegalMoves )
-        {
-            moveStack[lookAheadLevel]._bIsCheck = testBoard.IsKingInCheck(colour.opposite());
-        }
-        else
+        if( !bEnemyHasLegalMoves )
         {
             // Enemy has no legal moves
             if( testBoard.IsKingInCheck(colour.opposite()) )
             {
                 // Enemy is checkmated, we win
                 moveStack[lookAheadLevel]._score = MS_WIN;
-                moveStack[lookAheadLevel]._bIsCheck = true;
-                moveStack[lookAheadLevel]._bIsMate = true;
             }
             else
             {
                 // Enemy is stalemated, we draw
                 moveStack[lookAheadLevel]._score = MS_DRAW;
-                moveStack[lookAheadLevel]._bIsCheck = false;
             }
         }
     }

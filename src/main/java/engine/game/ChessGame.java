@@ -6,6 +6,7 @@ import engine.pieces.Colour;
 import engine.players.BotPlayer;
 import engine.players.ChessPlayer;
 import engine.players.PlayerAction;
+import io.SANFormatter;
 import ui.GraphicalChess;
 
 import java.util.ArrayList;
@@ -103,6 +104,9 @@ public class ChessGame {
                         }
                         else
                         {
+                            // Need to do this before making the move on the board
+                            String sMove = SANFormatter.getSAN(board, currentPlayer.getColour(), move);
+
                             board.MakeMove(move);
                             moves.add(move);
 
@@ -110,9 +114,9 @@ public class ChessGame {
                             if(showConsoleMessages)
                             {
                                 if (currentPlayer == _white)
-                                    System.out.println(moveNum + ": White: " + move.getSan());
+                                    System.out.println(moveNum + ": White: " + sMove);
                                 else
-                                    System.out.println(moveNum + ": Black: " + move.getSan());
+                                    System.out.println(moveNum + ": Black: " + sMove);
                             }
 
                             if(currentPlayer == _black) moveNum++;
@@ -170,22 +174,13 @@ public class ChessGame {
 
         Colour currentColour = currentPlayer.getColour();
 
-        move._bIsCheck = false;
-        move._bIsMate = false;
-
-        if(board.IsKingInCheck(currentColour))
-        {
-            move._bIsCheck = true;
-        }
-
         if(!board.HasAnyLegalMoves(currentColour))
         {
             isGameOver = true;
 
-            if(move._bIsCheck)
+            if(board.IsKingInCheck(currentColour))
             {
                 // System.out.println("Checkmate!!!");
-                move._bIsMate = true;
                 result = currentColour == Colour.WHITE ? GameResult.BLACK_WIN : GameResult.WHITE_WIN;
             }
             else

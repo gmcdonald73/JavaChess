@@ -3,7 +3,12 @@ package ui;
 import engine.game.ChessGame;
 import engine.game.GameResult;
 import engine.players.ChessPlayer;
+import io.PgnWriter;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +52,8 @@ public class Tournament {
         this.showConsoleMessages = showConsoleMessages;
     }
 
-    public List<GameRecord> run() {
+    public List<GameRecord> run() throws IOException
+    {
         results.clear();
 
         for (int gameNumber = 1;
@@ -87,6 +93,19 @@ public class Tournament {
                     record.getBlackPlayer(),
                     record.getResult(),
                     record.getElapsedMillis());
+
+            // Save game to file
+            LocalDateTime now = LocalDateTime.now();
+
+            DateTimeFormatter formatter =
+                    DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+
+            String fileName = "game_" + now.format(formatter) + ".pgn";
+
+            Path file = Path.of("games", fileName);
+            System.out.println("Saving game to " + file.toAbsolutePath());
+            PgnWriter.save(game,  file);
+
 
         }
 

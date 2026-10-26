@@ -67,28 +67,6 @@ public abstract class Piece
 	{
 		Square pos = Square.fromRelCoords(colour, rx, ry);
 
-/*
-		relPosType posMyCoords = new relPosType(); // The position to capture at in our co-ordinate system
-
-		if(colour != _colour)
-		{
-			relPosType posEnemyCoords = new relPosType(); // The position to capture at in the enemy co-ordinate system
-
-			posEnemyCoords._colour = colour;
-			posEnemyCoords._rx = rx;
-			posEnemyCoords._ry = ry;
-
-			Board.InvertCoords(posEnemyCoords, posMyCoords);
-		}
-		else
-		{
-			// The coords are already in my coordinate system
-			posMyCoords._colour = colour;
-			posMyCoords._rx = rx;
-			posMyCoords._ry = ry;
-		}
-*/
-
 		// MoveStack possibleMoves = new MoveStack(Constants.MAX_PIECE_POSSIBLE_MOVES);
 		List<Move> possibleMoves = new ArrayList<>();
 

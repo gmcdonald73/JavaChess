@@ -11,7 +11,7 @@ public class Move
 {
 	private Colour _colour;
 	private PieceRank _rank;
-	private boolean _bIsCapture; // Is the move a capture?
+	private boolean _bIsCapture;
 	private PieceRank _promoteTo;
 	private boolean _bCastleQueenSide;
 	private boolean _bCastleKingSide;
@@ -23,10 +23,6 @@ public class Move
 
 	// Does this belong in this class?
 	public int _score;
-
-	// These two are just for displaying the move. Do these belong in Move class?
-	public boolean _bIsCheck;
-	public boolean _bIsMate;
 
 	public Colour getColour()
 	{
@@ -94,8 +90,6 @@ public class Move
 		_rank = null;
 		_bIsCapture = false; // Is the move a capture?
 		_promoteTo = null;
-		_bIsCheck = false;
-		_bIsMate = false;
 		_bCastleQueenSide = false;
 		_bCastleKingSide = false;
 		_bEnPassantCapture = false;
@@ -111,8 +105,6 @@ public class Move
 
 		_bIsCapture = false; // Is the move a capture?
 		_promoteTo = null;
-		_bIsCheck = false;
-		_bIsMate = false;
 		_bCastleQueenSide = false;
 		_bCastleKingSide = false;
 		_bEnPassantCapture = false;
@@ -125,8 +117,6 @@ public class Move
 		_rank = src._rank;
 		_bIsCapture = src._bIsCapture;
 		_promoteTo = src._promoteTo;
-		_bIsCheck = src._bIsCheck;
-		_bIsMate = src._bIsMate;
 		_bCastleQueenSide = src._bCastleQueenSide;
 		_bCastleKingSide = src._bCastleKingSide;
 		_bEnPassantCapture = src._bEnPassantCapture;
@@ -144,8 +134,6 @@ public class Move
 		_rank = src._rank;
 		_bIsCapture = src._bIsCapture;
 		_promoteTo = src._promoteTo;
-		_bIsCheck = src._bIsCheck;
-		_bIsMate = src._bIsMate;
 		_bCastleQueenSide = src._bCastleQueenSide;
 		_bCastleKingSide = src._bCastleKingSide;
 		_bEnPassantCapture = src._bEnPassantCapture;
@@ -160,7 +148,7 @@ public class Move
 	{
 		Move move = new Move(colour, request.getRank(), request.getStartPosition(), request.getEndPosition());
 
-		move._bIsCapture = request.isCapture(); // Is the move a capture?
+		move._bIsCapture = request.isCapture();
 		move._promoteTo = request.getPromoteTo();
 		move._bCastleQueenSide = request.isCastleQueenSide();
 		move._bCastleKingSide = request.isCastleKingSide();
@@ -194,121 +182,6 @@ public class Move
 	public void setEndPosition(Square endPosition) {_endPosition = endPosition; }
 	public Square getEndPosition() { return _endPosition; }
 
-/*
-	public void UpdateAbsolutePositions()
-	{
-		setStartPosition( Square.fromRelCoords(_colour, _startRX, _startRY));
-		setEndPosition( Square.fromRelCoords(_colour, _endRX, _endRY));
-	}
-*/
-
-
-/*
-	public String StartPos() {
-		return FormatRelPos(_colour, _startRX, _startRY);
-	}
-	public String EndPos() {
-		return FormatRelPos(_colour, _endRX, _endRY);
-	}
-*/
-
-/*
-	private String FormatRelPos(Colour colour, int rx, int ry)
-	{
-		String pos = "";
-		int absX = 0;
-		int absY = 0;
-		relPosType relPos = new relPosType();
-		posType absPos = new posType();
-
-		relPos._colour = colour;
-		relPos._rx = rx;
-		relPos._ry = ry;
-
-		Board.ConvertRelToAbsCoords(relPos, absPos);
-
-		absX = absPos._x;
-		absY = absPos._y;
-
-		// Display source
-		pos = pos + ((char)('a' + absX)) + (absY + 1);
-
-		return pos;
-	}
-*/
-
-	public String getSan()
-	{
-		return getSan(false,false);
-	}
-
-	public String getSan(boolean showFileDisambiguation, boolean showRankDisambiguation)
-	{
-		String san = "";
-		int absStartX = 0;
-		int absStartY = 0;
-		int absEndX = 0;
-		int absEndY = 0;
-
-		if(_colour == Colour.NONE)
-		{
-			san = "Null Move";
-			return san;
-		}
-
-		if( _bCastleKingSide )
-		{
-			san += "O-O";
-		}
-		else if( _bCastleQueenSide )
-		{
-			san += "O-O-O";
-		}
-		else
-		{
-			if( _rank != PieceRank.PAWN )
-			{
-				san += _rank.getSymbol();
-
-				if(showFileDisambiguation)
-					san += _startPosition.getFile();
-
-				if(showRankDisambiguation)
-					san += _startPosition.getRank();
-			}
-
-			if(_bIsCapture)
-			{
-				// pawn capture need to add source file
-				if( _rank == PieceRank.PAWN )
-				{
-					san += _startPosition.getFile();
-				}
-
-				san += "x";
-			}
-
-			// Display destination
-			san += _endPosition.toSAN();
-
-			// If a pawn is being promoted, display the piece that it is promoted to
-			if( (_rank == PieceRank.PAWN) && (_promoteTo != null) )
-			{
-				san += "=" + _promoteTo.getSymbol();
-			}
-		}
-
-		if( _bIsMate )
-		{
-			san += "#";
-		}
-		else if( _bIsCheck )
-		{
-			san += "+";
-		}
-
-		return san;
-	}
 }
 
 

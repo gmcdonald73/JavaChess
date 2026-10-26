@@ -17,8 +17,9 @@ public class ConsoleChess {
 
     public static void main(String[] args) throws Exception
     {
-//        ChessPlayer playerA = new BotPlayer("Bot");
-        ChessPlayer playerA = new HumanPlayer("GMac");
+        ChessPlayer playerA = new BotPlayer("Bot");
+//        ChessPlayer playerA = new HumanPlayer("GMac");
+//        ChessPlayer playerB = new HumanPlayer("Player2");
 //        ChessPlayer playerB = new StockFishPlayer("StockFish");
         BotPlayer playerB = new BotPlayer("BotB");
 //        playerB.setDepth(4);
@@ -26,18 +27,6 @@ public class ConsoleChess {
         Tournament tournament = new Tournament(playerA, playerB, 1, true, true);
 
         List<Tournament.GameRecord> results = tournament.run();
-
-/*
-        for (Tournament.GameRecord record : results) {
-            System.out.printf(
-                    "Game %d: White=%s, Black=%s, Result=%s, Time=%dms%n",
-                    record.getGameNumber(),
-                    record.getWhitePlayer(),
-                    record.getBlackPlayer(),
-                    record.getResult(),
-                    record.getElapsedMillis());
-        }
-*/
 
         tournament.printStatistics();
 

@@ -53,12 +53,12 @@ public class PgnWriter
 
             // Moves
             List<Move> moves = game.getMoves();
-            Board testBoard = new Board();
+            Board replayBoard = new Board();
             Colour playerColour = Colour.WHITE;
             Move move;
             String sMove;
 
-            testBoard.SetupForGame();
+            replayBoard.SetupForGame();
 
             for (int i = 0; i < moves.size(); i++)
             {
@@ -68,12 +68,12 @@ public class PgnWriter
                 }
 
                 move = moves.get(i);
-                sMove = getUnambiguousMove(testBoard, playerColour, move);
+                sMove = SANFormatter.getSAN(replayBoard, playerColour, move);
 
-                MoveValidationResult mvr = MoveValidator.IsMoveLegal(testBoard, playerColour, move);
+                MoveValidationResult mvr = MoveValidator.IsMoveLegal(replayBoard, playerColour, move);
                 assert mvr.isValid();
 
-                testBoard.MakeMove(move);
+                replayBoard.MakeMove(move);
                 writer.write( sMove + " ");
 
                 playerColour = playerColour.opposite();
@@ -86,46 +86,4 @@ public class PgnWriter
         }
     }
 
-    private static String getUnambiguousMove(Board testBoard, Colour playerColour, Move move)
-    {
-        String sMove;
-        MoveParseResult mpr;
-        MoveResolutionResult mrr;
-
-        // Check if move is ambiguous
-        sMove = move.getSan();
-        mpr = MoveParser.parse(sMove);
-        assert mpr.isValid();
-        mrr = MoveResolver.resolve(testBoard, mpr.getMoveRequest(), playerColour);
-        if(mrr.isSuccess())
-            return sMove;
-
-        // If resolve fails, try file disambig
-        sMove = move.getSan(true, false);
-        mpr = MoveParser.parse(sMove);
-        assert mpr.isValid();
-        mrr = MoveResolver.resolve(testBoard, mpr.getMoveRequest(), playerColour);
-        if(mrr.isSuccess())
-            return sMove;
-
-        // Try rank
-        sMove = move.getSan(false, true);
-        mpr = MoveParser.parse(sMove);
-        assert mpr.isValid();
-        mrr = MoveResolver.resolve(testBoard, mpr.getMoveRequest(), playerColour);
-        if(mrr.isSuccess())
-            return sMove;
-
-        // Try both
-        sMove = move.getSan(true, true);
-        mpr = MoveParser.parse(sMove);
-        assert mpr.isValid();
-        mrr = MoveResolver.resolve(testBoard, mpr.getMoveRequest(), playerColour);
-        if(mrr.isSuccess())
-            return sMove;
-
-        // !!! Shouldn't get here, but probably should handle this better
-        return "";
-
-    }
 }
