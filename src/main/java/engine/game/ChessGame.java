@@ -10,7 +10,9 @@ import io.SANFormatter;
 import ui.GraphicalChess;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ChessGame {
@@ -20,6 +22,8 @@ public class ChessGame {
     private final Board board;
     private List<Move> moves = new ArrayList<>();
     private GameResult result;
+
+    private final Map<String, Integer> positionCounts = new HashMap<>();
 
     public ChessGame(ChessPlayer white, ChessPlayer black) {
 
@@ -52,6 +56,7 @@ public class ChessGame {
         int moveNum = 1;
 
         board.SetupForGame();
+        recordPosition(board, currentPlayer.getColour(), 0);
 
         boolean isGameOver = false;
 
@@ -104,32 +109,46 @@ public class ChessGame {
                         }
                         else
                         {
-                            // Need to do this before making the move on the board
-                            String sMove = SANFormatter.getSAN(board, currentPlayer.getColour(), move);
-
-                            board.MakeMove(move);
-                            moves.add(move);
-
                             // Display move
                             if(showConsoleMessages)
                             {
+                                // Need to do this before making the move on the board
+                                String sMove = SANFormatter.getSAN(board, currentPlayer.getColour(), move);
+
                                 if (currentPlayer == _white)
                                     System.out.println(moveNum + ": White: " + sMove);
                                 else
                                     System.out.println(moveNum + ": Black: " + sMove);
                             }
 
-                            if(currentPlayer == _black) moveNum++;
+                            board.MakeMove(move);
+                            moves.add(move);
+                            recordPosition(board, currentPlayer.getColour(), 0);
 
-                            // Switch players - see if opponent is in check or mated
-                            currentPlayer = (currentPlayer == _white ? _black : _white);
-
-                            // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
-                            isGameOver = IsGameOver(currentPlayer, move);
-
-                            // !!! fix this. simple hack to break out of infinite loop so we can save the game
-                            if (moveNum > 100) {
+                            if(isThreefoldRepetition(board, currentPlayer.getColour(), moveNum))
+                            {
+                                // !!! This isn't technically correct. Not an automatic draw until 5 fold
+                                System.out.println("Draw by threefold repetition");
                                 isGameOver = true;
+
+                            }
+                            else
+                            {
+                                if (currentPlayer == _black) moveNum++;
+
+                                // Switch players - see if opponent is in check or mated
+                                currentPlayer = (currentPlayer == _white ? _black : _white);
+
+                                // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
+                                isGameOver = IsGameOver(currentPlayer, move);
+
+                                // Check for draw by 50 move rule
+                                // !!! put this in IsGameOver
+                                if (board.getHalfMoveClock() >= 100)
+                                {
+                                    System.out.println("Draw by 50 move rule");
+                                    isGameOver = true;
+                                }
                             }
                         }
                     }
@@ -208,5 +227,17 @@ public class ChessGame {
                 //break;
             }
         }
+    }
+
+    private void recordPosition(Board board, Colour currPlayerColour, int moveNum)
+    {
+        String key = board.getPositionKey(currPlayerColour, moveNum);
+
+        positionCounts.merge(key, 1, Integer::sum);
+    }
+
+    public boolean isThreefoldRepetition(Board board, Colour currPlayerColour, int moveNum)
+    {
+        return positionCounts.getOrDefault(board.getPositionKey(currPlayerColour, moveNum), 0) >= 3;
     }
 }

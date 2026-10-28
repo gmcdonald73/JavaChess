@@ -49,7 +49,7 @@ public class Pawn extends Piece
 
 		if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
-			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+			piece = board.WhatIsAtRelPos(_colour, testRelPos._x, testRelPos._y);
 
 			// If the position is empty then we can move there
 			if( piece == null)
@@ -65,7 +65,7 @@ public class Pawn extends Piece
 
 					if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 					{
-						piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+						piece = board.WhatIsAtRelPos(_colour, testRelPos._x, testRelPos._y);
 
 						// If the position is empty then we can move there
 						if( piece == null)
@@ -85,7 +85,7 @@ public class Pawn extends Piece
 
 		if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
-			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+			piece = board.WhatIsAtRelPos(_colour, testRelPos._x, testRelPos._y);
 
 			if(piece != null)
 			{
@@ -103,7 +103,7 @@ public class Pawn extends Piece
 
 		if( Board.IsRelPositionOnBoard(_colour, testRelPos._x, testRelPos._y) )
 		{
-			piece = board.WhatIsAt(_colour, testRelPos._x, testRelPos._y);
+			piece = board.WhatIsAtRelPos(_colour, testRelPos._x, testRelPos._y);
 
 			if(piece != null)
 			{

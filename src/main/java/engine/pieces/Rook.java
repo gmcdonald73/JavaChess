@@ -77,7 +77,7 @@ public class Rook extends Piece
 
 				if( Board.IsRelPositionOnBoard(_colour, currRelPos._x, currRelPos._y) )
 				{
-					piece = board.WhatIsAt(_colour, currRelPos._x, currRelPos._y);
+					piece = board.WhatIsAtRelPos(_colour, currRelPos._x, currRelPos._y);
 
 					if( piece != null && piece._colour == _colour )
 					{

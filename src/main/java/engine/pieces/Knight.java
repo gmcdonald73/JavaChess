@@ -87,7 +87,7 @@ public class Knight extends Piece
 			}
 
 			// Check endpoint doesn't have a friendly piece there
-			piece = board.WhatIsAt(_colour, _testMove[i]._rx, _testMove[i]._ry);
+			piece = board.WhatIsAtRelPos(_colour, _testMove[i]._rx, _testMove[i]._ry);
 
 			if(piece != null)
 			{

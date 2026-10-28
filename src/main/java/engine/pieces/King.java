@@ -83,7 +83,7 @@ public class King extends Piece
 		{
 			if( Board.IsRelPositionOnBoard(_colour, _testMove[i]._rx, _testMove[i]._ry) )
 			{
-				piece = board.WhatIsAt(_colour, _testMove[i]._rx, _testMove[i]._ry);
+				piece = board.WhatIsAtRelPos(_colour, _testMove[i]._rx, _testMove[i]._ry);
 
 				if( piece == null || piece._colour != _colour )
 				{
@@ -178,7 +178,7 @@ public class King extends Piece
 		}
 
 		// See if there is a rook at the correct position
-		piece = board.WhatIsAt(_colour, rookStartX, 1);
+		piece = board.WhatIsAtRelPos(_colour, rookStartX, 1);
 
 		if(piece == null) return false;
 
@@ -211,7 +211,7 @@ public class King extends Piece
 		// Are the squares between the king and the rook clear?
 		for(rx=startRX; rx<=endRX; rx++)
 		{
-			piece = board.WhatIsAt(_colour, rx, 1);
+			piece = board.WhatIsAtRelPos(_colour, rx, 1);
 
 			if(piece != null)
 			{

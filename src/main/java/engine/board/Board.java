@@ -1,6 +1,5 @@
 package engine.board;
 
-import engine.*;
 import engine.moves.Move;
 import engine.pieces.*;
 
@@ -30,6 +29,9 @@ public class Board
 	// The positions on the board, lookup what piece is there
 	private Piece[][] _position = new Piece[Board.MAX_X][Board.MAX_Y];
 
+	private int _halfMoveClock;
+	public int getHalfMoveClock() { return _halfMoveClock; }
+
 	// public methods
 	public Board()
 	{
@@ -46,6 +48,7 @@ public class Board
 		_whiteKing = null;
 		_blackKing = null;
 		_enPassantTarget = null;
+		_halfMoveClock = 0;
 
 		for(x=0; x<MAX_X; x++)
 		{
@@ -58,52 +61,8 @@ public class Board
 
 	public void SetupForGame()
 	{
-		setupFromFEN(
-				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-		);
-
-/*
-		// Place white pieces
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "a2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "b2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "c2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "d2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "e2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "f2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "g2");
-		PlacePiece(Colour.WHITE, PieceRank.PAWN, "h2");
-
-		PlacePiece(Colour.WHITE, PieceRank.ROOK, "a1");
-		PlacePiece(Colour.WHITE, PieceRank.KNIGHT, "b1");
-		PlacePiece(Colour.WHITE, PieceRank.BISHOP, "c1");
-		PlacePiece(Colour.WHITE, PieceRank.QUEEN, "d1");
-		PlacePiece(Colour.WHITE, PieceRank.KING, "e1");
-		PlacePiece(Colour.WHITE, PieceRank.BISHOP, "f1");
-		PlacePiece(Colour.WHITE, PieceRank.KNIGHT, "g1");
-		PlacePiece(Colour.WHITE, PieceRank.ROOK, "h1");
-
-		// Place black pieces
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "a7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "b7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "c7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "d7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "e7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "f7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "g7");
-		PlacePiece(Colour.BLACK, PieceRank.PAWN, "h7");
-
-		PlacePiece(Colour.BLACK, PieceRank.ROOK, "a8");
-		PlacePiece(Colour.BLACK, PieceRank.KNIGHT, "b8");
-		PlacePiece(Colour.BLACK, PieceRank.BISHOP, "c8");
-		PlacePiece(Colour.BLACK, PieceRank.QUEEN, "d8");
-		PlacePiece(Colour.BLACK, PieceRank.KING, "e8");
-		PlacePiece(Colour.BLACK, PieceRank.BISHOP, "f8");
-		PlacePiece(Colour.BLACK, PieceRank.KNIGHT, "g8");
-		PlacePiece(Colour.BLACK, PieceRank.ROOK, "h8");
-*/
+		setupFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	}
-
-
 
 	public void setupFromFEN(String fen)
 	{
@@ -201,6 +160,123 @@ public class Board
 */
 	}
 
+	public String saveToFen(Colour currPlayerColour, int moveNum)
+	{
+		StringBuilder fen = new StringBuilder();
+
+		// 1. Piece placement: rank 8 down to rank 1
+		for (int y = 7; y >= 0; y--)
+		{
+			int emptySquares = 0;
+
+			for (int x = 0; x < 8; x++)
+			{
+				Piece piece = WhatIsAtAbsPos(x, y);
+
+				if (piece == null)
+				{
+					emptySquares++;
+				} else
+				{
+					if (emptySquares > 0)
+					{
+						fen.append(emptySquares);
+						emptySquares = 0;
+					}
+
+					char symbol = piece.Symbol();
+
+					// Black pieces are lowercase in FEN
+					if (piece.Colour() == Colour.BLACK)
+					{
+						symbol = Character.toLowerCase(symbol);
+					}
+
+					fen.append(symbol);
+				}
+			}
+
+			if (emptySquares > 0)
+			{
+				fen.append(emptySquares);
+			}
+
+			if (y > 0)
+			{
+				fen.append('/');
+			}
+		}
+
+		// 2. Active colour
+		fen.append(' ').append(currPlayerColour == Colour.WHITE ? 'w' : 'b');
+
+		// 3. Castling availability
+		fen.append(' ').append(getCastlingRightsFen());
+
+		// 4. En passant target square
+		fen.append(' ').append(getEnPassantTargetFen());
+
+		// 5. Halfmove clock
+		fen.append(' ').append(getHalfMoveClock());
+
+		// 6. Fullmove number
+		fen.append(' ').append(moveNum);
+
+		return fen.toString();
+	}
+
+	public String getCastlingRightsFen()
+	{
+		String castlingRights = "";
+		Piece rook;
+
+		if(_whiteKing != null && !_whiteKing.HasMovedThisGame())
+		{
+
+			// Check white kingside
+			rook = WhatIsAtSquare(Square.fromSAN("h1"));
+			if(rook != null && rook.Rank() == PieceRank.ROOK && !rook.HasMovedThisGame())
+				castlingRights += "K";
+
+			// Check white queenside
+			rook = WhatIsAtSquare(Square.fromSAN("a1"));
+			if(rook != null && rook.Rank() == PieceRank.ROOK && !rook.HasMovedThisGame())
+				castlingRights += "Q";
+		}
+
+		if(_blackKing != null && !_blackKing.HasMovedThisGame())
+		{
+			// Check black kingside
+			rook = WhatIsAtSquare(Square.fromSAN("h8"));
+			if(rook != null && rook.Rank() == PieceRank.ROOK && !rook.HasMovedThisGame())
+				castlingRights += "k";
+
+			// Check black queenside
+			rook = WhatIsAtSquare(Square.fromSAN("a8"));
+			if(rook != null && rook.Rank() == PieceRank.ROOK && !rook.HasMovedThisGame())
+				castlingRights += "q";
+		}
+
+		if(castlingRights == "")
+			castlingRights = "-";
+
+		return castlingRights;
+	}
+
+	public String getEnPassantTargetFen()
+	{
+		// !!! fix this
+		return "-";
+	}
+
+	public String getPositionKey(Colour currPlayerColour, int moveNum)
+	{
+		String[] fields = saveToFen(currPlayerColour, moveNum).split("\\s+");
+
+		// Piece placement, active colour, castling rights,
+		// and en passant target square.
+		return String.join(" ", fields[0], fields[1], fields[2], fields[3]);
+	}
 
 	public Piece PlacePiece(Colour colour, PieceRank rank, String pos)
 	{
@@ -278,11 +354,24 @@ public class Board
 		};
 	}
 
+	private void updateHalfMoveClock(Move move)
+	{
+		if (move.getRank() == PieceRank.PAWN || move.isCapture())
+		{
+			_halfMoveClock = 0;
+		}
+		else
+		{
+			_halfMoveClock++;
+		}
+	}
 
 	public void MakeMove(Move move)
 	{
 		// Move the piece
 		MovePiece(move);
+
+		updateHalfMoveClock(move);
 
 		// Castling stuff
 		if((move.isCastleQueenSide()) || (move.isCastleKingSide()))
@@ -325,12 +414,17 @@ public class Board
 
 	public Piece WhatIsAtSquare(Square pos)
 	{
-        assert IsAbsPositionOnBoard(pos.getX(), pos.getY());
-
-		return _position[pos.getX()][pos.getY()];
+		return WhatIsAtAbsPos(pos.getX(), pos.getY());
 	}
 
-	public Piece WhatIsAt(Colour colour, int rx, int ry)
+	public Piece WhatIsAtAbsPos(int x, int y)
+	{
+		assert IsAbsPositionOnBoard(x, y);
+
+		return _position[x][y];
+	}
+
+	public Piece WhatIsAtRelPos(Colour colour, int rx, int ry)
 	{
 		relPosType relPos = new relPosType();
 		posType absPos = new posType();
@@ -341,9 +435,7 @@ public class Board
 
 		ConvertRelToAbsCoords(relPos, absPos);
 
-        assert IsAbsPositionOnBoard(absPos._x, absPos._y);
-
-		return _position[absPos._x][absPos._y];
+		return WhatIsAtAbsPos(absPos._x, absPos._y);
 	}
 
 	public void DisplayBoard()
@@ -457,8 +549,6 @@ public class Board
 
 		return IsAbsPositionOnBoard(absPos._x, absPos._y);
 	}
-
-// private methods
 
 // This routine assumes that the move has already been validated and is thus valid for the piece
 	private	void MovePiece(Move move)
