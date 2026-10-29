@@ -1,7 +1,5 @@
-package ui;
+package engine.game;
 
-import engine.game.ChessGame;
-import engine.game.GameResult;
 import engine.players.ChessPlayer;
 import io.PgnWriter;
 

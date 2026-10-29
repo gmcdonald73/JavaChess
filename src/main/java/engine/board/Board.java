@@ -265,8 +265,7 @@ public class Board
 
 	public String getEnPassantTargetFen()
 	{
-		// !!! fix this
-		return "-";
+		return _enPassantTarget != null ? _enPassantTarget.toSAN() : "-";
 	}
 
 	public String getPositionKey(Colour currPlayerColour)
@@ -275,6 +274,7 @@ public class Board
 
 		// Piece placement, active colour, castling rights,
 		// and en passant target square.
+		// !!! This bit should only include the enPassantTarget if a legal enpassant capture is available
 		return String.join(" ", fields[0], fields[1], fields[2], fields[3]);
 	}
 

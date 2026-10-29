@@ -1,17 +1,10 @@
 package ui;
 
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import engine.game.ChessGame;
-import engine.pieces.Colour;
+import engine.game.Tournament;
 import engine.players.BotPlayer;
 import engine.players.ChessPlayer;
-import engine.players.HumanPlayer;
-import engine.players.StockFishPlayer;
-import io.PgnWriter;
 
 public class ConsoleChess {
 
