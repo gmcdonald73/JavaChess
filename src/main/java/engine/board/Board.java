@@ -269,9 +269,9 @@ public class Board
 		return "-";
 	}
 
-	public String getPositionKey(Colour currPlayerColour, int moveNum)
+	public String getPositionKey(Colour currPlayerColour)
 	{
-		String[] fields = saveToFen(currPlayerColour, moveNum).split("\\s+");
+		String[] fields = saveToFen(currPlayerColour, 0).split("\\s+");
 
 		// Piece placement, active colour, castling rights,
 		// and en passant target square.

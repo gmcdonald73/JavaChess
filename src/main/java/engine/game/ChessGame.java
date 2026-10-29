@@ -56,11 +56,9 @@ public class ChessGame {
         int moveNum = 1;
 
         board.SetupForGame();
-        recordPosition(board, currentPlayer.getColour(), 0);
+        recordPosition(board, currentPlayer.getColour());
 
-        boolean isGameOver = false;
-
-        while (!isGameOver)
+        while (result == GameResult.UNFINISHED)
         {
 
             if(gui != null) gui.refresh();
@@ -123,49 +121,28 @@ public class ChessGame {
 
                             board.MakeMove(move);
                             moves.add(move);
-                            recordPosition(board, currentPlayer.getColour(), 0);
+                            recordPosition(board, currentPlayer.getColour());
 
-                            if(isThreefoldRepetition(board, currentPlayer.getColour(), moveNum))
-                            {
-                                // !!! This isn't technically correct. Not an automatic draw until 5 fold
-                                System.out.println("Draw by threefold repetition");
-                                isGameOver = true;
+                            // Check for win for draw
+                            result = UpdateGameResult(currentPlayer, move);
 
-                            }
-                            else
-                            {
-                                if (currentPlayer == _black) moveNum++;
+                            if (currentPlayer == _black) moveNum++;
 
-                                // Switch players - see if opponent is in check or mated
-                                currentPlayer = (currentPlayer == _white ? _black : _white);
+                            // Switch players
+                            currentPlayer = (currentPlayer == _white ? _black : _white);
 
-                                // Check for Checkmake, Stalemate, draw by repetition, 50 move rule, insufficient forces?
-                                isGameOver = IsGameOver(currentPlayer, move);
-
-                                // Check for draw by 50 move rule
-                                // !!! put this in IsGameOver
-                                if (board.getHalfMoveClock() >= 100)
-                                {
-                                    System.out.println("Draw by 50 move rule");
-                                    isGameOver = true;
-                                }
-                            }
                         }
                     }
-                    break;
-
-                case QUIT:
-                    // End the game
-                    isGameOver = true;
                     break;
 
                 case HELP:
                     // Display help
                     break;
 
+                case QUIT:
                 case RESIGN:
                     // End the game with the current player resigning
-                    isGameOver = true;
+                    result = currentPlayer.getColour() == Colour.WHITE ? GameResult.BLACK_WIN : GameResult.WHITE_WIN;
                     break;
 
                 case DRAW_OFFER:
@@ -187,29 +164,40 @@ public class ChessGame {
 
     }
 
-    boolean IsGameOver(ChessPlayer currentPlayer, Move move)
+    GameResult UpdateGameResult(ChessPlayer currentPlayer, Move move)
     {
-        boolean isGameOver = false;
-
         Colour currentColour = currentPlayer.getColour();
+        Colour opponentColour = currentColour.opposite();
 
-        if(!board.HasAnyLegalMoves(currentColour))
+        if(!board.HasAnyLegalMoves(opponentColour))
         {
-            isGameOver = true;
-
-            if(board.IsKingInCheck(currentColour))
+            if(board.IsKingInCheck(opponentColour))
             {
-                // System.out.println("Checkmate!!!");
-                result = currentColour == Colour.WHITE ? GameResult.BLACK_WIN : GameResult.WHITE_WIN;
+                System.out.println("Checkmate!!!");
+                return currentColour == Colour.WHITE ? GameResult.WHITE_WIN : GameResult.BLACK_WIN;
             }
             else
             {
-                // System.out.println("Stalemate!!!");
-                result = GameResult.DRAW;
+                System.out.println("Stalemate!!!");
+                return GameResult.DRAW;
             }
         }
 
-        return isGameOver;
+        if(isThreefoldRepetition(board, currentPlayer.getColour()))
+        {
+            // !!! This isn't technically correct. Not an automatic draw until 5 fold
+            System.out.println("Draw by threefold repetition");
+            return GameResult.DRAW;
+        }
+
+        // Check for draw by 50 move rule
+        if (board.getHalfMoveClock() >= 100)
+        {
+            System.out.println("Draw by 50 move rule");
+            return GameResult.DRAW;
+        }
+
+        return GameResult.UNFINISHED;
     }
 
     private void Sleep(int ms)
@@ -229,15 +217,15 @@ public class ChessGame {
         }
     }
 
-    private void recordPosition(Board board, Colour currPlayerColour, int moveNum)
+    private void recordPosition(Board board, Colour currPlayerColour)
     {
-        String key = board.getPositionKey(currPlayerColour, moveNum);
+        String key = board.getPositionKey(currPlayerColour);
 
         positionCounts.merge(key, 1, Integer::sum);
     }
 
-    public boolean isThreefoldRepetition(Board board, Colour currPlayerColour, int moveNum)
+    public boolean isThreefoldRepetition(Board board, Colour currPlayerColour)
     {
-        return positionCounts.getOrDefault(board.getPositionKey(currPlayerColour, moveNum), 0) >= 3;
+        return positionCounts.getOrDefault(board.getPositionKey(currPlayerColour), 0) >= 3;
     }
 }
