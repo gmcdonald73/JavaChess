@@ -4,8 +4,7 @@
 ![JavaChess GUI](docs/screenshots/javachess.png)
 
 This is a revival of a custom chess engine and bot that I wrote over twenty years ago and has been gathering dust since then.
-It includes a chess engine to run the game and a very basic chess bot to play against
-I thought it might be a fun learning project to get it going again. 
+It includes a chess engine to run the game and a very basic chess bot to play against. I thought it might be a fun learning project to get it going again. 
 My goal was also to integrate StockFish as another bot and play my bot vs StockFish to judge its strength. 
 
 The core chess engine, architecture and bot was coded by me by hand.
@@ -50,10 +49,10 @@ java/
 #### Console output
 
 If the console UI is enabled then the board is displayed like this:
-![Console](docs/screenshots/console.png)
+![Console](docs/screenshots/Console.png)
 
 When running bot vs bot tournament with the GUI and Console board disabled, it will show game results like this:
-![Tournament](docs/screenshots/tournament.png)
+![Tournament](docs/screenshots/Tournament.png)
 
 
 ### Technology used
@@ -64,7 +63,7 @@ When running bot vs bot tournament with the GUI and Console board disabled, it w
 * Stockfish integration (external chess engine)
 
 ### Building and running
-JDK 25 is required
+JDK 25 is required.
 ConsoleChess in the UI package is main entry point. Run this to run the engine.
 You'll currently need to modify this code to define the players, specify the number of games in the tournament, and whether the GUI and/or console messages should be displayed while running.
 To use the stockfish player, you will need to install the stockfish engine and then copy its executable to the engines/stockfish folder. The path to the exe is defined by STOCKFISH_PATH in StockFishPlayer.
