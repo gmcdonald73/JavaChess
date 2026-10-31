@@ -103,8 +103,8 @@ public class ChessBoardPanel extends JPanel
 
     private void drawPieces(Graphics g)
     {
-        Color lightSq =  new Color(223,233,235);
-        Color darkSq = new Color(88, 195,214);
+        Color lightSqColour =  new Color(223,233,235);
+        Color darkSqColour = new Color(88, 195,214);
 
         for (int y = 0; y < 8; y++)
         {
@@ -113,14 +113,8 @@ public class ChessBoardPanel extends JPanel
                 boolean lightSquare = (x + y) % 2 == 1;
 
                 g.setColor(lightSquare
-                        ? lightSq
-                        : darkSq);
-
-/*
-                g.setColor(lightSquare
-                        ? new Color(87, 106, 138)
-                        : new Color(3, 41, 102));
-*/
+                        ? lightSqColour
+                        : darkSqColour);
 
                 g.fillRect(
                         x * SQUARE_SIZE,
@@ -156,8 +150,6 @@ public class ChessBoardPanel extends JPanel
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-
-//        drawSquares(g);
         drawPieces(g);
     }
 }

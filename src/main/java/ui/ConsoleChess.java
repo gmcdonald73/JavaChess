@@ -5,19 +5,21 @@ import java.util.List;
 import engine.game.Tournament;
 import engine.players.BotPlayer;
 import engine.players.ChessPlayer;
+import engine.players.HumanPlayer;
+import engine.players.StockFishPlayer;
 
 public class ConsoleChess {
 
     public static void main(String[] args) throws Exception
     {
         ChessPlayer playerA = new BotPlayer("Bot");
-//        ChessPlayer playerA = new HumanPlayer("GMac");
+ //      ChessPlayer playerA = new HumanPlayer("GMac");
 //        ChessPlayer playerB = new HumanPlayer("Player2");
-//        ChessPlayer playerB = new StockFishPlayer("StockFish");
-        BotPlayer playerB = new BotPlayer("BotB");
+        ChessPlayer playerB = new StockFishPlayer("StockFish");
+//        BotPlayer playerB = new BotPlayer("BotB");
 //        playerB.setDepth(4);
 
-        Tournament tournament = new Tournament(playerA, playerB, 1, true, true);
+        Tournament tournament = new Tournament(playerA, playerB, 30, false, false);
 
         List<Tournament.GameRecord> results = tournament.run();
 

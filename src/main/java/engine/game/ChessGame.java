@@ -157,8 +157,9 @@ public class ChessGame {
         // Should really display board, then wait for player to close game? (if human player)
         // gui.refresh();
 
+
         // !!! should also close on exceptions
-        if(gui != null) gui.close();
+        // if(gui != null) gui.close();
 
         return result;
 
